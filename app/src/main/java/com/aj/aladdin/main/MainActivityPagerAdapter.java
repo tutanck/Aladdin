@@ -9,9 +9,11 @@ import com.aj.aladdin.domain.components.userprofile.ProfileFragment;
 import com.aj.aladdin.rnd.PageFragment;
 
 public class MainActivityPagerAdapter extends FragmentPagerAdapter {
-    private final int PAGE_COUNT = 4;
-    private String TAB_TITLES[] = new String[]{"OFFRES", "PROFIL", "BESOINS", "MESSAGES"};
+
     private Context context;
+
+    private String TAB_TITLES[] = new String[]{"OFFRES", "PROFIL", "BESOINS", "MESSAGES"};
+
 
     public MainActivityPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
@@ -20,7 +22,7 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return PAGE_COUNT;
+        return TAB_TITLES.length;
     }
 
     @Override

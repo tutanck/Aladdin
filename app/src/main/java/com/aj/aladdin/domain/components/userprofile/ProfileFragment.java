@@ -1,9 +1,14 @@
 package com.aj.aladdin.domain.components.userprofile;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +16,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.main.MainActivity;
+import com.aj.aladdin.main.MainActivityPagerAdapter;
 
 public class ProfileFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
+
+    private Context ctx;
 
     private int mPage;
 
@@ -39,10 +48,6 @@ public class ProfileFragment extends Fragment {
     ) {
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
-
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,5 +57,17 @@ public class ProfileFragment extends Fragment {
             }
         });
         return view;
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        this.ctx = context;
+        super.onAttach(context);
+        /*if (context instanceof Listener)
+            mListener = (Listener) context;
+        else
+            throw new RuntimeException(context.toString()
+                    + " must implement Listener");*/
     }
 }
