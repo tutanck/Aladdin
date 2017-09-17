@@ -29,16 +29,16 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
 
         switch (position) {
-            case 1:
+            case 0:
                 return PageFragment.newInstance(position + 1);
-            case 2:
+            case 1:
                 return ProfileFragment.newInstance(position + 1);
+            case 2:
+                return PageFragment.newInstance(position + 1);
             case 3:
                 return PageFragment.newInstance(position + 1);
-            case 4:
-                return PageFragment.newInstance(position + 1);
             default:
-                return PageFragment.newInstance(position + 1);
+                throw new RuntimeException("Unknown top level tab menu");
         }
 
     }

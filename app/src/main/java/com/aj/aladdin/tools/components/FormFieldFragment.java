@@ -11,26 +11,32 @@ import android.widget.TextView;
 
 import com.aj.aladdin.R;
 
+
 public class FormFieldFragment extends Fragment {
-    public static final String ARG_PAGE = "ARG_PAGE";
+    private static final String LABEL = "LABEL";
+    private static final String HINT = "HINT";
+    private static final String SIZE = "SIZE";
+    private static final String CONTENT = "CONTENT";
 
-    private int mPage;
+    private Listener mListener;
 
-    private Context ctx;
 
-    public static FormFieldFragment newInstance(int page) {
+    public static FormFieldFragment newInstance(
+            String label
+            , String hint
+            , int size
+            , String content
+    ) {
         Bundle args = new Bundle();
-        args.putInt(ARG_PAGE, page);
+        args.putString(LABEL, label);
+        args.putString(HINT, hint);
+        args.putInt(SIZE, size);
+        args.putString(CONTENT, content);
         FormFieldFragment fragment = new FormFieldFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mPage = getArguments().getInt(ARG_PAGE);
-    }
 
     @Override
     public View onCreateView(
@@ -40,15 +46,17 @@ public class FormFieldFragment extends Fragment {
     ) {
         View view = inflater.inflate(R.layout.fragment_form_field, container, false);
 
-        ImageView ivIndication = (ImageView)view.findViewById(R.id.ivIndication);
+        final Bundle args = getArguments();
+
+        ImageView ivIndication = (ImageView) view.findViewById(R.id.ivIndication);
 
         TextView tvContent = (TextView) view.findViewById(R.id.tvContent);
-        tvContent.setText("Fragment #" + mPage);
+        tvContent.setText(args.getString(CONTENT));
 
         TextView tvDescription = (TextView) view.findViewById(R.id.tvDescription);
-        tvDescription.setText("Fragment #" + mPage);
+        tvDescription.setText(args.getString(LABEL));
 
-        ImageView ivToogleButton = (ImageView)view.findViewById(R.id.ivToogleButton);
+        ImageView ivToogleButton = (ImageView) view.findViewById(R.id.ivToogleButton);
 
         return view;
     }
@@ -56,12 +64,14 @@ public class FormFieldFragment extends Fragment {
 
     @Override
     public void onAttach(Context context) {
-        this.ctx = context;
         super.onAttach(context);
         /*if (context instanceof Listener)
             mListener = (Listener) context;
         else
             throw new RuntimeException(context.toString()
                     + " must implement Listener");*/
+    }
+
+    public interface Listener {
     }
 }
