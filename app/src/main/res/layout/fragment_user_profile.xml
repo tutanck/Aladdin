@@ -5,7 +5,6 @@
     android:layout_height="match_parent">
 
 
-
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
@@ -31,21 +30,19 @@
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0.7" />
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:minHeight="0dp"
-                app:layout_collapseMode="pin"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+            <FrameLayout android:id="@+id/rating_layout"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_gravity="bottom">
+            </FrameLayout>
+
 
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
-
-
 
 
     <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -63,25 +60,70 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <FrameLayout android:id="@+id/rating_control_layout"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/activity_vertical_margin">
+            </FrameLayout>
+
+
+            <TextView
+                android:id="@+id/tvContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:layout_marginLeft="64dp"
+                android:ellipsize="end"
+                android:text="JE SUIS UN(E) :"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textSize="16dp"
+                android:textColor="#212121"/>
+
+
+            <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radio_individual"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/individual" />
+
+                <RadioButton
+                    android:id="@+id/radio_company"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/company" />
+            </RadioGroup>
+
             <include layout="@layout/item_divider" />
 
             <LinearLayout
                 android:id="@+id/form_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_marginBottom="@dimen/activity_horizontal_margin"
-                android:padding="@dimen/activity_horizontal_margin"
-                android:gravity="center"></LinearLayout>
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/activity_horizontal_margin">
+            </LinearLayout>
 
             <include layout="@layout/item_divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="vertical"
-                android:padding="@dimen/activity_horizontal_margin"
-                android:gravity="center">
+                android:padding="@dimen/activity_horizontal_margin">
 
                 <Button
                     android:layout_width="wrap_content"
@@ -92,8 +134,6 @@
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
-
-
 
 
     <android.support.design.widget.FloatingActionButton

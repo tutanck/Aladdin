@@ -12,9 +12,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.tools.components.FormFieldFragment;
+import com.aj.aladdin.tools.components.RatingControlFragment;
 
 
 public class ProfileFragment extends Fragment {
@@ -45,9 +47,26 @@ public class ProfileFragment extends Fragment {
             , ViewGroup container
             , Bundle savedInstanceState
     ) {
-        View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
         final Activity activity = getActivity();
+
+
+        View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
+
+        ((AppCompatActivity) activity).getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.rating_layout, RatingControlFragment.newInstance(
+                        mLabels[0],mHints[0],0,mSamples[0]
+                ), "form_field_"+0)
+                .commit();
+
+        ((AppCompatActivity) activity).getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.rating_control_layout, RatingControlFragment.newInstance(
+                        mLabels[0],mHints[0],0,mSamples[0]
+                ), "form_field_"+0)
+                .commit();
+
         for (int i = 0; i < mLabels.length; i++)
             ((AppCompatActivity) activity).getSupportFragmentManager()
                     .beginTransaction()

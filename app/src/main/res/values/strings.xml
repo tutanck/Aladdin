@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Aladdin</string>
+    <string name="company">entreprise</string>
+    <string name="individual">particulier</string>
 </resources>
