@@ -1,4 +1,4 @@
-package com.aj.aladdin.rnd;
+package com.aj.aladdin.tools.oths;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

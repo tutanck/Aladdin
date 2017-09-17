@@ -6,11 +6,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.tools.components.FormFieldFragment;
+import com.aj.aladdin.tools.oths.PageFragment;
 
 
 public class ProfileFragment extends Fragment {
@@ -41,6 +44,13 @@ public class ProfileFragment extends Fragment {
             , Bundle savedInstanceState
     ) {
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
+
+        ((AppCompatActivity)ctx).getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.form_layout, FormFieldFragment.newInstance(2), "form_field_"+2)
+                .commit();
+
+
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
