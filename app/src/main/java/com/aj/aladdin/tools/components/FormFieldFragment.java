@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,9 +14,9 @@ import com.aj.aladdin.R;
 
 
 public class FormFieldFragment extends Fragment {
+    private static final String RANK = "RANK";
     private static final String LABEL = "LABEL";
     private static final String HINT = "HINT";
-    private static final String SIZE = "SIZE";
     private static final String CONTENT = "CONTENT";
 
     private Listener mListener;
@@ -24,13 +25,13 @@ public class FormFieldFragment extends Fragment {
     public static FormFieldFragment newInstance(
             String label
             , String hint
-            , int size
+            , int rank
             , String content
     ) {
         Bundle args = new Bundle();
+        args.putInt(RANK, rank);
         args.putString(LABEL, label);
         args.putString(HINT, hint);
-        args.putInt(SIZE, size);
         args.putString(CONTENT, content);
         FormFieldFragment fragment = new FormFieldFragment();
         fragment.setArguments(args);
@@ -48,15 +49,30 @@ public class FormFieldFragment extends Fragment {
 
         final Bundle args = getArguments();
 
-        ImageView ivIndication = (ImageView) view.findViewById(R.id.ivIndication);
+        final ImageView ivIndication = (ImageView) view.findViewById(R.id.ivIndication);
 
-        TextView tvContent = (TextView) view.findViewById(R.id.tvContent);
+        final TextView tvContent = (TextView) view.findViewById(R.id.tvContent);
         tvContent.setText(args.getString(CONTENT));
+        if(args.getInt(RANK)==0)
+            tvContent.setMaxLines(1);
 
-        TextView tvDescription = (TextView) view.findViewById(R.id.tvDescription);
+        final TextView tvDescription = (TextView) view.findViewById(R.id.tvDescription);
         tvDescription.setText(args.getString(LABEL));
 
         ImageView ivToogleButton = (ImageView) view.findViewById(R.id.ivToogleButton);
+        ivToogleButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        EditText et = new EditText(getContext());
+                        et.setText(tvContent.getText());
+                        replaceView(tvContent,et);
+                        ivIndication.setVisibility(View.GONE);
+                        tvDescription.setVisibility(View.GONE);
+                    }
+                }
+        );
+
 
         return view;
     }
@@ -71,6 +87,17 @@ public class FormFieldFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement Listener");*/
     }
+
+
+    private void replaceView(
+            View oldView
+            ,View newView
+    ){
+        ViewGroup parent = (ViewGroup) oldView.getParent();
+        parent.removeView(oldView);
+        parent.addView(newView, parent.indexOfChild(oldView));
+    }
+
 
     public interface Listener {
     }

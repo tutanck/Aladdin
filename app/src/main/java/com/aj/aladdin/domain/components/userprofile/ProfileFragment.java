@@ -52,7 +52,7 @@ public class ProfileFragment extends Fragment {
             ((AppCompatActivity) activity).getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.form_layout, FormFieldFragment.newInstance(
-                            mLabels[i],mHints[i],mSizes[i],mSamples[i]
+                            mLabels[i],mHints[i],i,mSamples[i]
                     ), "form_field_"+i)
                     .commit();
 

@@ -18,9 +18,9 @@
 
     <integer-array name="profile_form_field_size">
         <!--<item>0</item>-->
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>12</item>
     </integer-array>
 
     <string-array name="sample_contents">
