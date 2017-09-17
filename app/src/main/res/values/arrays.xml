@@ -2,26 +2,18 @@
 <resources>
 
     <string-array name="profile_form_field_labels">
-        <!--<item>JE SUIS UN(E)</item>-->
         <item>NOM D\'UTILISATEUR</item>
         <item>MON ACTIVITE</item>
         <item>MES TARIFS (Optionnel)</item>
     </string-array>
 
-    <string-array name="profile_form_field_hints">
-        <!--<item></item>-->
+    <string-array name="profile_form_field_indications">
         <item>Choisissez un nom d\'utilisateur</item>
         <item>Dites en plus sur votre activité</item>
         <item>Indiquez vos tarifs (Optionnel)</item>
     </string-array>
 
 
-    <integer-array name="profile_form_field_size">
-        <!--<item>0</item>-->
-        <item>1</item>
-        <item>1</item>
-        <item>12</item>
-    </integer-array>
 
     <string-array name="sample_contents">
         <item>Cereal Guy is a stick figure character commonly used on image boards and discussion forums as a multi-purpose reaction face.</item>

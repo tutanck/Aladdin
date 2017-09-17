@@ -1,4 +1,4 @@
-package com.aj.aladdin.tools.components;
+package com.aj.aladdin.tools.components.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -6,14 +6,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.aj.aladdin.R;
 
 
-public class FormFieldFragment extends Fragment {
+public class ImageFragment extends Fragment {
     private static final String RANK = "RANK";
     private static final String LABEL = "LABEL";
     private static final String HINT = "HINT";
@@ -22,7 +20,7 @@ public class FormFieldFragment extends Fragment {
     private Listener mListener;
 
 
-    public static FormFieldFragment newInstance(
+    public static ImageFragment newInstance(
             String label
             , String hint
             , int rank
@@ -33,7 +31,7 @@ public class FormFieldFragment extends Fragment {
         args.putString(LABEL, label);
         args.putString(HINT, hint);
         args.putString(CONTENT, content);
-        FormFieldFragment fragment = new FormFieldFragment();
+        ImageFragment fragment = new ImageFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -45,35 +43,19 @@ public class FormFieldFragment extends Fragment {
             , ViewGroup container
             , Bundle savedInstanceState
     ) {
-        View view = inflater.inflate(R.layout.fragment_form_field, container, false);
+        View view = inflater.inflate(R.layout.fragment_image, container, false);
 
         final Bundle args = getArguments();
 
-        final ImageView ivIndication = (ImageView) view.findViewById(R.id.ivIndication);
-
-        final TextView tvContent = (TextView) view.findViewById(R.id.tvContent);
-        tvContent.setText(args.getString(CONTENT));
-        if(args.getInt(RANK)==0)
-            tvContent.setMaxLines(1);
-
-        final TextView tvDescription = (TextView) view.findViewById(R.id.tvDescription);
-        tvDescription.setText(args.getString(LABEL));
-
-        /*ImageView ivToogleButton = (ImageView) view.findViewById(R.id.ivToogleButton);
-        ivToogleButton.setOnClickListener(
+        final ImageView image = (ImageView) view.findViewById(R.id.image);
+        image.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        EditText et = new EditText(getContext());
-                        et.setText(tvContent.getText());
-                        replaceView(tvContent,et);
-                        ivIndication.setVisibility(View.GONE);
-                        tvDescription.setVisibility(View.GONE);
+
                     }
                 }
-        );*/
-
-
+        );
         return view;
     }
 
@@ -86,16 +68,6 @@ public class FormFieldFragment extends Fragment {
         else
             throw new RuntimeException(context.toString()
                     + " must implement Listener");*/
-    }
-
-
-    private void replaceView(
-            View oldView
-            ,View newView
-    ){
-        ViewGroup parent = (ViewGroup) oldView.getParent();
-        parent.removeView(oldView);
-        parent.addView(newView, parent.indexOfChild(oldView));
     }
 
 

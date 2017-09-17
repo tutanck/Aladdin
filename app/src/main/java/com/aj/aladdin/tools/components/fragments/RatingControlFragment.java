@@ -1,4 +1,4 @@
-package com.aj.aladdin.tools.components;
+package com.aj.aladdin.tools.components.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -6,9 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RatingBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aj.aladdin.R;

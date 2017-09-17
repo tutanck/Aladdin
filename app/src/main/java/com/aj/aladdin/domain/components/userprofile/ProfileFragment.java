@@ -12,11 +12,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.components.FormFieldFragment;
-import com.aj.aladdin.tools.components.RatingControlFragment;
+import com.aj.aladdin.tools.components.fragments.FormFieldFragment;
+import com.aj.aladdin.tools.components.fragments.ImageFragment;
+import com.aj.aladdin.tools.components.fragments.RadioGroupFragment;
+import com.aj.aladdin.tools.components.fragments.RatingControlFragment;
 
 
 public class ProfileFragment extends Fragment {
@@ -24,10 +25,12 @@ public class ProfileFragment extends Fragment {
 
     private String[] mSamples;
 
-    private String[] mLabels;
-    private String[] mHints;
-    private int[] mSizes;
+
     private Listener mListener;
+
+    private String[] mLabels;
+    private String[] mIndics;
+
 
     private int mPage;
 
@@ -38,7 +41,6 @@ public class ProfileFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
 
 
     @Override
@@ -55,24 +57,38 @@ public class ProfileFragment extends Fragment {
 
         ((AppCompatActivity) activity).getSupportFragmentManager()
                 .beginTransaction()
+                .add(R.id.profile_image_layout, ImageFragment.newInstance(
+                        mLabels[0], mIndics[0], 0, mSamples[0]
+                ), "profile_image")
+                .commit();
+
+        ((AppCompatActivity) activity).getSupportFragmentManager()
+                .beginTransaction()
                 .add(R.id.rating_layout, RatingControlFragment.newInstance(
-                        mLabels[0],mHints[0],0,mSamples[0]
-                ), "form_field_"+0)
+                        mLabels[0], mIndics[0], 0, mSamples[0]
+                ), "rating")
                 .commit();
 
         ((AppCompatActivity) activity).getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.rating_control_layout, RatingControlFragment.newInstance(
-                        mLabels[0],mHints[0],0,mSamples[0]
-                ), "form_field_"+0)
+                        mLabels[0], mIndics[0], 0, mSamples[0]
+                ), "rating_control")
+                .commit();
+
+        ((AppCompatActivity) activity).getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.radio_group_layout, RadioGroupFragment.newInstance(
+                        mLabels[0], mIndics[0], 0, mSamples[0]
+                ), "radio_group")
                 .commit();
 
         for (int i = 0; i < mLabels.length; i++)
             ((AppCompatActivity) activity).getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.form_layout, FormFieldFragment.newInstance(
-                            mLabels[i],mHints[i],i,mSamples[i]
-                    ), "form_field_"+i)
+                            mLabels[i], true, mSamples[i]
+                    ), "form_field_" + i)
                     .commit();
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
@@ -98,12 +114,11 @@ public class ProfileFragment extends Fragment {
 
         final Resources resources = context.getResources();
         mLabels = resources.getStringArray(R.array.profile_form_field_labels);
-        mHints = resources.getStringArray(R.array.profile_form_field_hints);
-        mSizes = resources.getIntArray(R.array.profile_form_field_size);
+        mIndics = resources.getStringArray(R.array.profile_form_field_indications);
 
         mSamples = resources.getStringArray(R.array.sample_contents);
 
-        if(mLabels.length!=mHints.length || mLabels.length!=mSizes.length || mHints.length!=mSizes.length)
+        if (mLabels.length != mIndics.length)
             throw new RuntimeException("Form Fields resources are not consistent !");
     }
 
