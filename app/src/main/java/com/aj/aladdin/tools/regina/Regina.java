@@ -17,6 +17,7 @@ import io.socket.emitter.Emitter;
 
 public class Regina {
 
+    public final String serverURL;
 
     public final Socket socket;
 
@@ -26,7 +27,7 @@ public class Regina {
             , SocketClientEventDelegate delegate
     ) throws URISyntaxException {
         socket = IO.socket(serverURL);
-
+        this.serverURL = serverURL;
 
         //Events handling
 
@@ -98,15 +99,9 @@ public class Regina {
     }
 
 
-
-
-
-
-
-
-
     /**
      * REGINA aggregate
+     *
      * @param coll
      * @param query
      * @param opt
@@ -120,14 +115,13 @@ public class Regina {
             , JSONObject meta
             , Ack ack
     ) throws NullRequiredParameterException {
-        socket.emit("aggregate", checkSTR(coll,"coll"), checkJO(query,"query"), softenJO(opt), softenJO(meta), checkACK(ack,"ack"));
+        socket.emit("aggregate", checkSTR(coll, "coll"), checkJO(query, "query"), softenJO(opt), softenJO(meta), checkACK(ack, "ack"));
     }
-
-
 
 
     /**
      * REGINA find
+     *
      * @param coll
      * @param query
      * @param opt
@@ -141,14 +135,13 @@ public class Regina {
             , JSONObject meta
             , Ack ack
     ) throws NullRequiredParameterException {
-         socket.emit("find", checkSTR(coll,"coll"), checkJO(query,"query"), softenJO(opt), softenJO(meta), checkACK(ack,"ack"));
+        socket.emit("find", checkSTR(coll, "coll"), checkJO(query, "query"), softenJO(opt), softenJO(meta), checkACK(ack, "ack"));
     }
-
-
 
 
     /**
      * REGINA count
+     *
      * @param coll
      * @param query
      * @param opt
@@ -162,14 +155,13 @@ public class Regina {
             , JSONObject meta
             , Ack ack
     ) throws NullRequiredParameterException {
-        socket.emit("count", checkSTR(coll,"coll"), checkJO(query,"query"), softenJO(opt), softenJO(meta), checkACK(ack,"ack"));
+        socket.emit("count", checkSTR(coll, "coll"), checkJO(query, "query"), softenJO(opt), softenJO(meta), checkACK(ack, "ack"));
     }
-
-
 
 
     /**
      * REGINA insert
+     *
      * @param coll
      * @param doc
      * @param opt
@@ -183,14 +175,13 @@ public class Regina {
             , JSONObject meta
             , Ack ack
     ) throws NullRequiredParameterException {
-        socket.emit("insert", checkSTR(coll,"coll"), checkJO(doc,"doc"), softenJO(opt), softenJO(meta), checkACK(ack,"ack"));
+        socket.emit("insert", checkSTR(coll, "coll"), checkJO(doc, "doc"), softenJO(opt), softenJO(meta), checkACK(ack, "ack"));
     }
-
-
 
 
     /**
      * REGINA insert
+     *
      * @param coll
      * @param docs
      * @param opt
@@ -209,14 +200,13 @@ public class Regina {
          opt = new JSONObject();
          if(meta == null)
          meta = new JSONObject();**/
-        socket.emit("insert", checkSTR(coll,"coll"), checkJAR(docs,"docs"), softenJO(opt), softenJO(meta), checkACK(ack,"ack"));
+        socket.emit("insert", checkSTR(coll, "coll"), checkJAR(docs, "docs"), softenJO(opt), softenJO(meta), checkACK(ack, "ack"));
     }
-
-
 
 
     /**
      * REGINA update
+     *
      * @param coll
      * @param query
      * @param update
@@ -232,14 +222,13 @@ public class Regina {
             , JSONObject meta
             , Ack ack
     ) throws NullRequiredParameterException {
-        socket.emit("update", checkSTR(coll,"coll"), checkJO(query,"query"), checkJO(update,"update"), softenJO(opt), softenJO(meta), checkACK(ack,"ack"));
+        socket.emit("update", checkSTR(coll, "coll"), checkJO(query, "query"), checkJO(update, "update"), softenJO(opt), softenJO(meta), checkACK(ack, "ack"));
     }
-
-
 
 
     /**
      * REGINA remove
+     *
      * @param coll
      * @param query
      * @param opt
@@ -253,15 +242,8 @@ public class Regina {
             , JSONObject meta
             , Ack ack
     ) throws NullRequiredParameterException {
-        socket.emit("remove", checkSTR(coll,"coll"), checkJO(query,"query"), softenJO(opt), softenJO(meta), checkACK(ack,"ack"));
+        socket.emit("remove", checkSTR(coll, "coll"), checkJO(query, "query"), softenJO(opt), softenJO(meta), checkACK(ack, "ack"));
     }
-
-
-
-
-
-
-
 
 
     //INTERNALS
@@ -279,7 +261,6 @@ public class Regina {
             return name;
         }
     }
-
 
 
     public enum SocketClientEvent {
@@ -310,6 +291,10 @@ public class Regina {
     }
 
 
+    public String toString() {
+        return serverURL;
+    }
+
 
     public interface SocketClientEventDelegate {
         void handle(SocketClientEvent clientEvent);
@@ -318,56 +303,66 @@ public class Regina {
     }
 
 
-
-
     private JSONObject softenJO(
             JSONObject jo
-    ){
+    ) {
         return jo == null ? new JSONObject() : jo;
     }
 
 
-
-
     private String checkSTR(
             String str
-            ,String param
+            , String param
     ) throws NullRequiredParameterException {
-        if(str == null)
+        if (str == null)
             throw new NullRequiredParameterException(param);
         return str;
     }
 
     private JSONObject checkJO(
             JSONObject jo
-            ,String param
+            , String param
     ) throws NullRequiredParameterException {
-        if(jo == null)
+        if (jo == null)
             throw new NullRequiredParameterException(param);
         return jo;
     }
 
     private JSONArray checkJAR(
             JSONArray jar
-            ,String param
+            , String param
     ) throws NullRequiredParameterException {
-        if(jar == null)
+        if (jar == null)
             throw new NullRequiredParameterException(param);
         return jar;
     }
 
     private Ack checkACK(
             Ack ack
-            ,String param
+            , String param
     ) throws NullRequiredParameterException {
-        if(ack == null)
+        if (ack == null)
             throw new NullRequiredParameterException(param);
         return ack;
     }
 
     public class NullRequiredParameterException extends Exception {
-        NullRequiredParameterException(String param) {
-            super("Parameter :  "+param+" is required but found 'null'");
+        public NullRequiredParameterException(String param) {
+            super("Parameter :  " + param + " is required but found 'null'");
+        }
+    }
+
+    public class ReginaException extends Exception {
+        public ReginaException(Throwable throwable) {
+            super(throwable);
+        }
+
+        public ReginaException(JSONObject json) {
+            super(String.valueOf(json));
+        }
+
+        public ReginaException(String msg) {
+            super(msg);
         }
     }
 }

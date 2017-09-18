@@ -1,23 +1,109 @@
 package com.aj.aladdin.tools.components.services;
 
-import android.content.Context;
-import android.util.TypedValue;
-import android.view.View;
-import android.view.ViewGroup;
+import com.aj.aladdin.tools.regina.Regina;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import io.socket.client.Ack;
 
 /**
  * Created by joan on 17/09/2017.
  */
 
-public interface AutonomousDBComponent {
+public abstract class AutonomousDBComponent {
 
-    void saveState();
+    protected AutonomousDBComponent ac = this;
 
-    void loadState();
+    //DB Handle
+    protected final Regina regina;
 
-    void followState();
+    //DB location
+    protected final String coll;
 
-    void syncState();
+    private /*final*/ String _id = null;
 
-    //boolean isStateValid(Object state, Class type, String rule); //todo later
+    protected String get_id() {
+        return _id;
+    }
+
+
+    //Data validation
+    protected Object state;
+    protected Class type;
+    protected String rule;
+
+    public AutonomousDBComponent(
+            Regina regina
+            , String coll
+            , String _id
+    ) {
+        this.regina = regina;
+        this.coll = coll;
+        this._id = _id;
+    }
+
+    //initState
+    public AutonomousDBComponent(
+            Regina regina
+            , String coll
+            , Ack ack
+    ) throws Regina.NullRequiredParameterException {
+        this.regina = regina;
+        this.coll = coll;
+        regina.insert(coll, jo(), jo(), jo(),
+                new Ack() {
+                    @Override
+                    public void call(Object... args) {
+                        if (args[0] != null) //no error
+                            try {
+                                ac._id = ((JSONObject) args[1]).getString("_id");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                    }
+                });
+    }
+
+
+    abstract void saveState();
+
+    abstract void loadState();
+
+    abstract void followState();
+
+    abstract void syncState();
+
+    abstract boolean isStateValid();
+
+
+    protected class InitException extends DBException {
+        protected InitException(JSONObject err) {
+            super(ac + " : An InitException occurred at '" + regina + "/" + coll + "' due to '" + err + "'");
+        }
+    }
+
+    protected class DBException extends Exception {
+        protected DBException() {
+            super(ac + " : An DBException occurred at '" + regina + "/'" + coll);
+        }
+
+        protected DBException(JSONObject err) {
+            this(
+                    ac + " : An DBException occurred at '"
+                            + regina + "/'" + coll + " due to " + String.valueOf(err)
+            );
+        }
+
+        protected DBException(String msg) {
+            super(msg);
+        }
+    }
+
+
+    private final JSONObject jo() {
+        return new JSONObject();
+    }
+
 }
