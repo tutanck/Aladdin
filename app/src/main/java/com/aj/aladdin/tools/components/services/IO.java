@@ -14,13 +14,13 @@ import io.socket.client.Socket;
 
 public class IO implements Regina.SocketClientEventDelegate {
 
-    public static IO io = new IO();
+    private IO(){}
 
     public static Regina r;
     public static Socket socket;
     static {
         try {
-            r = new Regina("http://192.168.1.15:3009", io);
+            r = new Regina("http://192.168.1.15:3009", new IO());
             socket = r.socket;
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);

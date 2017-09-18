@@ -24,24 +24,19 @@ public abstract class AutonomousDBFragment extends Fragment {
     protected Regina.Amplitude defaultAmplitude = Regina.Amplitude.IO;
 
     //DB handler
-    protected final Regina regina;
+    private Regina regina;
 
     //DB location
-    protected final String coll;
-    protected final String _id;
-    protected final String key;
-    protected final String locationTag;
-    protected final String collTag;
-    protected final String docTag;
+    private String coll;
+    private String _id;
+    private String key;
+    private String collTag;
+    private String docTag;
+    private String locationTag;
 
 
-    //Data validation
-    protected Class type; //todo later
-    protected String rule; //todo later
-
-
-    public AutonomousDBFragment( //todo start iof
-                                 Regina regina
+    public void start(
+            Regina regina
             , String coll
             , String _id
             , String key
@@ -50,6 +45,7 @@ public abstract class AutonomousDBFragment extends Fragment {
         this.coll = coll;
         this._id = _id;
         this.key = key;
+
         this.collTag = "#" + coll;
         this.docTag = collTag + "/" + _id;
         this.locationTag = docTag + "/" + key;
@@ -65,7 +61,6 @@ public abstract class AutonomousDBFragment extends Fragment {
             throw new InvalidStateException(state);
         regina.update(coll, id(), set(state), saveStateOpt(), saveStateMeta(), saveStateAck());
     }
-
 
     protected JSONObject saveStateOpt() {
         return jo();//todo meta see
@@ -100,7 +95,6 @@ public abstract class AutonomousDBFragment extends Fragment {
         regina.find(coll, id(), loadStateOpt(), loadStateMeta(), loadStateAck());
     }
 
-
     protected JSONObject loadStateOpt() {
         return jo(); //todo projection
     }
@@ -134,11 +128,6 @@ public abstract class AutonomousDBFragment extends Fragment {
     }
 
 
-    protected boolean isStateValid(Object state) {
-        return true; //todo later : compile_check state
-    }
-
-
     protected final JSONObject id() throws JSONException {
         return jo().put("_id", _id);
     }
@@ -156,6 +145,14 @@ public abstract class AutonomousDBFragment extends Fragment {
     }
 
 
+    //Data validation
+    private Class type; //todo later
+    private String rule; //todo later
+
+    protected boolean isStateValid(Object state) {
+        return true; //todo later : compile_check state
+    }
+
     protected class InvalidStateException extends Exception {
 
         protected InvalidStateException(Object state) {
@@ -166,18 +163,40 @@ public abstract class AutonomousDBFragment extends Fragment {
         }
     }
 
-    protected class DBException extends Exception { //todo rem useless
-        protected DBException() {
-            super(self + " : DBException at '" + locationTag + "'");
-        }
 
-        protected DBException(JSONObject err) {
-            this(self + " : DBException at '" + locationTag + "' due to " + String.valueOf(err));
-        }
-
-        protected DBException(String msg) {
-            super(msg);
-        }
+    public Regina getRegina() {
+        return regina;
     }
 
+    public String getColl() {
+        return coll;
+    }
+
+    public String get_id() {
+        return _id;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public String getLocationTag() {
+        return locationTag;
+    }
+
+    public String getCollTag() {
+        return collTag;
+    }
+
+    public String getDocTag() {
+        return docTag;
+    }
+
+    public Class getType() {
+        return type;
+    }
+
+    public String getRule() {
+        return rule;
+    }
 }
