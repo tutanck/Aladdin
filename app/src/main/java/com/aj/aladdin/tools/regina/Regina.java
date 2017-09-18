@@ -7,7 +7,6 @@ import java.net.URISyntaxException;
 
 import io.socket.client.Ack;
 import io.socket.client.IO;
-import io.socket.client.Manager;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
@@ -251,14 +250,31 @@ public class Regina {
     public enum ReginaEvent {
         NOACK("regina_noack_callback_error");
 
-        private String name = "";
+        private String value = "";
 
-        ReginaEvent(String name) {
-            this.name = name;
+        ReginaEvent(String value) {
+            this.value = value;
         }
 
         public String toString() {
-            return name;
+            return value;
+        }
+    }
+
+
+    public enum Amplitude {
+        IO("io"),
+        EMIT("emit"),
+        BROADCAST("broadcast");
+
+        private String value = "";
+
+        Amplitude(String value) {
+            this.value = value;
+        }
+
+        public String toString() {
+            return value;
         }
     }
 
@@ -279,14 +295,14 @@ public class Regina {
         PING(Socket.EVENT_PING),
         PONG(Socket.EVENT_PONG);
 
-        private String name = "";
+        private String value = "";
 
-        SocketClientEvent(String name) {
-            this.name = name;
+        SocketClientEvent(String value) {
+            this.value = value;
         }
 
         public String toString() {
-            return name;
+            return value;
         }
     }
 
@@ -303,10 +319,15 @@ public class Regina {
     }
 
 
+    private JSONObject jo() {
+        return new JSONObject();
+    }
+
+
     private JSONObject softenJO(
-            JSONObject jo
+            JSONObject json
     ) {
-        return jo == null ? new JSONObject() : jo;
+        return json == null ? jo() : json;
     }
 
 
