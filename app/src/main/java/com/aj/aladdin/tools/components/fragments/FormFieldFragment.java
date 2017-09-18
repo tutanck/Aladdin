@@ -37,6 +37,11 @@ public class FormFieldFragment extends AutonomousDBFragment {
 
     private boolean openStatus = false;
 
+
+    private TextView tvContent;
+    private EditText etContent;
+    private TextView tvDescription;
+
     public static FormFieldFragment newInstance(
             String label
             , boolean open
@@ -62,13 +67,13 @@ public class FormFieldFragment extends AutonomousDBFragment {
 
         final ImageView ivIndication = (ImageView) view.findViewById(R.id.ivIndication);
 
-        final TextView tvContent = (TextView) view.findViewById(R.id.tvContent);
+        tvContent = (TextView) view.findViewById(R.id.tvContent);
 
-        final EditText etContent = (EditText) view.findViewById(R.id.etContent);
+        etContent = (EditText) view.findViewById(R.id.etContent);
 
         final TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.text_input_layout);
 
-        final TextView tvDescription = (TextView) view.findViewById(R.id.tvDescription);
+        tvDescription = (TextView) view.findViewById(R.id.tvDescription);
 
 
         final Bundle args = getArguments();
@@ -86,18 +91,12 @@ public class FormFieldFragment extends AutonomousDBFragment {
                                 etContent.setVisibility(View.VISIBLE);
                                 tvContent.setVisibility(View.GONE);
                                 tvDescription.setVisibility(View.GONE);
-                            } else { //close it as selectable view
-                                tvContent.setText(etContent.getText());
-                                etContent.setVisibility(View.GONE);
-                                tvContent.setVisibility(View.VISIBLE);
-                                tvDescription.setVisibility(View.VISIBLE);
-                                KeyboardServices.dismiss(getContext(), etContent);
-                                try {
-                                    saveState(tvContent.getText());
-                                } catch (InvalidStateException | JSONException | Regina.NullRequiredParameterException | AutonomousDBFragmentNotInitializedException e) {
-                                    Toast.makeText(getContext(),""+e,Toast.LENGTH_LONG);
-                                }
+                            } else try {
+                                saveState(tvContent.getText());
+                            } catch (InvalidStateException | JSONException | Regina.NullRequiredParameterException | AutonomousDBFragmentNotInitializedException e) {
+                                Toast.makeText(getContext(), "" + e, Toast.LENGTH_LONG);
                             }
+
                             openStatus = !openStatus;
                         }
                     });
@@ -117,16 +116,30 @@ public class FormFieldFragment extends AutonomousDBFragment {
         try {
             init(IO.r, "test", "59bffef6ec22b00b725f20de", "username");
         } catch (Regina.NullRequiredParameterException | JSONException e) {
-            Toast.makeText(getContext(),""+e,Toast.LENGTH_LONG);
+            Toast.makeText(getContext(), "" + e, Toast.LENGTH_LONG);
         }
     }
 
+
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    protected Ack saveStateAck() {
+        return new Ack() {
+            @Override
+            public void call(Object... args) {
+                //close it as selectable view
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        tvContent.setText(etContent.getText());
+                        etContent.setVisibility(View.GONE);
+                        tvContent.setVisibility(View.VISIBLE);
+                        tvDescription.setVisibility(View.VISIBLE);
+                        KeyboardServices.dismiss(getContext(), etContent);
+                    }
+                });
+            }
+        };
 
-
-        getRegina().socket.off(getLocationTag(), null);
     }
 
     @Override

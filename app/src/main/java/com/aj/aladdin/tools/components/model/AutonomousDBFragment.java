@@ -36,6 +36,19 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
     private String locationTag;
 
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (!initialized) return;
+        regina.socket.off(locationTag, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Log.i("@off", locationTag);
+            }
+        });
+    }
+
+
     public void init(
             Regina regina
             , String coll
@@ -52,26 +65,21 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
         this.locationTag = docTag + "/" + key;
 
         this.initialized = true;
-        try {
-            syncState();
-        } catch (AutonomousDBFragmentNotInitializedException e) {
-            fatalError(e); //SNO : Should Never Occur
-        }
     }
 
 
     protected void saveState(
             Object state
-    ) throws InvalidStateException, JSONException, Regina.NullRequiredParameterException, AutonomousDBFragmentNotInitializedException {
+    ) throws InvalidStateException, JSONException, Regina.NullRequiredParameterException {
         if (!initialized)
-            throw new AutonomousDBFragmentNotInitializedException();
+            fatalError(self + " : is not yet initialized");
         if (!isStateValid(state))
             throw new InvalidStateException(state);
         regina.update(coll, id(), set(state), saveStateOpt(), saveStateMeta(), saveStateAck());
     }
 
     protected JSONObject saveStateOpt() throws JSONException {
-        return jo().put("upsert",true);//todo meta see
+        return jo().put("upsert", true);//todo meta see
     }
 
     protected JSONObject saveStateMeta() throws JSONException {
@@ -99,9 +107,9 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
     }
 
 
-    protected final void loadState() throws JSONException, Regina.NullRequiredParameterException, AutonomousDBFragmentNotInitializedException {
+    protected final void loadState() throws JSONException, Regina.NullRequiredParameterException {
         if (!initialized)
-            throw new AutonomousDBFragmentNotInitializedException();
+            fatalError(self + " : is not yet initialized");
         regina.find(coll, id(), loadStateOpt(), loadStateMeta(), loadStateAck());
     }
 
@@ -109,14 +117,14 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
         return jo(); //todo projection
     }
 
-    protected JSONObject loadStateMeta() throws JSONException{
+    protected JSONObject loadStateMeta() throws JSONException {
         return jo();
     }
 
     protected abstract Ack loadStateAck();
 
 
-    protected void syncState() throws Regina.NullRequiredParameterException, JSONException, AutonomousDBFragmentNotInitializedException {
+    protected void syncState() throws Regina.NullRequiredParameterException, JSONException {
         loadState();
 
         regina.socket.on(locationTag, new Emitter.Listener() {
@@ -128,7 +136,6 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
                 } catch (
                         JSONException /*should never occur because the above loadState executed itself first*/
                                 | Regina.NullRequiredParameterException /*shame on the dev who use null required parameters ... shame on you*/
-                                | AutonomousDBFragmentNotInitializedException  /*bad usage of the component*/
                                 e
                         ) {
                     fatalError(e);
@@ -146,7 +153,7 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
     }
 
     protected final JSONObject set(Object val) throws JSONException {
-        return jo().put("$set", jo().put(key,val));
+        return jo().put("$set", jo().put(key, val));
     }
 
     protected final JSONObject jo() {
@@ -174,17 +181,13 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
     }
 
 
-    protected class AutonomousDBFragmentNotInitializedException extends Exception {
-        protected AutonomousDBFragmentNotInitializedException() {
-            super(self + " : is not yet initialized");
-        }
-    }
-
-
     protected void fatalError(Throwable throwable) {
         throw new RuntimeException(throwable);
     }
 
+    protected void fatalError(String message) {
+        throw new RuntimeException(message);
+    }
 
     public Regina getRegina() {
         return regina;
