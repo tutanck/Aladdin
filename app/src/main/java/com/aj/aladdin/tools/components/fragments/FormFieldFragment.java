@@ -12,11 +12,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.tools.components.model.AutonomousDBFragment;
 import com.aj.aladdin.tools.components.services.ComponentsServices;
 import com.aj.aladdin.tools.oths.KeyboardServices;
+import com.aj.aladdin.tools.regina.Regina;
+
+import org.json.JSONException;
+
+import io.socket.client.Ack;
 
 
-public class FormFieldFragment extends Fragment {
+public class FormFieldFragment extends AutonomousDBFragment {
 
     private static final String OPEN = "OPEN";
     private static final String LABEL = "LABEL";
@@ -71,17 +77,28 @@ public class FormFieldFragment extends Fragment {
                     getContext(), view.findViewById(R.id.form_field_layout), new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            if (!openStatus) {
+                            if (!openStatus) { //open it as input
                                 etContent.setText(tvContent.getText());
                                 etContent.setVisibility(View.VISIBLE);
                                 tvContent.setVisibility(View.GONE);
                                 tvDescription.setVisibility(View.GONE);
-                            } else {
+                            } else { //close it as selectable view
                                 tvContent.setText(etContent.getText());
                                 etContent.setVisibility(View.GONE);
                                 tvContent.setVisibility(View.VISIBLE);
                                 tvDescription.setVisibility(View.VISIBLE);
                                 KeyboardServices.dismiss(getContext(), etContent);
+                                try {
+                                    saveState(tvContent.getText());
+                                } catch (InvalidStateException e) {
+                                    e.printStackTrace();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (Regina.NullRequiredParameterException e) {
+                                    e.printStackTrace();
+                                } catch (AutonomousDBFragmentNotInitializedException e) {
+                                    e.printStackTrace();
+                                }
                             }
                             openStatus = !openStatus;
                         }
@@ -105,6 +122,11 @@ public class FormFieldFragment extends Fragment {
         else
             throw new RuntimeException(context.toString()
                     + " must implement Listener");*/
+    }
+
+    @Override
+    protected Ack loadStateAck() {
+        return null; //todo
     }
 
 
