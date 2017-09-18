@@ -106,6 +106,7 @@ public class ProfileFragment extends Fragment {
                         .setAction("Action", null).show();
             }
         });
+
         return view;
     }
 
