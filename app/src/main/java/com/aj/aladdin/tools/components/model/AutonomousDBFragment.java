@@ -63,15 +63,15 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
     protected void saveState(
             Object state
     ) throws InvalidStateException, JSONException, Regina.NullRequiredParameterException, AutonomousDBFragmentNotInitializedException {
-        if(!initialized)
+        if (!initialized)
             throw new AutonomousDBFragmentNotInitializedException();
         if (!isStateValid(state))
             throw new InvalidStateException(state);
         regina.update(coll, id(), set(state), saveStateOpt(), saveStateMeta(), saveStateAck());
     }
 
-    protected JSONObject saveStateOpt() {
-        return jo();//todo meta see
+    protected JSONObject saveStateOpt() throws JSONException {
+        return jo().put("upsert",true);//todo meta see
     }
 
     protected JSONObject saveStateMeta() throws JSONException {
@@ -100,16 +100,16 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
 
 
     protected final void loadState() throws JSONException, Regina.NullRequiredParameterException, AutonomousDBFragmentNotInitializedException {
-        if(!initialized)
+        if (!initialized)
             throw new AutonomousDBFragmentNotInitializedException();
         regina.find(coll, id(), loadStateOpt(), loadStateMeta(), loadStateAck());
     }
 
-    protected JSONObject loadStateOpt() {
+    protected JSONObject loadStateOpt() throws JSONException {
         return jo(); //todo projection
     }
 
-    protected JSONObject loadStateMeta() {
+    protected JSONObject loadStateMeta() throws JSONException{
         return jo();
     }
 
@@ -125,12 +125,13 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
                 try {
                     if (((JSONObject) args[1]).getInt("op") == 2)
                         self.loadState();
-                } catch (JSONException e) {
-                    fatalError(e); //should never occur because the above loadState executed itself first
-                } catch (Regina.NullRequiredParameterException e) {
-                    fatalError(e); //shame on the dev who use null required parameters ... shame on you
-                } catch (AutonomousDBFragmentNotInitializedException e) {
-                    fatalError(e); //bad usage of the component
+                } catch (
+                        JSONException /*should never occur because the above loadState executed itself first*/
+                                | Regina.NullRequiredParameterException /*shame on the dev who use null required parameters ... shame on you*/
+                                | AutonomousDBFragmentNotInitializedException  /*bad usage of the component*/
+                                e
+                        ) {
+                    fatalError(e);
                 }
             }
         });
@@ -145,7 +146,7 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
     }
 
     protected final JSONObject set(Object val) throws JSONException {
-        return jo().put(key, jo().put("$set", val));
+        return jo().put("$set", jo().put(key,val));
     }
 
     protected final JSONObject jo() {
@@ -168,7 +169,7 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
     protected class InvalidStateException extends Exception {
         protected InvalidStateException(Object state) {
             super(self + " : InvalidStateException : "
-                            + state + " doesn't respect this rules : [" + type + "/" + rule + "]");
+                    + state + " doesn't respect this rules : [" + type + "/" + rule + "]");
         }
     }
 
@@ -180,7 +181,7 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
     }
 
 
-    protected void fatalError(Throwable throwable){
+    protected void fatalError(Throwable throwable) {
         throw new RuntimeException(throwable);
     }
 

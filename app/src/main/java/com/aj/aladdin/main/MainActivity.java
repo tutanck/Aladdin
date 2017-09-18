@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.tools.components.services.IO;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,5 +28,18 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+
+        IO.r.connect();
+
     }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        IO.r.disconnect();
+    }
+
+
 }

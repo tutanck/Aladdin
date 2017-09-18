@@ -2,6 +2,8 @@ package com.aj.aladdin.tools.components.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,10 +12,12 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.tools.components.model.AutonomousDBFragment;
 import com.aj.aladdin.tools.components.services.ComponentsServices;
+import com.aj.aladdin.tools.components.services.IO;
 import com.aj.aladdin.tools.oths.KeyboardServices;
 import com.aj.aladdin.tools.regina.Regina;
 
@@ -90,14 +94,8 @@ public class FormFieldFragment extends AutonomousDBFragment {
                                 KeyboardServices.dismiss(getContext(), etContent);
                                 try {
                                     saveState(tvContent.getText());
-                                } catch (InvalidStateException e) {
-                                    e.printStackTrace();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                } catch (Regina.NullRequiredParameterException e) {
-                                    e.printStackTrace();
-                                } catch (AutonomousDBFragmentNotInitializedException e) {
-                                    e.printStackTrace();
+                                } catch (InvalidStateException | JSONException | Regina.NullRequiredParameterException | AutonomousDBFragmentNotInitializedException e) {
+                                    Toast.makeText(getContext(),""+e,Toast.LENGTH_LONG);
                                 }
                             }
                             openStatus = !openStatus;
@@ -113,6 +111,23 @@ public class FormFieldFragment extends AutonomousDBFragment {
         return view;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        try {
+            init(IO.r, "test", "59bffef6ec22b00b725f20de", "username");
+        } catch (Regina.NullRequiredParameterException | JSONException e) {
+            Toast.makeText(getContext(),""+e,Toast.LENGTH_LONG);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+
+        getRegina().socket.off(getLocationTag(), null);
+    }
 
     @Override
     public void onAttach(Context context) {
