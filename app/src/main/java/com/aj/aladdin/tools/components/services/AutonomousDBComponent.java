@@ -11,11 +11,13 @@ import android.view.ViewGroup;
 
 public interface AutonomousDBComponent {
 
-    public void saveState();
+    void saveState();
 
-    public void loadState();
+    void loadState();
 
-    public void followState();
+    void followState();
 
-    public void syncState();
+    void syncState();
+
+    //boolean isStateValid(Object state, Class type, String rule); //todo later
 }
