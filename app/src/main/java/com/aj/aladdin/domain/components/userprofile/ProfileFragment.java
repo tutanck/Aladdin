@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import com.aj.aladdin.R;
 import com.aj.aladdin.tools.components.fragments.FormFieldFragment;
 import com.aj.aladdin.tools.components.fragments.ImageFragment;
+import com.aj.aladdin.tools.components.fragments.ItemDividerFragment;
 import com.aj.aladdin.tools.components.fragments.RadioGroupFragment;
 import com.aj.aladdin.tools.components.fragments.RatingControlFragment;
 
@@ -83,13 +84,19 @@ public class ProfileFragment extends Fragment {
                 ), "radio_group")
                 .commit();
 
-        for (int i = 0; i < mLabels.length; i++)
+        for (int i = 0; i < mLabels.length; i++) {
             ((AppCompatActivity) activity).getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.form_layout, FormFieldFragment.newInstance(
                             mLabels[i], true, mSamples[i]
                     ), "form_field_" + i)
                     .commit();
+            ((AppCompatActivity) activity).getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.form_layout, ItemDividerFragment.newInstance(false), "item_divider" + i)
+                    .commit();
+
+        }
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
