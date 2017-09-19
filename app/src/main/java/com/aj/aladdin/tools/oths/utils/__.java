@@ -12,10 +12,13 @@ import org.json.JSONObject;
 
 public class __ {
 
-    public static final void showToast(Context ctx, String text) {
+    public static final void showLongToast(Context ctx, String text) {
         Toast.makeText(ctx, text, Toast.LENGTH_LONG).show();
     }
 
+    public static final void showShortToast(Context ctx, String text) {
+        Toast.makeText(ctx, text, Toast.LENGTH_SHORT).show();
+    }
 
 
     public static final JSONObject jo() {

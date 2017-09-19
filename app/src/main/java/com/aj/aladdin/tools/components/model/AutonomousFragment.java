@@ -1,6 +1,9 @@
 package com.aj.aladdin.tools.components.model;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.View;
 
 import com.aj.aladdin.tools.regina.Regina;
 
@@ -17,13 +20,22 @@ import io.socket.emitter.Emitter;
  * Created by joan on 17/09/2017.
  */
 
-public abstract class AutonomousDBFragment extends android.support.v4.app.Fragment {
+public abstract class AutonomousFragment extends android.support.v4.app.Fragment {
 
-    private boolean initialized = false;
-    boolean synced = false;
+    //DB data synchronization mode
+    private boolean sync; //load data once if false, continually sync state if true
 
-    public AutonomousDBFragment self = this;
+    //self ref
+    public final AutonomousFragment self = this;
+
+    //DB synchronization state
+    protected boolean isSynced = false; //say if the fragment is now isSynced with the database
+
+    //DB actions resounding
     protected Regina.Amplitude defaultAmplitude = Regina.Amplitude.IO;
+
+    //DB Communication state
+    private boolean isInitialized = false; //is Fragment ready to talk with DB
 
     //DB handler
     private Regina regina;
@@ -33,25 +45,10 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
     private String _id;
     private String key;
 
-    //DB locations tags
+    //DB paths tags
     private String collTag;
     private String docTag;
     private String locationTag;
-
-
-    //destroy
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (!initialized) return;
-        regina.socket.off(locationTag, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                Log.i("@off", locationTag);
-            }
-        });
-    }
 
 
     //init
@@ -61,17 +58,50 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
             , String coll
             , String _id
             , String key
+            , boolean sync
     ) {
         this.regina = regina;
         this.coll = coll;
         this._id = _id;
         this.key = key;
+        this.sync = sync;
 
         this.collTag = "#" + coll;
         this.docTag = collTag + "/" + _id;
         this.locationTag = docTag + "/" + key;
 
-        this.initialized = true;
+        this.isInitialized = true;
+    }
+
+
+    //Fragment construction
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        try {
+            if (sync) syncState();
+            else loadState();
+        } catch (JSONException e) {
+            fatalError(e); //SNO : Should Never Occurs
+        } catch (Regina.NullRequiredParameterException e) {
+            fatalError(e); //Shame on you who use null required parameters ... shame on you
+        }
+    }
+
+
+    //Fragment destruction
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (!isInitialized) return;
+        regina.socket.off(locationTag, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Log.i("@off", locationTag);
+            }
+        });
     }
 
 
@@ -80,7 +110,7 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
     protected void saveState(
             Object state
     ) throws InvalidStateException, JSONException, Regina.NullRequiredParameterException {
-        if (!initialized) fatalError(self + " : is not yet initialized");
+        if (!isInitialized) fatalError(self + " : is not yet isInitialized");
         if (!isStateValid(state)) throw new InvalidStateException(state);
         regina.update(coll, id(), set(state), saveStateOpt(), saveStateMeta(), saveStateAck());
     }
@@ -105,10 +135,7 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
         return new Ack() {
             @Override
             public void call(Object... args) {
-                ArrayList<String> argsStr = new ArrayList<>();
-                for (Object arg : args)
-                    argsStr.add("" + arg); //toString() here could NPE
-                Log.i("@saveStateAck", argsStr.toString());
+                logObjectList(args);
             }
         };
     }
@@ -117,12 +144,12 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
     //load
 
     protected final void loadState() throws JSONException, Regina.NullRequiredParameterException {
-        if (!initialized) fatalError(self + " : is not yet initialized");
+        if (!isInitialized) fatalError(self + " : is not yet isInitialized");
         regina.find(coll, id(), loadStateOpt(), loadStateMeta(), loadStateAck());
     }
 
     protected JSONObject loadStateOpt() throws JSONException {
-        return jo(); //todo projection
+        return key();
     }
 
     protected JSONObject loadStateMeta() throws JSONException {
@@ -153,14 +180,25 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
             }
         });
 
-        this.synced = true;
+        this.isSynced = true;
 
-        Log.i("@AutonomousDBFragment:"
+        Log.i("@syncState:"
                 , self.getClass().getSimpleName() + " started following : '" + locationTag + "'");
     }
 
 
     //utils
+
+    protected final void logObjectList(Object... objects){
+        ArrayList<String> strList = new ArrayList<>();
+        for (Object obj : objects)
+            strList.add("" + obj); //toString() here could NPE
+        Log.i("@logObjectList", strList.toString());
+    }
+
+    protected final JSONObject key() throws JSONException {
+        return jo().put(getKey(),1).put("_id", 0);
+    }
 
     protected final JSONObject id() throws JSONException {
         return jo().put("_id", _id);
@@ -179,21 +217,34 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
     }
 
 
-    //Data validation
+    //validation
 
-    private Class type; //todo later
-    private String rule; //todo later
-
+    /**
+     * isStateValid : Define if the fragment's state is valid before saving in Database.
+     * This method must be overriden by its children
+     *
+     * @param state
+     * @return
+     */
     protected boolean isStateValid(Object state) {
-        return true; //todo later : compile_check state
+        return true;
     }
 
     protected class InvalidStateException extends Exception {
+
+        protected InvalidStateException(String message) {
+            super(message);
+        }
+
         protected InvalidStateException(Object state) {
-            super(self + " : InvalidStateException : "
-                    + state + " doesn't respect this rules : [" + type + "/" + rule + "]");
+            super(self + " : InvalidStateException : " + state);
+        }
+
+        protected InvalidStateException(Object state, String message) {
+            super(self + " : InvalidStateException : " + state + "\n message : " + message);
         }
     }
+
 
     //fatal
 
@@ -234,13 +285,5 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
 
     public String getDocTag() {
         return docTag;
-    }
-
-    public Class getType() {
-        return type;
-    }
-
-    public String getRule() {
-        return rule;
     }
 }

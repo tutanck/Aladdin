@@ -7,6 +7,12 @@
         <item>MES TARIFS (Optionnel)</item>
     </string-array>
 
+    <string-array name="profile_form_field_keys">
+        <item>username</item>
+        <item>resume</item>
+        <item>tariff</item>
+    </string-array>
+
     <string-array name="profile_form_field_indications">
         <item>Choisissez un nom d\'utilisateur</item>
         <item>Dites en plus sur votre activité</item>

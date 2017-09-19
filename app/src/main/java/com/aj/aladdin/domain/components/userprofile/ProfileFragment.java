@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.components.fragments.FormFieldFragment;
+import com.aj.aladdin.tools.components.fragments.autonomous.AutoFormField;
 import com.aj.aladdin.tools.components.fragments.ImageFragment;
 import com.aj.aladdin.tools.components.fragments.ItemDividerFragment;
 import com.aj.aladdin.tools.components.fragments.RadioGroupFragment;
@@ -30,6 +30,7 @@ public class ProfileFragment extends Fragment {
     private Listener mListener;
 
     private String[] mLabels;
+    private String[] mKeys;
     private String[] mIndics;
 
 
@@ -41,6 +42,27 @@ public class ProfileFragment extends Fragment {
         ProfileFragment fragment = new ProfileFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        /*if (context instanceof Listener)
+            mListener = (Listener) context;
+        else
+            throw new RuntimeException(context.toString()
+                    + " must implement Listener");*/
+
+        final Resources resources = context.getResources();
+        mLabels = resources.getStringArray(R.array.profile_form_field_labels);
+        mKeys = resources.getStringArray(R.array.profile_form_field_keys);
+        mIndics = resources.getStringArray(R.array.profile_form_field_indications);
+
+        mSamples = resources.getStringArray(R.array.sample_contents);
+
+        if (mLabels.length != mIndics.length)
+            throw new RuntimeException("Form Fields resources are not consistent !");
     }
 
 
@@ -87,8 +109,8 @@ public class ProfileFragment extends Fragment {
         for (int i = 0; i < mLabels.length; i++) {
             ((AppCompatActivity) activity).getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.form_layout, FormFieldFragment.newInstance(
-                            "users","59bffef6ec22b00b725f20de",""
+                    .add(R.id.form_layout, AutoFormField.newInstance(
+                            "test","59bffef6ec22b00b725f20de",mKeys[i], //todo coll name
                             mLabels[i], true, mSamples[i]
                     ), "form_field_" + i)
                     .commit();
@@ -112,24 +134,7 @@ public class ProfileFragment extends Fragment {
     }
 
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        /*if (context instanceof Listener)
-            mListener = (Listener) context;
-        else
-            throw new RuntimeException(context.toString()
-                    + " must implement Listener");*/
 
-        final Resources resources = context.getResources();
-        mLabels = resources.getStringArray(R.array.profile_form_field_labels);
-        mIndics = resources.getStringArray(R.array.profile_form_field_indications);
-
-        mSamples = resources.getStringArray(R.array.sample_contents);
-
-        if (mLabels.length != mIndics.length)
-            throw new RuntimeException("Form Fields resources are not consistent !");
-    }
 
     public interface Listener {
     }

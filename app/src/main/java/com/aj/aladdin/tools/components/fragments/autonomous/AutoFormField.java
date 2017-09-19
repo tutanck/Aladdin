@@ -1,8 +1,6 @@
-package com.aj.aladdin.tools.components.fragments;
+package com.aj.aladdin.tools.components.fragments.autonomous;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,19 +10,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.components.model.AutonomousDBFragment;
+import com.aj.aladdin.tools.components.model.AutonomousFragment;
 import com.aj.aladdin.tools.components.services.ComponentsServices;
 import com.aj.aladdin.tools.components.services.IO;
 import com.aj.aladdin.tools.oths.KeyboardServices;
 import com.aj.aladdin.tools.oths.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 
 import io.socket.client.Ack;
 
 
-public class FormFieldFragment extends AutonomousDBFragment {
+public class AutoFormField extends AutonomousFragment {
 
     private static final String SELECTABLE = "SELECTABLE";
     private static final String LABEL = "LABEL";
@@ -40,7 +39,7 @@ public class FormFieldFragment extends AutonomousDBFragment {
 
     //instance parameters
 
-    public static FormFieldFragment newInstance(
+    public static AutoFormField newInstance(
             String coll
             , String _id
             , String key
@@ -52,9 +51,9 @@ public class FormFieldFragment extends AutonomousDBFragment {
         args.putBoolean(SELECTABLE, selectable);
         args.putString(LABEL, label);
         args.putString(CONTENT, content);
-        FormFieldFragment fragment = new FormFieldFragment();
+        AutoFormField fragment = new AutoFormField();
         fragment.setArguments(args);
-        fragment.init(IO.r, coll, _id, key);
+        fragment.init(IO.r, coll, _id, key, true);
         return fragment;
     }
 
@@ -80,13 +79,10 @@ public class FormFieldFragment extends AutonomousDBFragment {
 
         final Bundle args = getArguments();
 
-        String label = args.getString(LABEL);
-        //String indic = args.getString(INDIC);
-
 
         tvContent.setText(args.getString(CONTENT));
-        tvDescription.setText(label);
-        textInputLayout.setHint(label);
+        tvDescription.setText(args.getString(LABEL));
+        textInputLayout.setHint(args.getString(LABEL));
 
         etContent.setVisibility(View.GONE);
 
@@ -101,11 +97,11 @@ public class FormFieldFragment extends AutonomousDBFragment {
                                 tvContent.setVisibility(View.GONE);
                                 tvDescription.setVisibility(View.GONE);
                                 openStatus = true;
-                                __.showToast(getContext(), "Enregistrez en cliquant sur l'icone à gauche");
+                                __.showShortToast(getContext(), "Enregistrez en cliquant sur l'icone à gauche");
                             } else try {
-                                saveState(tvContent.getText());
+                                saveState(etContent.getText().toString());
                             } catch (InvalidStateException | JSONException | Regina.NullRequiredParameterException e) {
-                                __.showToast(getContext(), "DebugMode : Une erreur s'est produite" + e);//todo prod mod
+                                __.showLongToast(getContext(), "DebugMode : Une erreur s'est produite" + e);//todo prod mod
                             }
                         }
                     });
@@ -113,46 +109,51 @@ public class FormFieldFragment extends AutonomousDBFragment {
         return view;
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        try {
-            loadState();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (Regina.NullRequiredParameterException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     @Override
-    protected Ack saveStateAck() { //close the selectable view
+    protected Ack saveStateAck() {
         return new Ack() {
             @Override
             public void call(Object... args) {
-                if (args[0] != null)
-                    __.showToast(getContext(), "Une erreur s'est produite");
-                else
-                    getActivity().runOnUiThread(new Runnable() { //mandatory to modify an activity's ui view
-                        @Override
-                        public void run() {
-                            tvContent.setText(etContent.getText());
-                            etContent.setVisibility(View.GONE);
-                            tvContent.setVisibility(View.VISIBLE);
-                            tvDescription.setVisibility(View.VISIBLE);
-                            openStatus = false;
-                            __.showToast(getContext(), "Mise à jour réussie");
-                            KeyboardServices.dismiss(getContext(), etContent);
-                        }
-                    });
+                getActivity().runOnUiThread(new Runnable() { //mandatory to modify an activity's ui view
+                    @Override
+                    public void run() {
+                        __.showShortToast(self.getContext(), "Mise à jour réussie");
+                    }
+                });
+                logObjectList(args); //debug // TODO: 19/09/2017 REM
             }
         };
     }
 
     @Override
     protected Ack loadStateAck() {
-        return null; //todo
+        return new Ack() {
+            @Override
+            public void call(Object... args) {
+                if (args[0] != null)
+                    __.showLongToast(getContext(), "Une erreur s'est produite");
+                else
+                    getActivity().runOnUiThread(new Runnable() { //mandatory to modify an activity's ui view
+                        @Override
+                        public void run() {
+                            try {
+                                etContent.setVisibility(View.GONE);
+                                tvContent.setVisibility(View.VISIBLE);
+                                tvDescription.setVisibility(View.VISIBLE);
+                                openStatus = false;
+
+                                tvContent.setText(((JSONArray) args[1]).getJSONObject(0).optString(getKey(), ""));
+
+                                KeyboardServices.dismiss(getContext(), etContent);
+
+                            } catch (JSONException e) {
+                                fatalError(e); //SNO or means that DB is inconsistent if there is no profile found getJSONObject(0)
+                            }
+                        }
+                    });
+            }
+        };
     }
 
 }
