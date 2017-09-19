@@ -1,32 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="profile_form_field_labels">
-        <item>NOM D\'UTILISATEUR</item>
-        <item>MON ACTIVITE</item>
-        <item>MES TARIFS (Optionnel)</item>
-    </string-array>
 
-    <string-array name="profile_form_field_keys">
-        <item>username</item>
-        <item>resume</item>
-        <item>tariff</item>
-    </string-array>
-
-    <string-array name="profile_form_field_indications">
-        <item>Choisissez un nom d\'utilisateur</item>
-        <item>Dites en plus sur votre activité</item>
-        <item>Indiquez vos tarifs (Optionnel)</item>
-    </string-array>
-
-    <integer-array name="profile_form_field_type">
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-    </integer-array>
-
-
-    <string-array name="sample_contents">
+    <string-array name="sample_texts">
         <item>Cereal Guy is a stick figure character commonly used on image boards and discussion forums as a multi-purpose reaction face.</item>
         <item>F!@# Yeah is a series of four-pane cartoon strips featuring a stick figure looking rather self-complacent and quite frankly, for all the right reasons. Originally posted via /b/ board on February 11, 2010, these cartoons illustrate all sorts of triumphant moments in our daily lives that make us feel awesome, like when you wake up a few seconds before the morning alarm goes off. This phenomenon can be also seen as the antithesis to Rageguy comics, another four-pane series originating from 4chan circa late 2008.</item>
         <item>Forever Alone is an exploitable rage comic character that is used to express loneliness and disappointment with life. The face has also been used as an advice animal and inspired the creation of the snowclone template \"Forever an X.\"</item>
@@ -40,5 +16,6 @@
         <item>\"Y U NO\" Guy (also known as \"Y U No [X]?\") is an image macro series using SMS shorthands and carefree grammar as a way to bring someone’s attention on a particular subject or issue. The unique facial expression worn by stick-figure character is believed to have been traced from the Japanese sci-fi manga / anime series Gantz.</item>
         <item>Yao Ming Face (sometimes referred to as “F!@# That Guy” or “Dumb B!@#$”) is a rage comic-style contour drawing of the professional basketball player Yao Ming wearing a hearty smile. The image is typically used as a reaction face to convey a dismissive attitude towards someone else’s input in online discussions, then usually following something that one ups their input.</item>
     </string-array>
+
 
 </resources>

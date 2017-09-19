@@ -17,9 +17,8 @@ import com.aj.aladdin.R;
 import com.aj.aladdin.tools.components.fragments.autonomous.AutoFormField;
 import com.aj.aladdin.tools.components.fragments.ImageFragment;
 import com.aj.aladdin.tools.components.fragments.ItemDividerFragment;
-import com.aj.aladdin.tools.components.fragments.RadioGroupFragment;
+import com.aj.aladdin.tools.components.fragments.autonomous.AutoRadioGroup;
 import com.aj.aladdin.tools.components.fragments.RatingControlFragment;
-import com.aj.aladdin.tools.components.services.IO;
 import com.aj.aladdin.tools.oths.db.Colls;
 import com.aj.aladdin.tools.oths.utils.__;
 
@@ -32,12 +31,21 @@ public class ProfileFragment extends Fragment {
     private static final String EDITABLE = "EDITABLE";
 
 
+    private final String coll = Colls.USER_PROFILE;
+    private final String _id = "59c13a29457ba52f74884c89";
+
     private Listener mListener; //TODO later
 
-    private String[] mLabels;
-    private String[] mKeys;
-    private int[] mTypes;
-    private String[] mIndics; // TODO: 19/09/2017 See what to do
+
+    //rg : radio_group
+    private String[] rgKeys;
+    private String[] rgLabels;
+
+    //ff : form_field
+    private String[] ffLabels;
+    private String[] ffKeys;
+    private int[] ffTypes;
+    private String[] ffIndics; // TODO: 19/09/2017 See what to do
 
 
     public static ProfileFragment newInstance(
@@ -61,17 +69,19 @@ public class ProfileFragment extends Fragment {
                     + " must implement Listener");*/
 
         final Resources resources = context.getResources();
-        mLabels = resources.getStringArray(R.array.profile_form_field_labels);
-        mKeys = resources.getStringArray(R.array.profile_form_field_keys);
-        mTypes = resources.getIntArray(R.array.profile_form_field_type);
-
-        mIndics = resources.getStringArray(R.array.profile_form_field_indications);
 
 
-        mSamples = resources.getStringArray(R.array.sample_contents);
+        rgKeys = resources.getStringArray(R.array.profile_radio_group_keys);
+        rgLabels = resources.getStringArray(R.array.profile_radio_group_labels);
 
-        if (mLabels.length != mIndics.length)
-            __.fatalError("Form Fields resources are not consistent !");
+
+        ffLabels = resources.getStringArray(R.array.profile_form_field_labels);
+        ffKeys = resources.getStringArray(R.array.profile_form_field_keys);
+        ffTypes = resources.getIntArray(R.array.profile_form_field_type);
+        ffIndics = resources.getStringArray(R.array.profile_form_field_indications);
+
+
+        mSamples = resources.getStringArray(R.array.sample_texts);
     }
 
 
@@ -81,8 +91,10 @@ public class ProfileFragment extends Fragment {
             , ViewGroup container
             , Bundle savedInstanceState
     ) {
-
+        final Bundle args = getArguments();
         final Activity activity = getActivity();
+
+        final boolean isEditable = args.getBoolean(EDITABLE);
 
 
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
@@ -90,38 +102,37 @@ public class ProfileFragment extends Fragment {
         ((AppCompatActivity) activity).getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.profile_image_layout, ImageFragment.newInstance(
-                        mLabels[0], mIndics[0], 0, mSamples[0]
+                        ffLabels[0], ffIndics[0], 0, mSamples[0]
                 ), "profile_image")
                 .commit();
 
         ((AppCompatActivity) activity).getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.rating_layout, RatingControlFragment.newInstance(
-                        mLabels[0], mIndics[0], 0, mSamples[0]
+                        ffLabels[0], ffIndics[0], 0, mSamples[0]
                 ), "rating")
                 .commit();
 
         ((AppCompatActivity) activity).getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.rating_control_layout, RatingControlFragment.newInstance(
-                        mLabels[0], mIndics[0], 0, mSamples[0]
+                        ffLabels[0], ffIndics[0], 0, mSamples[0]
                 ), "rating_control")
                 .commit();
 
         ((AppCompatActivity) activity).getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.radio_group_layout, RadioGroupFragment.newInstance(
-                        mLabels[0], mIndics[0], 0, mSamples[0]
+                .add(R.id.radio_group_layout, AutoRadioGroup.newInstance(
+                        coll, _id, rgKeys[0], rgLabels, isEditable
                 ), "radio_group")
                 .commit();
 
 
-        for (int i = 0; i < mLabels.length; i++) {
+        for (int i = 0; i < ffLabels.length; i++) {
             ((AppCompatActivity) activity).getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.form_layout, AutoFormField.newInstance(
-                            Colls.USER_PROFILE, "59c13a29457ba52f74884c89"
-                            , mKeys[i], mLabels[i], mTypes[i], getArguments().getBoolean(EDITABLE)
+                            coll, _id, ffKeys[i], ffLabels[i], ffTypes[i], isEditable
                     ), "form_field_" + i)
                     .commit();
 

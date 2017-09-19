@@ -22,8 +22,6 @@ import org.json.JSONException;
 
 import io.socket.client.Ack;
 
-import static android.R.attr.type;
-
 
 public class AutoFormField extends AutonomousFragment {
 
