@@ -87,6 +87,7 @@ public abstract class AutonomousFragment extends android.support.v4.app.Fragment
         } catch (Regina.NullRequiredParameterException e) {
             fatalError(e); //Shame on you who use null required parameters ... shame on you
         }
+        Log.i("@onViewCreated", self+" : sync="+ sync);
     }
 
 
@@ -183,7 +184,7 @@ public abstract class AutonomousFragment extends android.support.v4.app.Fragment
         this.isSynced = true;
 
         Log.i("@syncState:"
-                , self.getClass().getSimpleName() + " started following : '" + locationTag + "'");
+                , self + " started following : '" + locationTag + "'");
     }
 
 

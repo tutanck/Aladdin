@@ -22,15 +22,16 @@ import org.json.JSONException;
 
 import io.socket.client.Ack;
 
+import static android.R.attr.type;
+
 
 public class AutoFormField extends AutonomousFragment {
 
+    private static final String TYPE = "TYPE";
     private static final String SELECTABLE = "SELECTABLE";
     private static final String LABEL = "LABEL";
-    private static final String INDIC = "INDIC";
-    private static final String CONTENT = "CONTENT";
 
-    private boolean openStatus = false;
+    private boolean isOpen = false;
 
     private TextView tvContent;
     private EditText etContent;
@@ -44,13 +45,13 @@ public class AutoFormField extends AutonomousFragment {
             , String _id
             , String key
             , String label
+            , int type
             , boolean selectable
-            , String content
     ) {
         Bundle args = new Bundle();
+        args.putInt(TYPE, type);
         args.putBoolean(SELECTABLE, selectable);
         args.putString(LABEL, label);
-        args.putString(CONTENT, content);
         AutoFormField fragment = new AutoFormField();
         fragment.setArguments(args);
         fragment.init(IO.r, coll, _id, key, true);
@@ -64,39 +65,50 @@ public class AutoFormField extends AutonomousFragment {
             , ViewGroup container
             , Bundle savedInstanceState
     ) {
-        View view = inflater.inflate(R.layout.fragment_form_field, container, false);
+        final Bundle args = getArguments();
 
-        tvContent = (TextView) view.findViewById(R.id.tvContent);
+        View view;
+        switch (args.getInt(TYPE)) {
+            case 0:
+                view = inflater.inflate(R.layout.fragment_form_field_multiline, container, false);
+                break;
+            case 1:
+                view = inflater.inflate(R.layout.fragment_form_field_oneliner, container, false);
+                break;
+            default:
+                view = inflater.inflate(R.layout.fragment_form_field_multiline, container, false);
+                break;
+        }
 
-        etContent = (EditText) view.findViewById(R.id.etContent);
-
-        tvDescription = (TextView) view.findViewById(R.id.tvDescription);
 
         final ImageView ivIndication = (ImageView) view.findViewById(R.id.ivIndication);
 
+
         final TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.text_input_layout);
-
-
-        final Bundle args = getArguments();
-
-
-        tvContent.setText(args.getString(CONTENT));
-        tvDescription.setText(args.getString(LABEL));
         textInputLayout.setHint(args.getString(LABEL));
 
+
+        tvDescription = (TextView) view.findViewById(R.id.tvDescription);
+        tvDescription.setText(args.getString(LABEL));
+
+
+        etContent = (EditText) view.findViewById(R.id.etContent);
         etContent.setVisibility(View.GONE);
+
+
+        tvContent = (TextView) view.findViewById(R.id.tvContent);
 
         if (args.getBoolean(SELECTABLE))
             ComponentsServices.setSelectable(
                     getContext(), view.findViewById(R.id.form_field_layout), new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            if (!openStatus) { //open the selectable view as input
+                            if (!isOpen) { //open the selectable view as input
                                 etContent.setText(tvContent.getText());
                                 etContent.setVisibility(View.VISIBLE);
                                 tvContent.setVisibility(View.GONE);
                                 tvDescription.setVisibility(View.GONE);
-                                openStatus = true;
+                                isOpen = true;
                                 __.showShortToast(getContext(), "Enregistrez en cliquant sur l'icone à gauche");
                             } else try {
                                 saveState(etContent.getText().toString());
@@ -121,7 +133,7 @@ public class AutoFormField extends AutonomousFragment {
                         __.showShortToast(self.getContext(), "Mise à jour réussie");
                     }
                 });
-                logObjectList(args); //debug // TODO: 19/09/2017 REM
+                logObjectList(args); //debug
             }
         };
     }
@@ -131,27 +143,26 @@ public class AutoFormField extends AutonomousFragment {
         return new Ack() {
             @Override
             public void call(Object... args) {
-                if (args[0] != null)
-                    __.showLongToast(getContext(), "Une erreur s'est produite");
-                else
-                    getActivity().runOnUiThread(new Runnable() { //mandatory to modify an activity's ui view
-                        @Override
-                        public void run() {
-                            try {
-                                etContent.setVisibility(View.GONE);
-                                tvContent.setVisibility(View.VISIBLE);
-                                tvDescription.setVisibility(View.VISIBLE);
-                                openStatus = false;
+                getActivity().runOnUiThread(new Runnable() { //mandatory to modify an activity's ui view
+                    @Override
+                    public void run() {
+                        if (args[0] != null)
+                            __.showLongToast(getContext(), "Une erreur s'est produite");
+                        else try {//close the selectable view
+                            etContent.setVisibility(View.GONE);
+                            tvContent.setVisibility(View.VISIBLE);
+                            tvDescription.setVisibility(View.VISIBLE);
+                            isOpen = false;
 
-                                tvContent.setText(((JSONArray) args[1]).getJSONObject(0).optString(getKey(), ""));
+                            tvContent.setText(((JSONArray) args[1]).getJSONObject(0).optString(getKey(), ""));
 
-                                KeyboardServices.dismiss(getContext(), etContent);
+                            KeyboardServices.dismiss(getContext(), etContent);
 
-                            } catch (JSONException e) {
-                                fatalError(e); //SNO or means that DB is inconsistent if there is no profile found getJSONObject(0)
-                            }
+                        } catch (JSONException e) {
+                            fatalError(e); //SNO or means that DB is inconsistent if there is no profile found getJSONObject(0)
                         }
-                    });
+                    }
+                });
             }
         };
     }

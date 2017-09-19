@@ -19,6 +19,11 @@
         <item>Indiquez vos tarifs (Optionnel)</item>
     </string-array>
 
+    <integer-array name="profile_form_field_type">
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+    </integer-array>
 
 
     <string-array name="sample_contents">

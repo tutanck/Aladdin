@@ -19,26 +19,32 @@ import com.aj.aladdin.tools.components.fragments.ImageFragment;
 import com.aj.aladdin.tools.components.fragments.ItemDividerFragment;
 import com.aj.aladdin.tools.components.fragments.RadioGroupFragment;
 import com.aj.aladdin.tools.components.fragments.RatingControlFragment;
+import com.aj.aladdin.tools.components.services.IO;
+import com.aj.aladdin.tools.oths.db.Colls;
+import com.aj.aladdin.tools.oths.utils.__;
 
 
 public class ProfileFragment extends Fragment {
-    public static final String ARG_PAGE = "ARG_PAGE";
 
-    private String[] mSamples;
+    private String[] mSamples; //TODO rem
 
 
-    private Listener mListener;
+    private static final String EDITABLE = "EDITABLE";
+
+
+    private Listener mListener; //TODO later
 
     private String[] mLabels;
     private String[] mKeys;
-    private String[] mIndics;
+    private int[] mTypes;
+    private String[] mIndics; // TODO: 19/09/2017 See what to do
 
 
-    private int mPage;
-
-    public static ProfileFragment newInstance(int page) {
+    public static ProfileFragment newInstance(
+            boolean editable
+    ) {
         Bundle args = new Bundle();
-        args.putInt(ARG_PAGE, page);
+        args.putBoolean(EDITABLE, editable);
         ProfileFragment fragment = new ProfileFragment();
         fragment.setArguments(args);
         return fragment;
@@ -51,18 +57,21 @@ public class ProfileFragment extends Fragment {
         /*if (context instanceof Listener)
             mListener = (Listener) context;
         else
-            throw new RuntimeException(context.toString()
+            throw new fatalError(context.toString()
                     + " must implement Listener");*/
 
         final Resources resources = context.getResources();
         mLabels = resources.getStringArray(R.array.profile_form_field_labels);
         mKeys = resources.getStringArray(R.array.profile_form_field_keys);
+        mTypes = resources.getIntArray(R.array.profile_form_field_type);
+
         mIndics = resources.getStringArray(R.array.profile_form_field_indications);
+
 
         mSamples = resources.getStringArray(R.array.sample_contents);
 
         if (mLabels.length != mIndics.length)
-            throw new RuntimeException("Form Fields resources are not consistent !");
+            __.fatalError("Form Fields resources are not consistent !");
     }
 
 
@@ -106,20 +115,22 @@ public class ProfileFragment extends Fragment {
                 ), "radio_group")
                 .commit();
 
+
         for (int i = 0; i < mLabels.length; i++) {
             ((AppCompatActivity) activity).getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.form_layout, AutoFormField.newInstance(
-                            "test","59bffef6ec22b00b725f20de",mKeys[i], //todo coll name
-                            mLabels[i], true, mSamples[i]
+                            Colls.USER_PROFILE, "59c13a29457ba52f74884c89"
+                            , mKeys[i], mLabels[i], mTypes[i], getArguments().getBoolean(EDITABLE)
                     ), "form_field_" + i)
                     .commit();
+
             ((AppCompatActivity) activity).getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.form_layout, ItemDividerFragment.newInstance(false), "item_divider" + i)
                     .commit();
-
         }
+
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -132,8 +143,6 @@ public class ProfileFragment extends Fragment {
 
         return view;
     }
-
-
 
 
     public interface Listener {

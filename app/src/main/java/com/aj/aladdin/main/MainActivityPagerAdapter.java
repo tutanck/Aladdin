@@ -32,7 +32,7 @@ public class MainActivityPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return PageFragment.newInstance(position + 1);
             case 1:
-                return ProfileFragment.newInstance(position + 1);
+                return ProfileFragment.newInstance(true);
             case 2:
                 return PageFragment.newInstance(position + 1);
             case 3:
