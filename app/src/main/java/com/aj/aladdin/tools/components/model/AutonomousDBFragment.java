@@ -20,6 +20,7 @@ import io.socket.emitter.Emitter;
 public abstract class AutonomousDBFragment extends android.support.v4.app.Fragment {
 
     private boolean initialized = false;
+    boolean synced = false;
 
     public AutonomousDBFragment self = this;
     protected Regina.Amplitude defaultAmplitude = Regina.Amplitude.IO;
@@ -31,10 +32,14 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
     private String coll;
     private String _id;
     private String key;
+
+    //DB locations tags
     private String collTag;
     private String docTag;
     private String locationTag;
 
+
+    //destroy
 
     @Override
     public void onDestroyView() {
@@ -49,12 +54,14 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
     }
 
 
+    //init
+
     public void init(
             Regina regina
             , String coll
             , String _id
             , String key
-    ) throws Regina.NullRequiredParameterException, JSONException {
+    ) {
         this.regina = regina;
         this.coll = coll;
         this._id = _id;
@@ -68,18 +75,18 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
     }
 
 
+    //save
+
     protected void saveState(
             Object state
     ) throws InvalidStateException, JSONException, Regina.NullRequiredParameterException {
-        if (!initialized)
-            fatalError(self + " : is not yet initialized");
-        if (!isStateValid(state))
-            throw new InvalidStateException(state);
+        if (!initialized) fatalError(self + " : is not yet initialized");
+        if (!isStateValid(state)) throw new InvalidStateException(state);
         regina.update(coll, id(), set(state), saveStateOpt(), saveStateMeta(), saveStateAck());
     }
 
     protected JSONObject saveStateOpt() throws JSONException {
-        return jo().put("upsert", true);//todo meta see
+        return jo();
     }
 
     protected JSONObject saveStateMeta() throws JSONException {
@@ -107,9 +114,10 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
     }
 
 
+    //load
+
     protected final void loadState() throws JSONException, Regina.NullRequiredParameterException {
-        if (!initialized)
-            fatalError(self + " : is not yet initialized");
+        if (!initialized) fatalError(self + " : is not yet initialized");
         regina.find(coll, id(), loadStateOpt(), loadStateMeta(), loadStateAck());
     }
 
@@ -123,6 +131,8 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
 
     protected abstract Ack loadStateAck();
 
+
+    //sync
 
     protected void syncState() throws Regina.NullRequiredParameterException, JSONException {
         loadState();
@@ -143,10 +153,14 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
             }
         });
 
+        this.synced = true;
+
         Log.i("@AutonomousDBFragment:"
                 , self.getClass().getSimpleName() + " started following : '" + locationTag + "'");
     }
 
+
+    //utils
 
     protected final JSONObject id() throws JSONException {
         return jo().put("_id", _id);
@@ -166,6 +180,7 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
 
 
     //Data validation
+
     private Class type; //todo later
     private String rule; //todo later
 
@@ -180,6 +195,7 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
         }
     }
 
+    //fatal
 
     protected void fatalError(Throwable throwable) {
         throw new RuntimeException(throwable);
@@ -188,6 +204,9 @@ public abstract class AutonomousDBFragment extends android.support.v4.app.Fragme
     protected void fatalError(String message) {
         throw new RuntimeException(message);
     }
+
+
+    //accessors
 
     public Regina getRegina() {
         return regina;
