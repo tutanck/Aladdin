@@ -14,19 +14,30 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import io.socket.client.Ack;
-import io.socket.emitter.Emitter;
 
 /**
  * Created by joan on 17/09/2017.
  */
 
-public abstract class AutonomousQueryFragment extends android.support.v4.app.Fragment {
+public abstract class AutonomousQueryFragment extends android.support.v4.app.Fragment /*support compatibility*/ {
+
+    //self ref
+    private final AutonomousQueryFragment self = this;
+
+    //DB Communication state
+    private boolean isInitialized = false; //is Fragment ready to talk with DB
 
     //DB data synchronization mode
     private boolean sync; //load data once if false, continually sync state if true
 
-    //self ref
-    public final AutonomousQueryFragment self = this;
+    //DB handler
+    private Regina regina;
+
+    //DB location
+    private String coll;
+
+    //DB paths tags
+    private String collTag;
 
     //DB synchronization state
     protected boolean isSynced = false; //say if the fragment is now isSynced with the database
@@ -34,41 +45,19 @@ public abstract class AutonomousQueryFragment extends android.support.v4.app.Fra
     //DB actions resounding
     protected Regina.Amplitude defaultAmplitude = Regina.Amplitude.IO;
 
-    //DB Communication state
-    private boolean isInitialized = false; //is Fragment ready to talk with DB
-
-    //DB handler
-    private Regina regina;
-
-    //DB location
-    private String coll;
-    private String _id;
-    private String key;
-
-    //DB paths tags
-    private String collTag;
-    private String docTag;
-    private String locationTag;
-
 
     //init
 
-    public void init(
+    public final void init(
             Regina regina
             , String coll
-            , String _id
-            , String key
             , boolean sync
     ) {
         this.regina = regina;
         this.coll = coll;
-        this._id = _id;
-        this.key = key;
         this.sync = sync;
 
         this.collTag = "#" + coll;
-        this.docTag = collTag + "/" + _id;
-        this.locationTag = docTag + "/" + key;
 
         this.isInitialized = true;
     }
@@ -91,46 +80,26 @@ public abstract class AutonomousQueryFragment extends android.support.v4.app.Fra
     }
 
 
-    //Fragment destruction
+    //IO
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (isSynced)
-            regina.socket.off(locationTag, new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    Log.i("@off", locationTag);
-                }
-            });
-    }
-
-
-    //save
-
-    protected void saveState(
+    protected final void saveState(
             Object state
     ) throws InvalidStateException, JSONException, Regina.NullRequiredParameterException {
         checkInit();
         checkState(state);
-        regina.update(coll, query(), set(state), saveStateOpt(), saveStateMeta(), saveStateAck());
+        regina.update(coll, query(), update(state), saveStateOpt(), saveStateMeta(), saveStateAck());
     }
 
+    protected final void loadState() throws JSONException, Regina.NullRequiredParameterException {
+        checkInit();
+        regina.find(coll, query(), loadStateOpt(), loadStateMeta(), loadStateAck());
+    }
+
+
+    //IO parameters default handlers for save operation
 
     protected JSONObject saveStateOpt() throws JSONException {
         return jo();
-    }
-
-    protected JSONObject saveStateMeta() throws JSONException {
-        final String defaultAmplitudeStr = defaultAmplitude.toString();
-
-        JSONObject collPath = jo().put("val", collTag).put("kind", defaultAmplitudeStr);
-        JSONObject docPath = jo().put("val", docTag).put("kind", defaultAmplitudeStr);
-        JSONObject locationPath = jo().put("val", locationTag).put("kind", defaultAmplitudeStr);
-
-        JSONArray tags = jar().put(collPath).put(docPath).put(locationPath);
-        Log.i("@saveStateMeta", tags.toString());
-        return jo().put("tags", tags);
     }
 
     protected Ack saveStateAck() {
@@ -143,55 +112,42 @@ public abstract class AutonomousQueryFragment extends android.support.v4.app.Fra
     }
 
 
-    //load
-
-    protected void loadState() throws JSONException, Regina.NullRequiredParameterException {
-        checkInit();
-        regina.find(coll, query(), loadStateOpt(), loadStateMeta(), loadStateAck());
-    }
-
-    protected JSONObject loadStateOpt() throws JSONException {
-        return key();
-    }
+    //IO parameters default handlers for load operation
 
     protected JSONObject loadStateMeta() throws JSONException {
         return jo();
     }
 
+
+    /*Discussion : Why this abstract have not default implementation?
+    *
+    * query() : obvious : define where to apply changes
+    *
+    * update(Object state) : obvious : define what change to apply
+    *
+    * syncState() : it's up to you to (and you should) define what to sync with
+    *
+    * saveStateMeta() : it's up to you to (and you should) define what others should sync with on data change
+    *
+    * loadStateOpt() : it's up to you to (and you should) define which specific parts (fields) of the found document represent the fragment's state
+    *
+    * loadStateAck() : it's up to you (and it's mandatory) to define what to do with the data loaded, like update the fragment's ui
+    *
+    * */
+
+    //abstract
+
+    protected abstract JSONObject query() throws JSONException;
+
+    protected abstract JSONObject update(Object state) throws JSONException;
+
+    protected abstract void syncState() throws Regina.NullRequiredParameterException, JSONException;
+
+    protected abstract JSONObject saveStateMeta() throws JSONException;
+
+    protected abstract JSONObject loadStateOpt() throws JSONException;
+
     protected abstract Ack loadStateAck();
-
-
-    //sync
-
-    protected void syncState() throws Regina.NullRequiredParameterException, JSONException {
-        loadState();
-
-        regina.socket.on(locationTag, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                try {
-                    if (((JSONObject) args[1]).getInt("op") == 2)
-                        self.loadState();
-                } catch (
-                        JSONException /*should never occur because the above loadState executed itself first*/
-                                | Regina.NullRequiredParameterException /*shame on the dev who use null required parameters ... shame on you*/
-                                e
-                        ) {
-                    fatalError(e);
-                }
-            }
-        });
-
-        this.isSynced = true;
-
-        Log.i("@syncState:"
-                , self + " started following : '" + locationTag + "'");
-    }
-
-
-    protected JSONObject query() throws JSONException {
-        return id();
-    }
 
 
     //utils
@@ -199,29 +155,15 @@ public abstract class AutonomousQueryFragment extends android.support.v4.app.Fra
     protected final void checkInit() {
         if (!isInitialized) fatalError(self + " : is not yet isInitialized");
     }
-    
+
     protected final void checkState(Object state) throws InvalidStateException {
         if (!isStateValid(state)) throw new InvalidStateException(state);
     }
 
-
     protected final void logObjectList(Object... objects) {
         ArrayList<String> strList = new ArrayList<>();
-        for (Object obj : objects)
-            strList.add("" + obj); //toString() here could NPE
+        for (Object obj : objects) strList.add("" + obj); //.toString() here could NPE
         Log.i("@logObjectList", strList.toString());
-    }
-
-    protected final JSONObject key() throws JSONException {
-        return jo().put(getKey(), 1).put("_id", 0);
-    }
-
-    protected final JSONObject id() throws JSONException {
-        return jo().put("_id", _id);
-    }
-
-    protected final JSONObject set(Object val) throws JSONException {
-        return jo().put("$set", jo().put(key, val));
     }
 
     protected final JSONObject jo() {
@@ -264,42 +206,38 @@ public abstract class AutonomousQueryFragment extends android.support.v4.app.Fra
 
     //fatal
 
-    protected void fatalError(Throwable throwable) {
+    protected final void fatalError(Throwable throwable) {
         throw new RuntimeException(throwable);
     }
 
-    protected void fatalError(String message) {
+    protected final void fatalError(String message) {
         throw new RuntimeException(message);
     }
 
 
     //accessors
 
-    public Regina getRegina() {
+    protected final Regina getRegina() {
         return regina;
     }
 
-    public String getColl() {
+    public final String getColl() {
         return coll;
     }
 
-    public String get_id() {
-        return _id;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public String getLocationTag() {
-        return locationTag;
-    }
-
-    public String getCollTag() {
+    public final String getCollTag() {
         return collTag;
     }
 
-    public String getDocTag() {
-        return docTag;
+    public final AutonomousQueryFragment getSelf() {
+        return self;
+    }
+
+    public final boolean getSyncMode() {
+        return sync;
+    }
+
+    public final boolean isInitialized() {
+        return isInitialized;
     }
 }

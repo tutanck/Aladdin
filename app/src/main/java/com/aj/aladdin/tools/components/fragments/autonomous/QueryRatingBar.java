@@ -17,14 +17,14 @@ import org.json.JSONException;
 import io.socket.client.Ack;
 
 
-public class AutoRatingBar extends AutonomousIDFragment {
+public class QueryRatingBar extends AutonomousIDFragment {
 
     private static final String SELECTABLE = "SELECTABLE";
 
 
     private RatingBar ratingBar;
 
-    public static AutoRatingBar newInstance(
+    public static QueryRatingBar newInstance(
             String coll
             , String _id
             , String key
@@ -32,7 +32,7 @@ public class AutoRatingBar extends AutonomousIDFragment {
     ) {
         Bundle args = new Bundle();
         args.putBoolean(SELECTABLE, selectable);
-        AutoRatingBar fragment = new AutoRatingBar();
+        QueryRatingBar fragment = new QueryRatingBar();
         fragment.setArguments(args);
         fragment.init(IO.r, coll, _id, key, true);
         return fragment;

@@ -23,7 +23,7 @@ import org.json.JSONException;
 import io.socket.client.Ack;
 
 
-public class AutoFormField extends AutonomousIDFragment {
+public class IDFormField extends AutonomousIDFragment {
 
     private static final String TYPE = "TYPE";
     private static final String SELECTABLE = "SELECTABLE";
@@ -38,7 +38,7 @@ public class AutoFormField extends AutonomousIDFragment {
 
     //instance parameters
 
-    public static AutoFormField newInstance(
+    public static IDFormField newInstance(
             String coll
             , String _id
             , String key
@@ -50,7 +50,7 @@ public class AutoFormField extends AutonomousIDFragment {
         args.putInt(TYPE, type);
         args.putBoolean(SELECTABLE, selectable);
         args.putString(LABEL, label);
-        AutoFormField fragment = new AutoFormField();
+        IDFormField fragment = new IDFormField();
         fragment.setArguments(args);
         fragment.init(IO.r, coll, _id, key, true);
         return fragment;

@@ -14,11 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.components.fragments.autonomous.AutoFormField;
+import com.aj.aladdin.tools.components.fragments.autonomous.IDFormField;
 import com.aj.aladdin.tools.components.fragments.ImageFragment;
 import com.aj.aladdin.tools.components.fragments.ItemDividerFragment;
-import com.aj.aladdin.tools.components.fragments.autonomous.AutoRadioGroup;
-import com.aj.aladdin.tools.components.fragments.autonomous.AutoRatingBar;
+import com.aj.aladdin.tools.components.fragments.autonomous.IDRadioGroup;
+import com.aj.aladdin.tools.components.fragments.autonomous.QueryRatingBar;
 import com.aj.aladdin.tools.oths.db.Colls;
 
 
@@ -107,21 +107,21 @@ public class ProfileFragment extends Fragment {
 
         ((AppCompatActivity) activity).getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.rating_layout, AutoRatingBar.newInstance(
+                .add(R.id.rating_layout, QueryRatingBar.newInstance(
                         Colls.USER_RATING, _id, "rbKeys[0]", !isEditable
                 ), "rating")
                 .commit();
 
         ((AppCompatActivity) activity).getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.rating_control_layout, AutoRatingBar.newInstance(
+                .add(R.id.rating_control_layout, QueryRatingBar.newInstance(
                         Colls.USER_RATING, _id, "rbKeys[1]", isEditable
                 ), "rating_control")
                 .commit();
 
         ((AppCompatActivity) activity).getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.radio_group_layout, AutoRadioGroup.newInstance(
+                .add(R.id.radio_group_layout, IDRadioGroup.newInstance(
                         coll, _id, rgKeys[0], rgLabels, isEditable
                 ), "radio_group")
                 .commit();
@@ -130,7 +130,7 @@ public class ProfileFragment extends Fragment {
         for (int i = 0; i < ffLabels.length; i++) {
             ((AppCompatActivity) activity).getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.form_layout, AutoFormField.newInstance(
+                    .add(R.id.form_layout, IDFormField.newInstance(
                             coll, _id, ffKeys[i], ffLabels[i], ffTypes[i], isEditable
                     ), "form_field_" + i)
                     .commit();

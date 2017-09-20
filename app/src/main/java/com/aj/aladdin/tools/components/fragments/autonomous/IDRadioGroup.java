@@ -19,7 +19,7 @@ import org.json.JSONException;
 import io.socket.client.Ack;
 
 
-public class AutoRadioGroup extends AutonomousIDFragment {
+public class IDRadioGroup extends AutonomousIDFragment {
 
     private static final String SELECTABLE = "SELECTABLE";
     private static final String LABELS = "LABELS";
@@ -28,7 +28,7 @@ public class AutoRadioGroup extends AutonomousIDFragment {
     private RadioGroup radioGroup;
 
 
-    public static AutoRadioGroup newInstance(
+    public static IDRadioGroup newInstance(
             String coll
             , String _id
             , String key
@@ -39,7 +39,7 @@ public class AutoRadioGroup extends AutonomousIDFragment {
         args.putStringArray(LABELS, labels);
         args.putBoolean(SELECTABLE, selectable);
 
-        AutoRadioGroup fragment = new AutoRadioGroup();
+        IDRadioGroup fragment = new IDRadioGroup();
         fragment.setArguments(args);
         fragment.init(IO.r, coll, _id, key, true);
         return fragment;
