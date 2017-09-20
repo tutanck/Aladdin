@@ -96,13 +96,13 @@ public abstract class AutonomousFragment extends android.support.v4.app.Fragment
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (!isInitialized) return;
-        regina.socket.off(locationTag, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                Log.i("@off", locationTag);
-            }
-        });
+        if (isSynced)
+            regina.socket.off(locationTag, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    Log.i("@off", locationTag);
+                }
+            });
     }
 
 
