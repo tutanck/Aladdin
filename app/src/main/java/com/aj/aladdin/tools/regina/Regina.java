@@ -102,19 +102,19 @@ public class Regina {
      * REGINA aggregate
      *
      * @param coll
-     * @param query
+     * @param pipeline
      * @param opt
      * @param meta
      * @param ack
      */
     public final void aggregate(
             String coll
-            , JSONObject query
+            , JSONObject pipeline
             , JSONObject opt
             , JSONObject meta
             , Ack ack
     ) throws NullRequiredParameterException {
-        socket.emit("aggregate", checkSTR(coll, "coll"), checkJO(query, "query"), softenJO(opt), softenJO(meta), checkACK(ack, "ack"));
+        socket.emit("aggregate", checkSTR(coll, "coll"), checkJO(pipeline, "pipeline"), softenJO(opt), softenJO(meta), checkACK(ack, "ack"));
     }
 
 

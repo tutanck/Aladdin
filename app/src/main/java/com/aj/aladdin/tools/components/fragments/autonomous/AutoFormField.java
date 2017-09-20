@@ -111,7 +111,7 @@ public class AutoFormField extends AutonomousFragment {
                             } else try {
                                 saveState(etContent.getText().toString());
                             } catch (InvalidStateException | JSONException | Regina.NullRequiredParameterException e) {
-                                __.showLongToast(getContext(), "DebugMode : Une erreur s'est produite" + e);//todo prod mod
+                                __.showLongToast(getContext(), "DebugMode : Une erreur s'est produite" + e);//todo prod mode
                             }
                         }
                     });
@@ -128,7 +128,8 @@ public class AutoFormField extends AutonomousFragment {
                 getActivity().runOnUiThread(new Runnable() { //mandatory to modify an activity's ui view
                     @Override
                     public void run() {
-                        __.showShortToast(self.getContext(), "Mise à jour réussie");
+                        __.showShortToast(getContext(),
+                                args[0] != null ? "Une erreur s'est produite" : "Mise à jour réussie");
                     }
                 });
                 logObjectList(args); //debug

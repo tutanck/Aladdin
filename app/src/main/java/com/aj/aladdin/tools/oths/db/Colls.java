@@ -7,6 +7,7 @@ package com.aj.aladdin.tools.oths.db;
 public interface Colls {
 
     public static String USER_PROFILE = "USER_PROFILE";
+    public static String USER_RATING = "USER_RATING";
 
 
 }

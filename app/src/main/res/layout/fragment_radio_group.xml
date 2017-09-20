@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/radio_group"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="horizontal">
 
     <RadioButton
-        android:id="@+id/radio_individual"
+        android:id="@+id/radio_button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checked="true"
-        android:text="label1" />
+        android:text="radio_button1" />
 
     <RadioButton
-        android:id="@+id/radio_company"
+        android:id="@+id/radio_button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="label2" />
+        android:text="radio_button2" />
 
 </RadioGroup>

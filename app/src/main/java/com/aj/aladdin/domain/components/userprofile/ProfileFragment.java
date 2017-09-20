@@ -18,9 +18,8 @@ import com.aj.aladdin.tools.components.fragments.autonomous.AutoFormField;
 import com.aj.aladdin.tools.components.fragments.ImageFragment;
 import com.aj.aladdin.tools.components.fragments.ItemDividerFragment;
 import com.aj.aladdin.tools.components.fragments.autonomous.AutoRadioGroup;
-import com.aj.aladdin.tools.components.fragments.RatingControlFragment;
+import com.aj.aladdin.tools.components.fragments.autonomous.AutoRatingBar;
 import com.aj.aladdin.tools.oths.db.Colls;
-import com.aj.aladdin.tools.oths.utils.__;
 
 
 public class ProfileFragment extends Fragment {
@@ -108,15 +107,15 @@ public class ProfileFragment extends Fragment {
 
         ((AppCompatActivity) activity).getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.rating_layout, RatingControlFragment.newInstance(
-                        ffLabels[0], ffIndics[0], 0, mSamples[0]
+                .add(R.id.rating_layout, AutoRatingBar.newInstance(
+                        Colls.USER_RATING, _id, "rbKeys[0]", !isEditable
                 ), "rating")
                 .commit();
 
         ((AppCompatActivity) activity).getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.rating_control_layout, RatingControlFragment.newInstance(
-                        ffLabels[0], ffIndics[0], 0, mSamples[0]
+                .add(R.id.rating_control_layout, AutoRatingBar.newInstance(
+                        Colls.USER_RATING, _id, "rbKeys[1]", isEditable
                 ), "rating_control")
                 .commit();
 

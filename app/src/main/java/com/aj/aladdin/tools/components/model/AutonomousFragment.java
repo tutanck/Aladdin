@@ -87,7 +87,7 @@ public abstract class AutonomousFragment extends android.support.v4.app.Fragment
         } catch (Regina.NullRequiredParameterException e) {
             fatalError(e); //Shame on you who use null required parameters ... shame on you
         }
-        Log.i("@onViewCreated", self+" : sync="+ sync);
+        Log.i("@onViewCreated", self + " : sync=" + sync);
     }
 
 
@@ -113,7 +113,7 @@ public abstract class AutonomousFragment extends android.support.v4.app.Fragment
     ) throws InvalidStateException, JSONException, Regina.NullRequiredParameterException {
         if (!isInitialized) fatalError(self + " : is not yet isInitialized");
         if (!isStateValid(state)) throw new InvalidStateException(state);
-        regina.update(coll, id(), set(state), saveStateOpt(), saveStateMeta(), saveStateAck());
+        regina.update(coll, query(), set(state), saveStateOpt(), saveStateMeta(), saveStateAck());
     }
 
     protected JSONObject saveStateOpt() throws JSONException {
@@ -144,9 +144,9 @@ public abstract class AutonomousFragment extends android.support.v4.app.Fragment
 
     //load
 
-    protected final void loadState() throws JSONException, Regina.NullRequiredParameterException {
+    protected void loadState() throws JSONException, Regina.NullRequiredParameterException {
         if (!isInitialized) fatalError(self + " : is not yet isInitialized");
-        regina.find(coll, id(), loadStateOpt(), loadStateMeta(), loadStateAck());
+        regina.find(coll, query(), loadStateOpt(), loadStateMeta(), loadStateAck());
     }
 
     protected JSONObject loadStateOpt() throws JSONException {
@@ -188,9 +188,14 @@ public abstract class AutonomousFragment extends android.support.v4.app.Fragment
     }
 
 
+    protected JSONObject query() throws JSONException {
+        return id();
+    }
+
+
     //utils
 
-    protected final void logObjectList(Object... objects){
+    protected final void logObjectList(Object... objects) {
         ArrayList<String> strList = new ArrayList<>();
         for (Object obj : objects)
             strList.add("" + obj); //toString() here could NPE
@@ -198,7 +203,7 @@ public abstract class AutonomousFragment extends android.support.v4.app.Fragment
     }
 
     protected final JSONObject key() throws JSONException {
-        return jo().put(getKey(),1).put("_id", 0);
+        return jo().put(getKey(), 1).put("_id", 0);
     }
 
     protected final JSONObject id() throws JSONException {

@@ -43,12 +43,11 @@ public class ImageFragment extends Fragment {
             , ViewGroup container
             , Bundle savedInstanceState
     ) {
-        View view = inflater.inflate(R.layout.fragment_image, container, false);
-
         final Bundle args = getArguments();
 
-        final ImageView image = (ImageView) view.findViewById(R.id.image);
-        image.setOnClickListener(
+        ImageView imageView = (ImageView) inflater.inflate(R.layout.fragment_image_view, container, false);
+
+        imageView.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -56,7 +55,7 @@ public class ImageFragment extends Fragment {
                     }
                 }
         );
-        return view;
+        return imageView;
     }
 
 

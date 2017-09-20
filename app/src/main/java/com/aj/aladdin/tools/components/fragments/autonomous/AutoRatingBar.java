@@ -4,8 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.RatingBar;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.tools.components.model.AutonomousFragment;
@@ -13,33 +12,27 @@ import com.aj.aladdin.tools.components.services.IO;
 import com.aj.aladdin.tools.oths.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 
 import io.socket.client.Ack;
 
 
-public class AutoRadioGroup extends AutonomousFragment {
+public class AutoRatingBar extends AutonomousFragment {
 
     private static final String SELECTABLE = "SELECTABLE";
-    private static final String LABELS = "LABELS";
 
 
-    private RadioGroup radioGroup;
+    private RatingBar ratingBar;
 
-
-    public static AutoRadioGroup newInstance(
+    public static AutoRatingBar newInstance(
             String coll
             , String _id
             , String key
-            , String[] labels
             , boolean selectable
     ) {
         Bundle args = new Bundle();
-        args.putStringArray(LABELS, labels);
         args.putBoolean(SELECTABLE, selectable);
-
-        AutoRadioGroup fragment = new AutoRadioGroup();
+        AutoRatingBar fragment = new AutoRatingBar();
         fragment.setArguments(args);
         fragment.init(IO.r, coll, _id, key, true);
         return fragment;
@@ -54,28 +47,26 @@ public class AutoRadioGroup extends AutonomousFragment {
     ) {
         final Bundle args = getArguments();
 
-        radioGroup = (RadioGroup) inflater.inflate(R.layout.fragment_radio_group, container, false);
+        RatingBar ratingBar = (RatingBar) inflater.inflate(R.layout.fragment_rating_bar, container, false);
 
-        for (int i = 0; i < radioGroup.getChildCount(); i++) {
-            RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
-            radioButton.setText(args.getStringArray(LABELS)[i]);
-            radioButton.setEnabled(args.getBoolean(SELECTABLE));
-            radioButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int radioButtonID = radioGroup.getCheckedRadioButtonId();
-                    RadioButton radioButton = radioGroup.findViewById(radioButtonID);
-                    int index = radioGroup.indexOfChild(radioButton);
-                    try {
-                        saveState(index);
-                    } catch (InvalidStateException | JSONException | Regina.NullRequiredParameterException e) {
-                        __.showLongToast(getContext(), "DebugMode : Une erreur s'est produite" + e);//todo prod mode
+        ratingBar.setIsIndicator(!args.getBoolean(SELECTABLE));
+
+        ratingBar.setOnRatingBarChangeListener(
+                new RatingBar.OnRatingBarChangeListener() {
+                    public void onRatingChanged(
+                            RatingBar ratingBar
+                            , float rating
+                            , boolean fromUser
+                    ) {
+                        try {
+                            if (fromUser) saveState(rating);
+                        } catch (InvalidStateException | JSONException | Regina.NullRequiredParameterException e) {
+                            __.showLongToast(getContext(), "DebugMode : Une erreur s'est produite" + e);//todo prod mode
+                        }
                     }
                 }
-            });
-        }
-
-        return radioGroup;
+        );
+        return ratingBar;
     }
 
 
@@ -107,16 +98,16 @@ public class AutoRadioGroup extends AutonomousFragment {
                     public void run() {
                         if (args[0] != null)
                             __.showLongToast(getContext(), "Une erreur s'est produite");
-                        else try {
-                            int selectedIndex = ((JSONArray) args[1]).getJSONObject(0).optInt(getKey(), 0);
-                            ((RadioButton) radioGroup.getChildAt(selectedIndex)).setChecked(true);
+                       /* else try {
+                            ratingBar.setRating(((JSONArray) args[1]).getJSONObject(0).optInt(getKey(), 0));
 
                         } catch (JSONException e) {
                             fatalError(e); //SNO or means that DB is inconsistent if there is no profile found getJSONObject(0)
-                        }
+                        }*/
                     }
                 });
             }
         };
     }
+
 }
