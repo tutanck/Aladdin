@@ -50,7 +50,7 @@ public class QueryRatingBar extends AutonomousQueryUpsertFragment {
 
         final Bundle args = getArguments();
 
-        RatingBar ratingBar = (RatingBar) inflater.inflate(R.layout.fragment_rating_bar, container, false);
+        ratingBar = (RatingBar) inflater.inflate(R.layout.fragment_rating_bar, container, false);
 
         ratingBar.setIsIndicator(!args.getBoolean(SELECTABLE));
 
