@@ -1,4 +1,4 @@
-package com.aj.aladdin.tools.components.fragments.autonomous;
+package com.aj.aladdin.tools.components.fragments.autonomous.id;
 
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -63,6 +63,8 @@ public class IDFormField extends AutonomousIDFragment {
             , ViewGroup container
             , Bundle savedInstanceState
     ) {
+        super.onCreateView(inflater,container,savedInstanceState);
+
         final Bundle args = getArguments();
 
         View view;

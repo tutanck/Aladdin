@@ -14,11 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.components.fragments.autonomous.IDFormField;
+import com.aj.aladdin.tools.components.fragments.autonomous.id.IDFormField;
 import com.aj.aladdin.tools.components.fragments.ImageFragment;
 import com.aj.aladdin.tools.components.fragments.ItemDividerFragment;
-import com.aj.aladdin.tools.components.fragments.autonomous.IDRadioGroup;
-import com.aj.aladdin.tools.components.fragments.autonomous.QueryRatingBar;
+import com.aj.aladdin.tools.components.fragments.autonomous.id.IDRadioGroup;
+import com.aj.aladdin.tools.components.fragments.autonomous.query.QueryRatingBar;
 import com.aj.aladdin.tools.oths.db.Colls;
 
 

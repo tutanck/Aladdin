@@ -1,17 +1,12 @@
 package com.aj.aladdin.tools.components.model;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.View;
 
 import com.aj.aladdin.tools.regina.Regina;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 import io.socket.client.Ack;
 import io.socket.emitter.Emitter;
@@ -56,41 +51,13 @@ public abstract class AutonomousIDFragment extends AutonomousQueryFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (isSynced)
+        if (isSynced())
             getRegina().socket.off(locationTag, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
                     Log.i("@off", locationTag);
                 }
             });
-    }
-
-
-    //sync
-
-    protected void syncState() throws Regina.NullRequiredParameterException, JSONException {
-        loadState();
-
-        getRegina().socket.on(locationTag, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                try {
-                    if (((JSONObject) args[1]).getInt("op") == 2)
-                        getSelf().loadState();
-                } catch (
-                        JSONException /*should never occur because the above loadState executed itself first*/
-                                | Regina.NullRequiredParameterException /*shame on the dev who use null required parameters ... shame on you*/
-                                e
-                        ) {
-                    fatalError(e);
-                }
-            }
-        });
-
-        this.isSynced = true;
-
-        Log.i("@syncState:"
-                , getSelf() + " started following : '" + locationTag + "'");
     }
 
 
@@ -104,6 +71,9 @@ public abstract class AutonomousIDFragment extends AutonomousQueryFragment {
         return set(state);
     }
 
+    protected String syncTag() {
+        return locationTag;
+    }
 
     //IO parameters default handlers for save operation
 

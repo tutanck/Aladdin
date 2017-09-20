@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import io.socket.client.Ack;
+import io.socket.emitter.Emitter;
 
 /**
  * Created by joan on 17/09/2017.
@@ -30,6 +31,9 @@ public abstract class AutonomousQueryFragment extends android.support.v4.app.Fra
     //DB data synchronization mode
     private boolean sync; //load data once if false, continually sync state if true
 
+    //DB synchronization state
+    private boolean isSynced = false; //say if the fragment is now isSynced with the database
+
     //DB handler
     private Regina regina;
 
@@ -38,9 +42,6 @@ public abstract class AutonomousQueryFragment extends android.support.v4.app.Fra
 
     //DB paths tags
     private String collTag;
-
-    //DB synchronization state
-    protected boolean isSynced = false; //say if the fragment is now isSynced with the database
 
     //DB actions resounding
     protected Regina.Amplitude defaultAmplitude = Regina.Amplitude.IO;
@@ -82,6 +83,7 @@ public abstract class AutonomousQueryFragment extends android.support.v4.app.Fra
 
     //IO
 
+    //save
     protected final void saveState(
             Object state
     ) throws InvalidStateException, JSONException, Regina.NullRequiredParameterException {
@@ -90,9 +92,36 @@ public abstract class AutonomousQueryFragment extends android.support.v4.app.Fra
         regina.update(coll, query(), update(state), saveStateOpt(), saveStateMeta(), saveStateAck());
     }
 
+    //load
     protected final void loadState() throws JSONException, Regina.NullRequiredParameterException {
         checkInit();
         regina.find(coll, query(), loadStateOpt(), loadStateMeta(), loadStateAck());
+    }
+
+    //sync
+    protected final void syncState() throws Regina.NullRequiredParameterException, JSONException {
+        loadState();
+
+        regina.socket.on(syncTag(), new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                try {
+                    if (((JSONObject) args[1]).getInt("op") == 2)
+                        self.loadState();
+                } catch (
+                        JSONException /*should never occur because the above loadState executed itself first*/
+                                | Regina.NullRequiredParameterException /*shame on the dev who use null required parameters ... shame on you*/
+                                e
+                        ) {
+                    fatalError(e);
+                }
+            }
+        });
+
+        this.isSynced = true;
+
+        Log.i("@syncState:"
+                , self + " started following : '" + syncTag() + "'");
     }
 
 
@@ -141,7 +170,7 @@ public abstract class AutonomousQueryFragment extends android.support.v4.app.Fra
 
     protected abstract JSONObject update(Object state) throws JSONException;
 
-    protected abstract void syncState() throws Regina.NullRequiredParameterException, JSONException;
+    protected abstract String syncTag();
 
     protected abstract JSONObject saveStateMeta() throws JSONException;
 
@@ -239,5 +268,9 @@ public abstract class AutonomousQueryFragment extends android.support.v4.app.Fra
 
     public final boolean isInitialized() {
         return isInitialized;
+    }
+
+    public boolean isSynced() {
+        return isSynced;
     }
 }
