@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.RatingBar;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.components.model.AutonomousQueryUpsertFragment;
+import com.aj.aladdin.tools.components.model.AutonomousFindUpsertFragment;
 import com.aj.aladdin.tools.components.services.IO;
 import com.aj.aladdin.tools.oths.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
@@ -18,7 +18,7 @@ import org.json.JSONObject;
 import io.socket.client.Ack;
 
 
-public class QueryRatingBar extends AutonomousQueryUpsertFragment {
+public class QueryRatingBar extends AutonomousFindUpsertFragment {
 
     private static final String SELECTABLE = "SELECTABLE";
 

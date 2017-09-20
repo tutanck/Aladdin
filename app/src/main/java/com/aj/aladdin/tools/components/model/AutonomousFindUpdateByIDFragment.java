@@ -15,7 +15,7 @@ import io.socket.emitter.Emitter;
  * Created by joan on 17/09/2017.
  */
 
-public abstract class AutonomousIDFragment extends AutonomousQueryFragment {
+public abstract class AutonomousFindUpdateByIDFragment extends AutonomousFindUpdateFragment {
 
     //DB location
     private String _id;

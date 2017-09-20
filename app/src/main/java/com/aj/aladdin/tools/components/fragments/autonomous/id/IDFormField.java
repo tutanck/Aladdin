@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.components.model.AutonomousIDFragment;
+import com.aj.aladdin.tools.components.model.AutonomousFindUpdateByIDFragment;
 import com.aj.aladdin.tools.components.services.ComponentsServices;
 import com.aj.aladdin.tools.components.services.IO;
 import com.aj.aladdin.tools.oths.KeyboardServices;
@@ -23,7 +23,7 @@ import org.json.JSONException;
 import io.socket.client.Ack;
 
 
-public class IDFormField extends AutonomousIDFragment {
+public class IDFormField extends AutonomousFindUpdateByIDFragment {
 
     private static final String TYPE = "TYPE";
     private static final String SELECTABLE = "SELECTABLE";

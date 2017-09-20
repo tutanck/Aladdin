@@ -20,10 +20,10 @@ import io.socket.emitter.Emitter;
  * Created by joan on 17/09/2017.
  */
 
-public abstract class AutonomousQueryFragment extends android.support.v4.app.Fragment /*support compatibility*/ {
+public abstract class AutonomousFragment extends android.support.v4.app.Fragment /*support compatibility*/ {
 
     //self ref
-    private final AutonomousQueryFragment self = this;
+    private final AutonomousFragment self = this;
 
     //DB Communication state
     private boolean isInitialized = false; //is Fragment ready to talk with DB
@@ -84,19 +84,12 @@ public abstract class AutonomousQueryFragment extends android.support.v4.app.Fra
     //IO
 
     //save
-    protected final void saveState(
+    protected abstract void saveState(
             Object state
-    ) throws InvalidStateException, JSONException, Regina.NullRequiredParameterException {
-        checkInit();
-        checkState(state);
-        regina.update(coll, query(), update(state), saveStateOpt(), saveStateMeta(), saveStateAck());
-    }
+    ) throws InvalidStateException, JSONException, Regina.NullRequiredParameterException;
 
     //load
-    protected final void loadState() throws JSONException, Regina.NullRequiredParameterException {
-        checkInit();
-        regina.find(coll, query(), loadStateOpt(), loadStateMeta(), loadStateAck());
-    }
+    protected abstract void loadState() throws JSONException, Regina.NullRequiredParameterException;
 
     //sync
     protected final void syncState() throws Regina.NullRequiredParameterException, JSONException {
@@ -258,7 +251,7 @@ public abstract class AutonomousQueryFragment extends android.support.v4.app.Fra
         return collTag;
     }
 
-    public final AutonomousQueryFragment getSelf() {
+    public final AutonomousFragment getSelf() {
         return self;
     }
 
