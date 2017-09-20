@@ -8,7 +8,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.components.model.AutonomousFragment;
+import com.aj.aladdin.tools.components.model.AutonomousIDFragment;
 import com.aj.aladdin.tools.components.services.IO;
 import com.aj.aladdin.tools.oths.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
@@ -19,7 +19,7 @@ import org.json.JSONException;
 import io.socket.client.Ack;
 
 
-public class AutoRadioGroup extends AutonomousFragment {
+public class AutoRadioGroup extends AutonomousIDFragment {
 
     private static final String SELECTABLE = "SELECTABLE";
     private static final String LABELS = "LABELS";

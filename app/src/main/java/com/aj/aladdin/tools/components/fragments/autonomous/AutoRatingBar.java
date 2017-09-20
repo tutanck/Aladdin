@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.RatingBar;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.components.model.AutonomousFragment;
+import com.aj.aladdin.tools.components.model.AutonomousIDFragment;
 import com.aj.aladdin.tools.components.services.IO;
 import com.aj.aladdin.tools.oths.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
@@ -17,7 +17,7 @@ import org.json.JSONException;
 import io.socket.client.Ack;
 
 
-public class AutoRatingBar extends AutonomousFragment {
+public class AutoRatingBar extends AutonomousIDFragment {
 
     private static final String SELECTABLE = "SELECTABLE";
 

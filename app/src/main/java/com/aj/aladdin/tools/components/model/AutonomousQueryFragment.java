@@ -20,13 +20,13 @@ import io.socket.emitter.Emitter;
  * Created by joan on 17/09/2017.
  */
 
-public abstract class AutonomousFragment extends android.support.v4.app.Fragment {
+public abstract class AutonomousQueryFragment extends android.support.v4.app.Fragment {
 
     //DB data synchronization mode
     private boolean sync; //load data once if false, continually sync state if true
 
     //self ref
-    public final AutonomousFragment self = this;
+    public final AutonomousQueryFragment self = this;
 
     //DB synchronization state
     protected boolean isSynced = false; //say if the fragment is now isSynced with the database
@@ -111,10 +111,11 @@ public abstract class AutonomousFragment extends android.support.v4.app.Fragment
     protected void saveState(
             Object state
     ) throws InvalidStateException, JSONException, Regina.NullRequiredParameterException {
-        if (!isInitialized) fatalError(self + " : is not yet isInitialized");
-        if (!isStateValid(state)) throw new InvalidStateException(state);
+        checkInit();
+        checkState(state);
         regina.update(coll, query(), set(state), saveStateOpt(), saveStateMeta(), saveStateAck());
     }
+
 
     protected JSONObject saveStateOpt() throws JSONException {
         return jo();
@@ -145,7 +146,7 @@ public abstract class AutonomousFragment extends android.support.v4.app.Fragment
     //load
 
     protected void loadState() throws JSONException, Regina.NullRequiredParameterException {
-        if (!isInitialized) fatalError(self + " : is not yet isInitialized");
+        checkInit();
         regina.find(coll, query(), loadStateOpt(), loadStateMeta(), loadStateAck());
     }
 
@@ -194,6 +195,15 @@ public abstract class AutonomousFragment extends android.support.v4.app.Fragment
 
 
     //utils
+
+    protected final void checkInit() {
+        if (!isInitialized) fatalError(self + " : is not yet isInitialized");
+    }
+    
+    protected final void checkState(Object state) throws InvalidStateException {
+        if (!isStateValid(state)) throw new InvalidStateException(state);
+    }
+
 
     protected final void logObjectList(Object... objects) {
         ArrayList<String> strList = new ArrayList<>();
