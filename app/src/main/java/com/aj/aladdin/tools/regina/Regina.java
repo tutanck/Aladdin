@@ -109,12 +109,12 @@ public class Regina {
      */
     public final void aggregate(
             String coll
-            , JSONObject pipeline
+            , JSONArray pipeline
             , JSONObject opt
             , JSONObject meta
             , Ack ack
     ) throws NullRequiredParameterException {
-        socket.emit("aggregate", checkSTR(coll, "coll"), checkJO(pipeline, "pipeline"), softenJO(opt), softenJO(meta), checkACK(ack, "ack"));
+        socket.emit("aggregate", checkSTR(coll, "coll"), checkJAR(pipeline, "pipeline"), softenJO(opt), softenJO(meta), checkACK(ack, "ack"));
     }
 
 

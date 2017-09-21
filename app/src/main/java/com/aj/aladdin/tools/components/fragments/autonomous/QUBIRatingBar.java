@@ -1,40 +1,52 @@
-package com.aj.aladdin.tools.components.fragments.autonomous.query;
+package com.aj.aladdin.tools.components.fragments.autonomous;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RatingBar;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.components.model.AutonomousFindUpsertFragment;
+import com.aj.aladdin.tools.components.model.AutonomousQueryUpdateFragment;
 import com.aj.aladdin.tools.components.services.IO;
 import com.aj.aladdin.tools.oths.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.socket.client.Ack;
 
 
-public class QueryRatingBar extends AutonomousFindUpsertFragment {
+public class QUBIRatingBar extends AutonomousQueryUpdateFragment {
 
-    private static final String SELECTABLE = "SELECTABLE";
+    private static final String FROM_ID = "FROM_ID";
+    private static final String TO_ID = "TO_ID";
+
+    private final String fromIDKey = "fromID";
+    private final String toIDKey = "toID";
+    private final String ratingKey = "rating";
+
+    private String fromIDVal;
+    private String toIDVal;
 
 
     private RatingBar ratingBar;
 
-    public static QueryRatingBar newInstance(
+    public static QUBIRatingBar newInstance(
             String coll
-            , String _id
-            , String key
-            , boolean selectable
+            , String fromID
+            , String toID
     ) {
         Bundle args = new Bundle();
-        args.putBoolean(SELECTABLE, selectable);
-        QueryRatingBar fragment = new QueryRatingBar();
+        args.putString(FROM_ID, fromID);
+        args.putString(TO_ID, toID);
+
+        QUBIRatingBar fragment = new QUBIRatingBar();
         fragment.setArguments(args);
+        fragment.defaultAmplitude = Regina.Amplitude.EMIT;
         fragment.init(IO.r, coll, true);
         return fragment;
     }
@@ -46,13 +58,15 @@ public class QueryRatingBar extends AutonomousFindUpsertFragment {
             , ViewGroup container
             , Bundle savedInstanceState
     ) {
-        super.onCreateView(inflater,container,savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
 
         final Bundle args = getArguments();
+        fromIDVal = args.getString(FROM_ID);
+        toIDVal = args.getString(TO_ID);
 
         ratingBar = (RatingBar) inflater.inflate(R.layout.fragment_rating_bar, container, false);
 
-        ratingBar.setIsIndicator(!args.getBoolean(SELECTABLE));
+        ratingBar.setIsIndicator(false);
 
         ratingBar.setOnRatingBarChangeListener(
                 new RatingBar.OnRatingBarChangeListener() {
@@ -73,32 +87,20 @@ public class QueryRatingBar extends AutonomousFindUpsertFragment {
     }
 
 
-
     @Override
     protected JSONObject query() throws JSONException {
-        return null;
+        return jo().put(fromIDKey, fromIDVal).put(toIDKey, toIDVal);
     }
 
     @Override
     protected JSONObject update(Object state) throws JSONException {
-        return null;
+        return jo().put(fromIDKey, fromIDVal).put(toIDKey, toIDVal).put(ratingKey, state);
     }
 
     @Override
-    protected String syncTag() {
-        return null;
+    protected JSONObject saveStateOpt() throws JSONException {
+        return jo().put("upsert", true);
     }
-
-    @Override
-    protected JSONObject saveStateMeta() throws JSONException {
-        return null;
-    }
-
-    @Override
-    protected JSONObject loadStateOpt() throws JSONException {
-        return null;
-    }
-
 
 
     @Override
@@ -120,6 +122,24 @@ public class QueryRatingBar extends AutonomousFindUpsertFragment {
 
 
     @Override
+    protected String syncTag() {
+        return getCollTag() + "/" + toIDKey + ":" + toIDVal + "/" + fromIDKey + ":" + fromIDVal;
+    }
+
+    @Override
+    protected JSONObject saveStateMeta() throws JSONException {
+        JSONArray tags = jar().put(path(syncTag(), defaultAmplitude));
+        Log.i("@saveStateMeta", tags.toString());
+        return jo().put("tags", tags);
+    }
+
+    @Override
+    protected JSONObject loadStateOpt() throws JSONException {
+        return jo().put(ratingKey, 1).put("_id", 0);
+    }
+
+
+    @Override
     protected Ack loadStateAck() {
         return new Ack() {
             @Override
@@ -129,16 +149,17 @@ public class QueryRatingBar extends AutonomousFindUpsertFragment {
                     public void run() {
                         if (args[0] != null)
                             __.showLongToast(getContext(), "Une erreur s'est produite");
-                       /* else try {
-                            ratingBar.setRating(((JSONArray) args[1]).getJSONObject(0).optInt(getKey(), 0));
-
-                        } catch (JSONException e) {
-                            fatalError(e); //SNO or means that DB is inconsistent if there is no profile found getJSONObject(0)
-                        }*/
+                        else {
+                            JSONObject ratingDoc = ((JSONArray) args[1]).optJSONObject(0);
+                            try {
+                                ratingBar.setRating(ratingDoc != null ? ratingDoc.getInt(ratingKey) : 0);
+                            } catch (JSONException e) {
+                                fatalError(e); //SNO : if a doc exist the rating should exist too
+                            }
+                        }
                     }
                 });
             }
         };
     }
-
 }

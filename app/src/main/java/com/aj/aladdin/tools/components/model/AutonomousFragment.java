@@ -83,17 +83,20 @@ public abstract class AutonomousFragment extends android.support.v4.app.Fragment
 
     //IO
 
+    //load
+    protected abstract void loadState() throws JSONException, Regina.NullRequiredParameterException;
+
     //save
     protected abstract void saveState(
             Object state
     ) throws InvalidStateException, JSONException, Regina.NullRequiredParameterException;
 
-    //load
-    protected abstract void loadState() throws JSONException, Regina.NullRequiredParameterException;
-
     //sync
     protected final void syncState() throws Regina.NullRequiredParameterException, JSONException {
         loadState();
+
+        if (syncTag() == null)
+            fatalError("@syncState : 'syncTag' should never be 'null' else 'sync' mode should be set to 'false'");
 
         regina.socket.on(syncTag(), new Emitter.Listener() {
             @Override
@@ -143,11 +146,7 @@ public abstract class AutonomousFragment extends android.support.v4.app.Fragment
 
     /*Discussion : Why this abstract have not default implementation?
     *
-    * query() : obvious : define where to apply changes
-    *
-    * update(Object state) : obvious : define what change to apply
-    *
-    * syncState() : it's up to you to (and you should) define what to sync with
+    * syncTag() : it's up to you to (and you should) define what to sync with
     *
     * saveStateMeta() : it's up to you to (and you should) define what others should sync with on data change
     *
@@ -159,9 +158,6 @@ public abstract class AutonomousFragment extends android.support.v4.app.Fragment
 
     //abstract
 
-    protected abstract JSONObject query() throws JSONException;
-
-    protected abstract JSONObject update(Object state) throws JSONException;
 
     protected abstract String syncTag();
 
@@ -194,6 +190,10 @@ public abstract class AutonomousFragment extends android.support.v4.app.Fragment
 
     protected final JSONArray jar() {
         return new JSONArray();
+    }
+
+    protected final JSONObject path(String tag, Regina.Amplitude amplitude) throws JSONException {
+        return jo().put("val", tag).put("kind", amplitude.toString());
     }
 
 

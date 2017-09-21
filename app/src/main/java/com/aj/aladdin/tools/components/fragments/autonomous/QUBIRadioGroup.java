@@ -1,4 +1,4 @@
-package com.aj.aladdin.tools.components.fragments.autonomous.id;
+package com.aj.aladdin.tools.components.fragments.autonomous;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,7 +8,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.components.model.AutonomousFindUpdateByIDFragment;
+import com.aj.aladdin.tools.components.model.AutonomousQueryUpdateByIDFragment;
 import com.aj.aladdin.tools.components.services.IO;
 import com.aj.aladdin.tools.oths.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
@@ -19,7 +19,7 @@ import org.json.JSONException;
 import io.socket.client.Ack;
 
 
-public class IDRadioGroup extends AutonomousFindUpdateByIDFragment {
+public class QUBIRadioGroup extends AutonomousQueryUpdateByIDFragment {
 
     private static final String SELECTABLE = "SELECTABLE";
     private static final String LABELS = "LABELS";
@@ -28,7 +28,7 @@ public class IDRadioGroup extends AutonomousFindUpdateByIDFragment {
     private RadioGroup radioGroup;
 
 
-    public static IDRadioGroup newInstance(
+    public static QUBIRadioGroup newInstance(
             String coll
             , String _id
             , String key
@@ -39,7 +39,7 @@ public class IDRadioGroup extends AutonomousFindUpdateByIDFragment {
         args.putStringArray(LABELS, labels);
         args.putBoolean(SELECTABLE, selectable);
 
-        IDRadioGroup fragment = new IDRadioGroup();
+        QUBIRadioGroup fragment = new QUBIRadioGroup();
         fragment.setArguments(args);
         fragment.init(IO.r, coll, _id, key, true);
         return fragment;

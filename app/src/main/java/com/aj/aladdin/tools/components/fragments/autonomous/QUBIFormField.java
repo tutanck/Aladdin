@@ -1,4 +1,4 @@
-package com.aj.aladdin.tools.components.fragments.autonomous.id;
+package com.aj.aladdin.tools.components.fragments.autonomous;
 
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.components.model.AutonomousFindUpdateByIDFragment;
+import com.aj.aladdin.tools.components.model.AutonomousQueryUpdateByIDFragment;
 import com.aj.aladdin.tools.components.services.ComponentsServices;
 import com.aj.aladdin.tools.components.services.IO;
 import com.aj.aladdin.tools.oths.KeyboardServices;
@@ -23,7 +23,7 @@ import org.json.JSONException;
 import io.socket.client.Ack;
 
 
-public class IDFormField extends AutonomousFindUpdateByIDFragment {
+public class QUBIFormField extends AutonomousQueryUpdateByIDFragment {
 
     private static final String TYPE = "TYPE";
     private static final String SELECTABLE = "SELECTABLE";
@@ -38,7 +38,7 @@ public class IDFormField extends AutonomousFindUpdateByIDFragment {
 
     //instance parameters
 
-    public static IDFormField newInstance(
+    public static QUBIFormField newInstance(
             String coll
             , String _id
             , String key
@@ -50,7 +50,7 @@ public class IDFormField extends AutonomousFindUpdateByIDFragment {
         args.putInt(TYPE, type);
         args.putBoolean(SELECTABLE, selectable);
         args.putString(LABEL, label);
-        IDFormField fragment = new IDFormField();
+        QUBIFormField fragment = new QUBIFormField();
         fragment.setArguments(args);
         fragment.init(IO.r, coll, _id, key, true);
         return fragment;

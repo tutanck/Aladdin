@@ -14,11 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.components.fragments.autonomous.id.IDFormField;
+import com.aj.aladdin.tools.components.fragments.autonomous.AutoRatingBar;
+import com.aj.aladdin.tools.components.fragments.autonomous.QUBIFormField;
 import com.aj.aladdin.tools.components.fragments.ImageFragment;
 import com.aj.aladdin.tools.components.fragments.ItemDividerFragment;
-import com.aj.aladdin.tools.components.fragments.autonomous.id.IDRadioGroup;
-import com.aj.aladdin.tools.components.fragments.autonomous.query.QueryRatingBar;
+import com.aj.aladdin.tools.components.fragments.autonomous.QUBIRadioGroup;
+import com.aj.aladdin.tools.components.fragments.autonomous.QUBIRatingBar;
 import com.aj.aladdin.tools.oths.db.Colls;
 
 
@@ -107,21 +108,21 @@ public class ProfileFragment extends Fragment {
 
         ((AppCompatActivity) activity).getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.rating_layout, QueryRatingBar.newInstance(
-                        Colls.USER_RATING, _id, "rbKeys[0]", !isEditable
+                .add(R.id.rating_layout, AutoRatingBar.newInstance(
+                        Colls.USER_RATING, "fictivID"
                 ), "rating")
                 .commit();
 
         ((AppCompatActivity) activity).getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.rating_control_layout, QueryRatingBar.newInstance(
-                        Colls.USER_RATING, _id, "rbKeys[1]", isEditable
+                .add(R.id.rating_control_layout, QUBIRatingBar.newInstance(
+                        Colls.USER_RATING, _id, "fictivID"
                 ), "rating_control")
                 .commit();
 
         ((AppCompatActivity) activity).getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.radio_group_layout, IDRadioGroup.newInstance(
+                .add(R.id.radio_group_layout, QUBIRadioGroup.newInstance(
                         coll, _id, rgKeys[0], rgLabels, isEditable
                 ), "radio_group")
                 .commit();
@@ -130,7 +131,7 @@ public class ProfileFragment extends Fragment {
         for (int i = 0; i < ffLabels.length; i++) {
             ((AppCompatActivity) activity).getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.form_layout, IDFormField.newInstance(
+                    .add(R.id.form_layout, QUBIFormField.newInstance(
                             coll, _id, ffKeys[i], ffLabels[i], ffTypes[i], isEditable
                     ), "form_field_" + i)
                     .commit();

@@ -1,26 +1,17 @@
 package com.aj.aladdin.tools.components.model;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.util.Log;
-import android.view.View;
-
 import com.aj.aladdin.tools.regina.Regina;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
-import io.socket.client.Ack;
-import io.socket.emitter.Emitter;
 
 /**
  * Created by joan on 17/09/2017.
  */
 
-public abstract class AutonomousFindUpdateFragment extends AutonomousFragment {
+public abstract class AutonomousQueryUpdateFragment extends AutonomousFragment {
+
 
     //IO
 
@@ -40,5 +31,19 @@ public abstract class AutonomousFindUpdateFragment extends AutonomousFragment {
     }
 
 
+
+    /*Discussion : Why this abstract have not default implementation?
+    *
+    * query() : obvious : define where to apply changes
+    *
+    * update(Object state) : obvious : define what change to apply
+    *
+    * */
+
+    //abstract
+
+    protected abstract JSONObject query() throws JSONException;
+
+    protected abstract JSONObject update(Object state) throws JSONException;
 
 }

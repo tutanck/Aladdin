@@ -15,7 +15,7 @@ import io.socket.emitter.Emitter;
  * Created by joan on 17/09/2017.
  */
 
-public abstract class AutonomousFindUpdateByIDFragment extends AutonomousFindUpdateFragment {
+public abstract class AutonomousQueryUpdateByIDFragment extends AutonomousQueryUpdateFragment {
 
     //DB location
     private String _id;
@@ -28,7 +28,7 @@ public abstract class AutonomousFindUpdateByIDFragment extends AutonomousFindUpd
 
     //init
 
-    public void init(
+    public final void init(
             Regina regina
             , String coll
             , String _id
@@ -52,7 +52,7 @@ public abstract class AutonomousFindUpdateByIDFragment extends AutonomousFindUpd
     public void onDestroyView() {
         super.onDestroyView();
         if (isSynced())
-            getRegina().socket.off(locationTag, new Emitter.Listener() {
+            getRegina().socket.off(syncTag(), new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
                     Log.i("@off", locationTag);
@@ -61,28 +61,18 @@ public abstract class AutonomousFindUpdateByIDFragment extends AutonomousFindUpd
     }
 
 
-    //concrete
-
-    protected JSONObject query() throws JSONException {
-        return id();
-    }
-
-    protected JSONObject update(Object state) throws JSONException {
-        return set(state);
-    }
-
-    protected String syncTag() {
-        return locationTag;
-    }
-
     //IO parameters default handlers for save operation
 
-    protected JSONObject saveStateMeta() throws JSONException {
+    protected final JSONObject saveStateMeta() throws JSONException {
         final String defaultAmplitudeStr = defaultAmplitude.toString();
 
-        JSONObject collPath = jo().put("val", getCollTag()).put("kind", defaultAmplitudeStr);
-        JSONObject docPath = jo().put("val", docTag).put("kind", defaultAmplitudeStr);
-        JSONObject locationPath = jo().put("val", locationTag).put("kind", defaultAmplitudeStr);
+        //TODO CLEAN UP
+        JSONObject collPath = path(getCollTag(), defaultAmplitude);
+        //jo().put("val", getCollTag()).put("kind", defaultAmplitudeStr);
+        JSONObject docPath = path(docTag, defaultAmplitude);
+        //jo().put("val", docTag).put("kind", defaultAmplitudeStr);
+        JSONObject locationPath = path(locationTag, defaultAmplitude);
+        //jo().put("val", locationTag).put("kind", defaultAmplitudeStr);
 
         JSONArray tags = jar().put(collPath).put(docPath).put(locationPath);
         Log.i("@saveStateMeta", tags.toString());
@@ -92,14 +82,24 @@ public abstract class AutonomousFindUpdateByIDFragment extends AutonomousFindUpd
 
     //IO parameters default handlers for load operation
 
-    protected JSONObject loadStateOpt() throws JSONException {
+    protected final JSONObject loadStateOpt() throws JSONException {
         return key();
     }
 
 
-    //abstract
+    //concrete
 
-    protected abstract Ack loadStateAck();
+    protected final JSONObject query() throws JSONException {
+        return id();
+    }
+
+    protected final JSONObject update(Object state) throws JSONException {
+        return set(state);
+    }
+
+    protected final String syncTag() {
+        return locationTag;
+    }
 
 
     //utils
@@ -119,19 +119,19 @@ public abstract class AutonomousFindUpdateByIDFragment extends AutonomousFindUpd
 
     //accessors
 
-    public String get_id() {
+    public final String get_id() {
         return _id;
     }
 
-    public String getKey() {
+    public final String getKey() {
         return key;
     }
 
-    public String getDocTag() {
+    public final String getDocTag() {
         return docTag;
     }
 
-    public String getLocationTag() {
+    public final String getLocationTag() {
         return locationTag;
     }
 
