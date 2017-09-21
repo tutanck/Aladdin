@@ -113,12 +113,13 @@ public class ProfileFragment extends Fragment {
                 ), "rating")
                 .commit();
 
-        ((AppCompatActivity) activity).getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.rating_control_layout, QUBIRatingBar.newInstance(
-                        Colls.USER_RATING, _id, "fictivID"
-                ), "rating_control")
-                .commit();
+        if (!isEditable)
+            ((AppCompatActivity) activity).getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.rating_control_layout, QUBIRatingBar.newInstance(
+                            Colls.USER_RATING, _id, "fictivID"
+                    ), "rating_control")
+                    .commit();
 
         ((AppCompatActivity) activity).getSupportFragmentManager()
                 .beginTransaction()
