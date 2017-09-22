@@ -1,7 +1,8 @@
-package com.aj.aladdin.domain.components.userprofile;
+package com.aj.aladdin.domain.components.profile;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.domain.components.keywords.UserKeywordsActivity;
+import com.aj.aladdin.domain.components.keywords.UtherKeywordsActivity;
 import com.aj.aladdin.tools.components.fragments.autonomous.AutoRatingBar;
 import com.aj.aladdin.tools.components.fragments.autonomous.QUBIFormField;
 import com.aj.aladdin.tools.components.fragments.ImageFragment;
@@ -148,8 +151,18 @@ public class ProfileFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent;
+                if (isEditable) {
+                    intent = new Intent(getContext(), UserKeywordsActivity.class);
+                    intent.putExtra(UserKeywordsActivity.USERID, "joan");
+                } else {
+                    intent = new Intent(getContext(), UtherKeywordsActivity.class);
+                    intent.putExtra(UtherKeywordsActivity.USERID, "joan");
+                }
+                intent.setAction(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                startActivity(intent);
+
             }
         });
 

@@ -4,16 +4,16 @@
     android:id="@+id/form_field_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/min_margin"
-    android:layout_marginTop="@dimen/min_margin"
-    android:padding="@dimen/min_margin">
+    android:layout_marginBottom="@dimen/min"
+    android:layout_marginTop="@dimen/min"
+    android:padding="@dimen/min">
 
     <ImageView
         android:id="@+id/ivIndication"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/min_margin"
+        android:layout_marginRight="@dimen/min"
         android:src="@drawable/ic_email_black" />
 
     <TextView

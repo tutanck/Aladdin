@@ -21,6 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".domain.components.keywords.UserKeywordsActivity"></activity>
+        <activity android:name=".domain.components.keywords.UtherKeywordsActivity"></activity>
     </application>
 
 </manifest>

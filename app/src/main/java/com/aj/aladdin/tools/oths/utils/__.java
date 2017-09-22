@@ -1,10 +1,14 @@
 package com.aj.aladdin.tools.oths.utils;
 
 import android.content.Context;
+import android.support.design.widget.Snackbar;
+import android.view.View;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.regex.Pattern;
 
 /**
  * Created by joan on 19/09/2017.
@@ -19,6 +23,27 @@ public class __ {
     public static final void showShortToast(Context ctx, String text) {
         Toast.makeText(ctx, text, Toast.LENGTH_SHORT).show();
     }
+
+    public static Snackbar showShortSnack(View view, String text) {
+        Snackbar snackbar = Snackbar.make(view, text, Snackbar.LENGTH_SHORT);
+        snackbar.show();
+        return snackbar;
+    }
+
+    public static Snackbar showLongSnack(View view, String text) {
+        Snackbar snackbar = Snackbar.make(view, text, Snackbar.LENGTH_LONG);
+        snackbar.show();
+        return snackbar;
+    }
+
+    public static boolean match(String regex, String text) {
+        return Pattern.compile(regex).matcher(text).matches();
+    }
+
+    public static boolean found(String regex, String text) {
+        return Pattern.compile(regex).matcher(text).find();
+    }
+
 
 
     public static final JSONObject jo() {

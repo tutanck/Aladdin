@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.aj.aladdin.domain.components.userprofile.ProfileFragment;
+import com.aj.aladdin.domain.components.profile.ProfileFragment;
 import com.aj.aladdin.tools.oths.PageFragment;
 
 public class MainActivityPagerAdapter extends FragmentPagerAdapter {

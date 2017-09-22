@@ -8,6 +8,7 @@ public interface Colls {
 
     public static String USER_PROFILE = "USER_PROFILE";
     public static String USER_RATING = "USER_RATING";
+    String USER_KEYWORDS = "USER_KEYWORDS";
 
 
 }

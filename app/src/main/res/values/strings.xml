@@ -3,4 +3,6 @@
     <string name="company">entreprise</string>
     <string name="individual">particulier</string>
     <string name="user_type_label">JE SUIS UN(E) :</string>
+    <string name="activity_keyword">Mot-clé de mon activité</string>
+    <string name="plus">+</string>
 </resources>
