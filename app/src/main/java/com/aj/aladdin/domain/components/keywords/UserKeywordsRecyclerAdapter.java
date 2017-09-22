@@ -47,6 +47,8 @@ public class UserKeywordsRecyclerAdapter extends RecyclerView.Adapter<UserKeywor
         private TextView mTextView;
         private Switch mSwitch;
 
+        private UserKeyword mUserKeyword;
+
 
         public ViewHolder(View v) {
             super(v);
@@ -56,8 +58,9 @@ public class UserKeywordsRecyclerAdapter extends RecyclerView.Adapter<UserKeywor
         }
 
         public void bindItem(UserKeyword userKeyword) {
-            String keyword = userKeyword.getKeyword();
-            boolean active = userKeyword.isActive();
+            this.mUserKeyword = userKeyword;
+            String keyword = mUserKeyword.getKeyword();
+            boolean active = mUserKeyword.isActive();
             mTextView.setText(keyword);
             mSwitch.setChecked(active);
 
@@ -65,10 +68,15 @@ public class UserKeywordsRecyclerAdapter extends RecyclerView.Adapter<UserKeywor
                     new CompoundButton.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                            userKeyword.getActivity().setKeyword(keyword,active,false);
+                            userKeyword.getActivity().setKeyword(keyword,!active,false);
                         }
                     }
             );
         }
+
+        void deleteKeywoord(){
+            mUserKeyword.getActivity().setKeyword(mUserKeyword.getKeyword(),mUserKeyword.isActive(),true);
+        }
+
     }
 }

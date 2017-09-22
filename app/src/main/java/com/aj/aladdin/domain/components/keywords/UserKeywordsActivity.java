@@ -65,6 +65,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
 
         functionalizeETKeyword();
         functionalizeBtnAdd();
+        setRecyclerViewItemTouchListener();
     }
 
     @Override
@@ -188,9 +189,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                int position = viewHolder.getAdapterPosition();
-                mUserKeywords.remove(position);
-                mRecyclerView.getAdapter().notifyItemRemoved(position);
+                ((UserKeywordsRecyclerAdapter.ViewHolder)viewHolder).deleteKeywoord();
             }
         };
 
