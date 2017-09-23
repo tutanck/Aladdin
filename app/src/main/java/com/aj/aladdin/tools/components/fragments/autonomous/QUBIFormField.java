@@ -25,7 +25,7 @@ import io.socket.client.Ack;
 
 public class QUBIFormField extends AutonomousQueryUpdateByIDFragment {
 
-    private static final String TYPE = "TYPE";
+    private static final String KIND = "KIND";
     private static final String SELECTABLE = "SELECTABLE";
     private static final String LABEL = "LABEL";
 
@@ -43,11 +43,11 @@ public class QUBIFormField extends AutonomousQueryUpdateByIDFragment {
             , String _id
             , String key
             , String label
-            , int type
+            , int kind
             , boolean selectable
     ) {
         Bundle args = new Bundle();
-        args.putInt(TYPE, type);
+        args.putInt(KIND, kind);
         args.putBoolean(SELECTABLE, selectable);
         args.putString(LABEL, label);
         QUBIFormField fragment = new QUBIFormField();
@@ -68,7 +68,7 @@ public class QUBIFormField extends AutonomousQueryUpdateByIDFragment {
         final Bundle args = getArguments();
 
         View view;
-        switch (args.getInt(TYPE)) {
+        switch (args.getInt(KIND)) {
             case 0:
                 view = inflater.inflate(R.layout.fragment_form_field_multiline, container, false);
                 break;

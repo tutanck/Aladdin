@@ -33,6 +33,8 @@ public class ProfileFragment extends Fragment {
     private final String coll = Colls.USER_PROFILE;
     private final String _id = "59c13a29457ba52f74884c89";
 
+    AppCompatActivity activity;
+
 
     //rg : radio_group
     private String[] rgKeys;
@@ -60,6 +62,8 @@ public class ProfileFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
+        activity = (AppCompatActivity) getActivity();
+
         final Resources resources = context.getResources();
 
         rgKeys = resources.getStringArray(R.array.profile_radio_group_keys);
@@ -86,14 +90,14 @@ public class ProfileFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
-        ((AppCompatActivity) getActivity()).getSupportFragmentManager()
+        activity.getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.profile_image_layout, ImageFragment.newInstance(
                         ffLabels[0], ffIndics[0], 0, "" //todo
                 ), "profile_image")
                 .commit();
 
-        ((AppCompatActivity) getActivity()).getSupportFragmentManager()
+        activity.getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.rating_layout, AutoRatingBar.newInstance(
                         Colls.USER_RATING, "fictivID"
@@ -101,14 +105,14 @@ public class ProfileFragment extends Fragment {
                 .commit();
 
         if (!isEditable)
-            ((AppCompatActivity) getActivity()).getSupportFragmentManager()
+            activity.getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.rating_control_layout, QUBIRatingBar.newInstance(
                             Colls.USER_RATING, _id, "fictivID"
                     ), "rating_control")
                     .commit();
 
-        ((AppCompatActivity) getActivity()).getSupportFragmentManager()
+        activity.getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.radio_group_layout, QUBIRadioGroup.newInstance(
                         coll, _id, rgKeys[0], rgLabels, isEditable
@@ -117,14 +121,14 @@ public class ProfileFragment extends Fragment {
 
 
         for (int i = 0; i < ffLabels.length; i++) {
-            ((AppCompatActivity) getActivity()).getSupportFragmentManager()
+            activity.getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.form_layout, QUBIFormField.newInstance(
                             coll, _id, ffKeys[i], ffLabels[i], ffTypes[i], isEditable
                     ), "form_field_" + i)
                     .commit();
 
-            ((AppCompatActivity) getActivity()).getSupportFragmentManager()
+            activity.getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.form_layout, ItemDividerFragment.newInstance(false), "item_divider" + i)
                     .commit();

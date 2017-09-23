@@ -17,7 +17,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/small"
         android:ellipsize="end"
-        android:text="Liste de vos recherches sauvegargées"
+        android:text="Recherches sauvegargées"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#212121"
         android:textSize="16dp" />

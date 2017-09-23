@@ -13,11 +13,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.tools.components.fragments.ItemDividerFragment;
+import com.aj.aladdin.tools.components.fragments.simple.FormField;
 import com.aj.aladdin.tools.oths.PageFragment;
+
+import java.util.ArrayList;
 
 public class UserNeedActivity extends AppCompatActivity {
 
     public final static String _ID = "_ID";
+
+    ArrayList<FormField> formFields = new ArrayList<>();
 
 
     @Override
@@ -38,12 +44,30 @@ public class UserNeedActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.user_need_results_sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+
+        for (int i = 0; i < 3; i++) {
+            FormField formField = FormField.newInstance(
+                    "loll", R.layout.fragment_form_field_multiline);
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.form_layout, formField, "form_field_" + i)
+                    .commit();
+
+            formFields.add(formField);
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.form_layout, ItemDividerFragment.newInstance(false), "item_divider" + i)
+                    .commit();
+        }
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_save_need);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                for (FormField formField : formFields)
+                    formField.toggle();
             }
         });
     }
@@ -53,7 +77,7 @@ public class UserNeedActivity extends AppCompatActivity {
 
         private Context context;
 
-        private String TAB_TITLES[] = new String[]{"PROFILS TROUVES", "DEMANDES RECUES"};
+        private String TAB_TITLES[] = new String[]{"PROFILS TROUVES", "PROPOSITIONS RECUES"};
 
         public PagerAdapter(FragmentManager fm, Context context) {
             super(fm);
