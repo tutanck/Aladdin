@@ -13,7 +13,7 @@ import com.aj.aladdin.R;
 import com.aj.aladdin.tools.components.model.AutonomousQueryUpdateByIDFragment;
 import com.aj.aladdin.tools.components.services.ComponentsServices;
 import com.aj.aladdin.tools.components.services.IO;
-import com.aj.aladdin.tools.oths.KeyboardServices;
+import com.aj.aladdin.tools.oths.utils.KeyboardServices;
 import com.aj.aladdin.tools.oths.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
 
@@ -25,7 +25,7 @@ import io.socket.client.Ack;
 
 public class QUBIFormField extends AutonomousQueryUpdateByIDFragment {
 
-    private static final String KIND = "KIND";
+    private static final String LAYOUT_ID = "LAYOUT_ID";
     private static final String SELECTABLE = "SELECTABLE";
     private static final String LABEL = "LABEL";
 
@@ -43,11 +43,11 @@ public class QUBIFormField extends AutonomousQueryUpdateByIDFragment {
             , String _id
             , String key
             , String label
-            , int kind
+            , int layoutID
             , boolean selectable
     ) {
         Bundle args = new Bundle();
-        args.putInt(KIND, kind);
+        args.putInt(LAYOUT_ID, layoutID);
         args.putBoolean(SELECTABLE, selectable);
         args.putString(LABEL, label);
         QUBIFormField fragment = new QUBIFormField();
@@ -67,19 +67,7 @@ public class QUBIFormField extends AutonomousQueryUpdateByIDFragment {
 
         final Bundle args = getArguments();
 
-        View view;
-        switch (args.getInt(KIND)) {
-            case 0:
-                view = inflater.inflate(R.layout.fragment_form_field_multiline, container, false);
-                break;
-            case 1:
-                view = inflater.inflate(R.layout.fragment_form_field_oneliner, container, false);
-                break;
-            default:
-                view = inflater.inflate(R.layout.fragment_form_field_multiline, container, false);
-                break;
-        }
-
+        View view = inflater.inflate(args.getInt(LAYOUT_ID), container, false);
 
         final ImageView ivIndication = (ImageView) view.findViewById(R.id.ivIndication);
 

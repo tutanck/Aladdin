@@ -3,7 +3,6 @@ package com.aj.aladdin.domain.components.needs;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,7 +14,14 @@ import android.view.View;
 import com.aj.aladdin.R;
 import com.aj.aladdin.tools.components.fragments.ItemDividerFragment;
 import com.aj.aladdin.tools.components.fragments.simple.FormField;
+import com.aj.aladdin.tools.components.services.FormFieldKindTranslator;
 import com.aj.aladdin.tools.oths.PageFragment;
+import com.aj.aladdin.tools.oths.utils.JSONServices;
+import com.aj.aladdin.tools.oths.utils.__;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -24,6 +30,8 @@ public class UserNeedActivity extends AppCompatActivity {
     public final static String _ID = "_ID";
 
     ArrayList<FormField> formFields = new ArrayList<>();
+
+    JSONObject formParams;
 
 
     @Override
@@ -45,21 +53,34 @@ public class UserNeedActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
 
-        for (int i = 0; i < 3; i++) {
-            FormField formField = FormField.newInstance(
-                    "loll", R.layout.fragment_form_field_multiline);
+        formParams = JSONServices.loadJsonFromAsset("form_params_user_need.json", this);
+        JSONArray orderedFieldsNames;
+        try {
+            orderedFieldsNames = formParams.getJSONArray("ordered_fields_names");
 
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.form_layout, formField, "form_field_" + i)
-                    .commit();
+            for (int i = 0; i < orderedFieldsNames.length(); i++) {
+                String fieldName = orderedFieldsNames.getString(i);
 
-            formFields.add(formField);
+                JSONObject fieldParam = formParams.getJSONObject(fieldName);
 
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.form_layout, ItemDividerFragment.newInstance(false), "item_divider" + i)
-                    .commit();
+                FormField formField = FormField.newInstance(
+                        fieldParam.getString("label"), FormFieldKindTranslator.tr(fieldParam.getInt("kind")));
+
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.form_layout, formField, fieldName)
+                        .commit();
+
+                formFields.add(formField);
+
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.form_layout, ItemDividerFragment.newInstance(false), "item_divider" + i)
+                        .commit();
+            }
+
+        } catch (JSONException e) {
+            __.fatalError(e);
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_save_need);

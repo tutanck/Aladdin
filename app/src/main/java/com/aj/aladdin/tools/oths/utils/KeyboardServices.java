@@ -1,4 +1,4 @@
-package com.aj.aladdin.tools.oths;
+package com.aj.aladdin.tools.oths.utils;
 
 import android.content.Context;
 import android.view.inputmethod.InputMethodManager;

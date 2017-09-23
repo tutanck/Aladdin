@@ -124,8 +124,8 @@ public class ProfileFragment extends Fragment {
             activity.getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.form_layout, QUBIFormField.newInstance(
-                            coll, _id, ffKeys[i], ffLabels[i], ffTypes[i], isEditable
-                    ), "form_field_" + i)
+                            coll, _id, ffKeys[i], ffLabels[i], R.layout.fragment_form_field_multiline, isEditable
+                    ), "form_field_" + i)//// TODO: 23/09/2017
                     .commit();
 
             activity.getSupportFragmentManager()

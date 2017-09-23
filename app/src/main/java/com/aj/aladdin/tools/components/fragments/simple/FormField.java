@@ -11,9 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.components.services.ComponentsServices;
-import com.aj.aladdin.tools.oths.KeyboardServices;
-import com.aj.aladdin.tools.oths.utils.__;
+import com.aj.aladdin.tools.oths.utils.KeyboardServices;
 
 
 public class FormField extends Fragment {
