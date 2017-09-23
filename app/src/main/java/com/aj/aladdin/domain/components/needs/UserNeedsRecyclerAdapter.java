@@ -1,4 +1,4 @@
-package com.aj.aladdin.domain.components.keywords;
+package com.aj.aladdin.domain.components.needs;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,38 +8,39 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.tools.oths.utils.__;
 
 import java.util.ArrayList;
 
 /**
  * Created by joan on 21/09/17.
  */
-public class UserKeywordsRecyclerAdapter extends RecyclerView.Adapter<UserKeywordsRecyclerAdapter.ViewHolder> {
+public class UserNeedsRecyclerAdapter extends RecyclerView.Adapter<UserNeedsRecyclerAdapter.ViewHolder> {
 
-    private ArrayList<UserKeyword> mUserKeywords;
+    private ArrayList<UserNeed> mUserNeeds;
 
-    public UserKeywordsRecyclerAdapter(
-            ArrayList<UserKeyword> userKeywords
+    public UserNeedsRecyclerAdapter(
+            ArrayList<UserNeed> userNeeds
     ) {
-        mUserKeywords = userKeywords;
+        mUserNeeds = userNeeds;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(
                 LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.list_item_user_keyword, parent, false)
+                        .inflate(R.layout.list_item_user_need, parent, false)
         );
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bindItem(mUserKeywords.get(position));
+        holder.bindItem(mUserNeeds.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mUserKeywords.size();
+        return mUserNeeds.size();
     }
 
 
@@ -50,27 +51,26 @@ public class UserKeywordsRecyclerAdapter extends RecyclerView.Adapter<UserKeywor
 
         private boolean haveSwitchListener = false;
 
-        private UserKeyword mUserKeyword;
+        private UserNeed mUserNeed;
 
 
         public ViewHolder(View v) {
             super(v);
 
-            mTextView = (TextView) v.findViewById(R.id.keyword_textview);
-            mSwitch = (Switch) v.findViewById(R.id.keyword_switch);
+            mTextView = (TextView) v.findViewById(R.id.need_textview);
+            mSwitch = (Switch) v.findViewById(R.id.need_switch);
         }
 
-        public void bindItem(UserKeyword userKeyword) {
-            this.mUserKeyword = userKeyword;
-            mTextView.setText(mUserKeyword.getKeyword());
-            mSwitch.setChecked(mUserKeyword.isActive());
+        public void bindItem(UserNeed userNeed) {
+            this.mUserNeed = userNeed;
+            mTextView.setText(mUserNeed.getTitle());
+            mSwitch.setChecked(mUserNeed.isActive());
 
             if (!haveSwitchListener) {
                 mSwitch.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        userKeyword.getActivity()
-                                .setKeyword(mUserKeyword.getKeyword(), !mUserKeyword.isActive(), false);
+                        //mUserNeed.getActivity().setNeedStatus(mUserNeed.get_id(), !mUserNeed.isActive(), false);
                     }
                 });
 
@@ -78,8 +78,8 @@ public class UserKeywordsRecyclerAdapter extends RecyclerView.Adapter<UserKeywor
             }
         }
 
-        void deleteKeyword() {
-            mUserKeyword.getActivity().setKeyword(mUserKeyword.getKeyword(), mUserKeyword.isActive(), true);
+        void deleteNeed() {
+            //mUserNeed.getActivity().setNeedStatus(mUserNeed.get_id(), mUserNeed.isActive(), true);
         }
 
     }

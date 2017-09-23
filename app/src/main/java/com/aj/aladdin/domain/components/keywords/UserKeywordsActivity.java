@@ -1,7 +1,6 @@
 package com.aj.aladdin.domain.components.keywords;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +9,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.aj.aladdin.R;
@@ -42,7 +42,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
     private UserKeywordsRecyclerAdapter mAdapter;
 
     private EditText etKeyword;
-    private FloatingActionButton btnAdd;
+    private Button btnAdd;
 
 
     @Override
@@ -50,7 +50,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_keywords);
 
-        btnAdd = (FloatingActionButton) findViewById(R.id.add_keyword_button);
+        btnAdd = (Button) findViewById(R.id.add_keyword_button);
         btnAdd.setEnabled(false);
 
         etKeyword = (EditText) findViewById(R.id.add_keyword_input);
@@ -126,7 +126,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
         return !TextUtils.isEmpty(input) && !__.found("[^a-zA-Z0-9]", input);
     }
 
-    void setKeyword(String input, boolean avtive, boolean deleted) {
+    void setKeyword(String input, boolean active, boolean deleted) {
         String keyword = input.trim();
         if (!isKeyword(keyword)) {
             __.showLongSnack(btnAdd, "Un mot-clé est composé d'un seul mot (caractères alphanumériques sans accents).");
@@ -134,7 +134,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
             String userID = getIntent().getStringExtra(USERID);
             IO.r.update(coll
                     , __.jo().put(USERID, userID).put("keyword", keyword)
-                    , __.jo().put(USERID, userID).put("keyword", keyword).put("active", avtive).put("deleted",deleted)
+                    , __.jo().put(USERID, userID).put("keyword", keyword).put("active", active).put("deleted",deleted)
                     , __.jo().put("upsert", true)
                     , __.jo()
                     , new Ack() {
@@ -189,7 +189,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                ((UserKeywordsRecyclerAdapter.ViewHolder)viewHolder).deleteKeywoord();
+                ((UserKeywordsRecyclerAdapter.ViewHolder)viewHolder).deleteKeyword();
             }
         };
 

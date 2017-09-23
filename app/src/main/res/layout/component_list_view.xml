@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/medium"
+    android:paddingRight="@dimen/medium"
+    android:paddingBottom="@dimen/small"
+    android:paddingTop="@dimen/small">
+
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+    </ListView>
+
+</RelativeLayout>

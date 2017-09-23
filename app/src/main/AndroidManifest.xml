@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.aj.aladdin">
 
-
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -22,8 +21,23 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".domain.components.keywords.UserKeywordsActivity"></activity>
-        <activity android:name=".domain.components.keywords.UtherKeywordsActivity"></activity>
+        <activity
+            android:name=".domain.components.keywords.UserKeywordsActivity" >
+
+
+        </activity>
+
+        <activity
+            android:name=".domain.components.keywords.UtherKeywordsActivity" >
+
+        </activity>
+
+        <activity
+            android:name=".domain.components.needs.UserNeedActivity"
+            android:label="Besoin"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
     </application>
 
 </manifest>
