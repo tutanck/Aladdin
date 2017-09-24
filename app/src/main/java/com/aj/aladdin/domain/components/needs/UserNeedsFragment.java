@@ -1,6 +1,5 @@
 package com.aj.aladdin.domain.components.needs;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -25,16 +24,12 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import io.socket.client.Ack;
-
 
 public class UserNeedsFragment extends Fragment {
 
-    private final String _id = "59c13a29457ba52f74884c89";
-
     public final static String coll = DB.USER_NEEDS;
 
-    public final static String USERID = "userID";
+    public final static String OWNER_ID = "ownerID";
 
     private ArrayList<UserNeed> mUserNeeds = new ArrayList<>();
 
@@ -43,16 +38,9 @@ public class UserNeedsFragment extends Fragment {
     private UserNeedsRecyclerAdapter mAdapter;
 
 
-    public static UserNeedsFragment newInstance(
-    ) {
+    public static UserNeedsFragment newInstance() {
         UserNeedsFragment fragment = new UserNeedsFragment();
         return fragment;
-    }
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
     }
 
 
@@ -81,7 +69,6 @@ public class UserNeedsFragment extends Fragment {
             }
         });
 
-
         return view;
     }
 
@@ -96,50 +83,26 @@ public class UserNeedsFragment extends Fragment {
         try {
             IO.r.find(
                     coll
-                    , __.jo().put(USERID, _id).put("deleted", false)
+                    , __.jo().put(OWNER_ID, "joan").put("deleted", false) //// TODO: 24/09/2017
                     , __.jo().put("sort", __.jo().put("active", 1).put("title", 1)) // TODO: 22/09/2017 check
                     , __.jo()
-                    , new Ack() {
-                        @Override
-                        public void call(Object... args) {
-                            getActivity().runOnUiThread(new Runnable() { //mandatory to modify an activity's ui view
-                                @Override
-                                public void run() {
-                                    if (args[0] != null) {
-                                        __.showLongToast(getActivity(), "Une erreur s'est produite");
-                                    } else try {
-                                        JSONArray jar = (JSONArray) args[1];
-                                        mUserNeeds.clear();
-                                        for (int i = 0; i < jar.length(); i++) {
-                                            JSONObject jo = jar.getJSONObject(i);
-                                            mUserNeeds.add(new UserNeed(jo.getString("_id"), jo.getString("title"), jo.getBoolean("active")));
-                                        }
-                                        mAdapter.notifyDataSetChanged();
-                                    } catch (JSONException e) {
-                                        __.fatalError(e); //SNO : if a doc exist the Need field should exist too
-                                    }
-                                }
-                            });
-                        }
-                    }
-            );
-        } catch (Regina.NullRequiredParameterException | JSONException e) {
-            __.fatalError(e);
-        }
-    }
-
-
-    void saveNeedStatus(String _id, boolean active, boolean deleted) {
-        try {
-            IO.r.update(coll, __.jo().put("_id", _id)
-                    , __.jo().put("active", active).put("deleted", deleted)
-                    , __.jo(), __.jo()
                     , new UIAck(getActivity()) {
                         @Override
                         protected void onRes(Object res, JSONObject ctx) {
-                            loadNeeds();
+                            try {
+                                JSONArray jar = (JSONArray) res;
+                                mUserNeeds.clear();
+                                for (int i = 0; i < jar.length(); i++) {
+                                    JSONObject jo = jar.getJSONObject(i);
+                                    mUserNeeds.add(new UserNeed(jo.getString("_id"), jo.getString("title"), jo.getString("search"), jo.getBoolean("active")));
+                                }
+                                mAdapter.notifyDataSetChanged();
+                            } catch (JSONException e) {
+                                __.fatalError(e); //SNO : if a doc exist the Need field should exist too
+                            }
                         }
-                    });
+                    }
+            );
         } catch (Regina.NullRequiredParameterException | JSONException e) {
             __.fatalError(e);
         }

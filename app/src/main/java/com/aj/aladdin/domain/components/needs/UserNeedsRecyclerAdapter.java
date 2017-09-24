@@ -8,7 +8,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.oths.utils.__;
 
 import java.util.ArrayList;
 
@@ -46,7 +45,8 @@ public class UserNeedsRecyclerAdapter extends RecyclerView.Adapter<UserNeedsRecy
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView mTextView;
+        private TextView mTitleTextView;
+        private TextView mSearchTextView;
         private Switch mSwitch;
 
         private boolean haveSwitchListener = false;
@@ -57,16 +57,18 @@ public class UserNeedsRecyclerAdapter extends RecyclerView.Adapter<UserNeedsRecy
         public ViewHolder(View v) {
             super(v);
 
-            mTextView = (TextView) v.findViewById(R.id.need_textview);
+            mTitleTextView = (TextView) v.findViewById(R.id.need_title_textview);
+            mSearchTextView = (TextView) v.findViewById(R.id.need_search_textview);
             mSwitch = (Switch) v.findViewById(R.id.need_switch);
         }
 
         public void bindItem(UserNeed userNeed) {
             this.mUserNeed = userNeed;
-            mTextView.setText(mUserNeed.getTitle());
-            mSwitch.setChecked(mUserNeed.isActive());
+            mTitleTextView.setText(mUserNeed.getTitle());
+            mSearchTextView.setText(mUserNeed.getSearch());
+           // mSwitch.setChecked(mUserNeed.isActive());
 
-            if (!haveSwitchListener) {
+            /*if (!haveSwitchListener) {
                 mSwitch.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -75,7 +77,7 @@ public class UserNeedsRecyclerAdapter extends RecyclerView.Adapter<UserNeedsRecy
                 });
 
                 haveSwitchListener = true;
-            }
+            }*/
         }
 
         void deleteNeed() {

@@ -8,15 +8,18 @@ class UserNeed {
 
     private String _id;
     private String title;
+    private String search;
     private boolean active;
 
     UserNeed(
             String _id
             , String title
+            , String search
             , boolean active
     ) {
         this._id = _id;
         this.title = title;
+        this.search = search;
         this.active = active;
     }
 
@@ -31,5 +34,9 @@ class UserNeed {
 
     boolean isActive() {
         return active;
+    }
+
+    public String getSearch() {
+        return search;
     }
 }

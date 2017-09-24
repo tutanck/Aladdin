@@ -54,7 +54,7 @@ public class UserNeedActivity extends AppCompatActivity {
 
         private Context context;
 
-        private String TAB_TITLES[] = new String[]{"PROFILS TROUVES", "DEMANDES RECUES"};
+        private String TAB_TITLES[] = new String[]{"PROFILS TROUVES", "POKES RECUES"};
 
         public PagerAdapter(FragmentManager fm, Context context) {
             super(fm);
