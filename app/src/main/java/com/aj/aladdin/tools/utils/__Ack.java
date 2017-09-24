@@ -1,6 +1,6 @@
 package com.aj.aladdin.tools.utils;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 import android.util.Log;
 
 import com.aj.aladdin.tools.oths.utils.__;
@@ -17,7 +17,7 @@ import io.socket.client.Ack;
 
 public abstract class __Ack implements Ack {
 
-    protected final AppCompatActivity compatActivity;
+    protected final Activity activity;
     protected boolean isDebugOn = true;
 
 
@@ -27,27 +27,27 @@ public abstract class __Ack implements Ack {
             JSONObject err,
             JSONObject ctx
     ) {
-        __.showShortToast(compatActivity, "Une erreur s'est produite");
+        __.showShortToast(activity, "Une erreur s'est produite");
     }
 
 
     protected void onReginaFail(
     ) {
-        __.showShortToast(compatActivity, "Une erreur s'est produite!");//note the exclamation mark : !
+        __.showShortToast(activity, "Une erreur s'est produite!");//note the exclamation mark : !
     }
 
 
     public __Ack(
-            AppCompatActivity compatActivity
+            Activity activity
     ) {
-        this.compatActivity = compatActivity;
+        this.activity = activity;
     }
 
     public __Ack(
-            AppCompatActivity compatActivity
+            Activity activity
             , boolean isDebugOn
     ) {
-        this.compatActivity = compatActivity;
+        this.activity = activity;
         this.isDebugOn = isDebugOn;
     }
 

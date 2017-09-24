@@ -1,12 +1,10 @@
 package com.aj.aladdin.domain.components.profile;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -23,14 +21,14 @@ import com.aj.aladdin.tools.components.fragments.ImageFragment;
 import com.aj.aladdin.tools.components.fragments.ItemDividerFragment;
 import com.aj.aladdin.tools.components.fragments.autonomous.QUBIRadioGroup;
 import com.aj.aladdin.tools.components.fragments.autonomous.QUBIRatingBar;
-import com.aj.aladdin.tools.oths.db.Colls;
+import com.aj.aladdin.tools.oths.db.DB;
 
 
 public class ProfileFragment extends Fragment {
 
     private static final String EDITABLE = "EDITABLE";
 
-    private final String coll = Colls.USER_PROFILE;
+    private final String coll = DB.USER_PROFILE;
     private final String _id = "59c13a29457ba52f74884c89";
 
     AppCompatActivity activity;
@@ -100,7 +98,7 @@ public class ProfileFragment extends Fragment {
         activity.getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.rating_layout, AutoRatingBar.newInstance(
-                        Colls.USER_RATING, "fictivID"
+                        DB.USER_RATING, "fictivID"
                 ), "rating")
                 .commit();
 
@@ -108,7 +106,7 @@ public class ProfileFragment extends Fragment {
             activity.getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.rating_control_layout, QUBIRatingBar.newInstance(
-                            Colls.USER_RATING, _id, "fictivID"
+                            DB.USER_RATING, _id, "fictivID"
                     ), "rating_control")
                     .commit();
 

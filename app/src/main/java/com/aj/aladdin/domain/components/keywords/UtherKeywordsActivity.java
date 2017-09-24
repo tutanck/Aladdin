@@ -7,7 +7,7 @@ import android.widget.ListView;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.tools.oths.db.IO;
-import com.aj.aladdin.tools.oths.db.Colls;
+import com.aj.aladdin.tools.oths.db.DB;
 import com.aj.aladdin.tools.oths.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
 
@@ -44,7 +44,7 @@ public class UtherKeywordsActivity extends AppCompatActivity {
         super.onStart();
         try {
             IO.r.find(
-                    Colls.USER_KEYWORDS
+                    DB.USER_KEYWORDS
                     , __.jo().put(USERID, getIntent().getStringExtra(USERID)).put("active",true).put("deleted",false)
                     , __.jo()
                     , __.jo()

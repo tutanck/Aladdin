@@ -1,5 +1,6 @@
 package com.aj.aladdin.tools.utils;
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 
 import org.json.JSONObject;
@@ -14,8 +15,7 @@ public abstract class UIAck extends __Ack {
     public final void call(Object... args) {
         if (isDebugOn)
             logObjectList(args);
-
-        compatActivity.runOnUiThread(new Runnable() { //mandatory to modify an activity's ui view
+        activity.runOnUiThread(new Runnable() { //mandatory to modify an activity's ui view
             @Override
             public void run() {
                 if (args[0] != null && args[2]!=null)
@@ -29,12 +29,12 @@ public abstract class UIAck extends __Ack {
     }
 
 
-    public UIAck(AppCompatActivity compatActivity) {
-        super(compatActivity);
+    public UIAck(Activity activity) {
+        super(activity);
     }
 
-    public UIAck(AppCompatActivity compatActivity, boolean isDebugOn) {
-        super(compatActivity, isDebugOn);
+    public UIAck(Activity activity, boolean isDebugOn) {
+        super(activity, isDebugOn);
     }
 
 

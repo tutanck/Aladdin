@@ -2,6 +2,7 @@ package com.aj.aladdin.tools.oths.utils;
 
 import android.content.Context;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -60,5 +61,9 @@ public class __ {
 
     public static void fatalError(String message) {
         throw new RuntimeException(message);
+    }
+
+    public static void chill(String who) {
+        Log.i("@"+who,"is chillin");
     }
 }

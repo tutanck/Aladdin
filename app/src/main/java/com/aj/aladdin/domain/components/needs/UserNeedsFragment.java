@@ -14,9 +14,10 @@ import android.view.ViewGroup;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.tools.oths.db.IO;
-import com.aj.aladdin.tools.oths.db.Colls;
+import com.aj.aladdin.tools.oths.db.DB;
 import com.aj.aladdin.tools.oths.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
+import com.aj.aladdin.tools.utils.UIAck;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,7 +32,7 @@ public class UserNeedsFragment extends Fragment {
 
     private final String _id = "59c13a29457ba52f74884c89";
 
-    public final static String coll = Colls.USER_NEEDS;
+    public final static String coll = DB.USER_NEEDS;
 
     public final static String USERID = "userID";
 
@@ -128,29 +129,17 @@ public class UserNeedsFragment extends Fragment {
     }
 
 
-    void setNeedStatus(String _id, boolean active, boolean deleted) {
+    void saveNeedStatus(String _id, boolean active, boolean deleted) {
         try {
-            IO.r.update(coll
-                    , __.jo().put("_id", _id)
+            IO.r.update(coll, __.jo().put("_id", _id)
                     , __.jo().put("active", active).put("deleted", deleted)
-                    , __.jo()
-                    , __.jo()
-                    , new Ack() {
+                    , __.jo(), __.jo()
+                    , new UIAck(getActivity()) {
                         @Override
-                        public void call(Object... args) {
-                            getActivity().runOnUiThread(new Runnable() { //mandatory to modify an activity's ui view
-                                @Override
-                                public void run() {
-                                    if (args[0] != null) {
-                                        __.showLongToast(getActivity(), "Une erreur s'est produite");
-                                    } else {
-                                        loadNeeds();
-                                    }
-                                }
-                            });
+                        protected void onRes(Object res, JSONObject ctx) {
+                            loadNeeds();
                         }
-                    }
-            );
+                    });
         } catch (Regina.NullRequiredParameterException | JSONException e) {
             __.fatalError(e);
         }

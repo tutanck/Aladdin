@@ -4,7 +4,7 @@ package com.aj.aladdin.tools.oths.db;
  * Created by joan on 19/09/2017.
  */
 
-public interface Colls {
+public interface DB {
 
     String USER_PROFILE = "USER_PROFILE";
     String USER_RATING = "USER_RATING";

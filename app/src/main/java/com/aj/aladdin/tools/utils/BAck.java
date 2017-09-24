@@ -1,6 +1,6 @@
 package com.aj.aladdin.tools.utils;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 
 import org.json.JSONObject;
 
@@ -23,13 +23,12 @@ public abstract class BAck extends __Ack {
             onReginaFail();
     }
 
-
-    public BAck(AppCompatActivity compatActivity) {
-        super(compatActivity);
+    public BAck(Activity activity) {
+        super(activity);
     }
 
-    public BAck(AppCompatActivity compatActivity, boolean isDebugOn) {
-        super(compatActivity, isDebugOn);
+    public BAck(Activity activity, boolean isDebugOn) {
+        super(activity, isDebugOn);
     }
 
 }
