@@ -1,6 +1,7 @@
 package com.aj.aladdin.domain.components.needs;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -12,27 +13,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.components.fragments.ItemDividerFragment;
-import com.aj.aladdin.tools.components.fragments.simple.FormField;
-import com.aj.aladdin.tools.components.services.FormFieldKindTranslator;
 import com.aj.aladdin.tools.oths.PageFragment;
-import com.aj.aladdin.tools.oths.utils.JSONServices;
-import com.aj.aladdin.tools.oths.utils.__;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 public class UserNeedActivity extends AppCompatActivity {
 
-    public final static String _ID = "_ID";
-
-    ArrayList<FormField> formFields = new ArrayList<>();
-
-    JSONObject formParams;
-
+    UserNeedActivity self = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,43 +38,13 @@ public class UserNeedActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.user_need_results_sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-
-        formParams = JSONServices.loadJsonFromAsset("form_params_user_need.json", this);
-        JSONArray orderedFieldsNames;
-        try {
-            orderedFieldsNames = formParams.getJSONArray("ordered_fields_names");
-
-            for (int i = 0; i < orderedFieldsNames.length(); i++) {
-                String fieldName = orderedFieldsNames.getString(i);
-
-                JSONObject fieldParam = formParams.getJSONObject(fieldName);
-
-                FormField formField = FormField.newInstance(
-                        fieldParam.getString("label"), FormFieldKindTranslator.tr(fieldParam.getInt("kind")));
-
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .add(R.id.form_layout, formField, fieldName)
-                        .commit();
-
-                formFields.add(formField);
-
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .add(R.id.form_layout, ItemDividerFragment.newInstance(false), "item_divider" + i)
-                        .commit();
-            }
-
-        } catch (JSONException e) {
-            __.fatalError(e);
-        }
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_save_need);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_open_need_save);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for (FormField formField : formFields)
-                    formField.toggle();
+                Intent intent = new Intent(self,UserNeedSaveActivity.class);
+                intent.putExtra(UserNeedSaveActivity._ID,"joan");
+                startActivity(intent);
             }
         });
     }
@@ -98,7 +54,7 @@ public class UserNeedActivity extends AppCompatActivity {
 
         private Context context;
 
-        private String TAB_TITLES[] = new String[]{"PROFILS TROUVES", "PROPOSITIONS RECUES"};
+        private String TAB_TITLES[] = new String[]{"PROFILS TROUVES", "DEMANDES RECUES"};
 
         public PagerAdapter(FragmentManager fm, Context context) {
             super(fm);

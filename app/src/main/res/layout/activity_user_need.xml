@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/user_need_coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/user_need_app_bar"
@@ -13,61 +13,6 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         ​
 
-        <LinearLayout
-            android:id="@+id/form_wrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingBottom="16dp"
-            android:paddingTop="8dp"
-            app:layout_scrollFlags="scroll">
-
-            <TextView
-                android:id="@+id/keywords_List_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/small"
-                android:ellipsize="end"
-                android:text="Enregistrez la recherche"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="#212121"
-                android:textSize="16dp" />
-
-            <TextView
-                android:id="@+id/keywords_List_indication2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="(Enregistrez cette recherche pour être contacté)"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#212121"
-                android:textSize="14dp" />
-
-            <LinearLayout
-                android:id="@+id/form_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingBottom="0dp"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"></LinearLayout>
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab_save_need"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right|end"
-                android:layout_marginBottom="@dimen/small"
-                android:layout_marginRight="@dimen/fab_margin"
-                android:elevation="8dp"
-                android:src="@drawable/ic_star_black" />
-
-        </LinearLayout>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/user_need_results_sliding_tabs"
@@ -87,5 +32,13 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_open_need_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:elevation="8dp"
+        android:src="@drawable/ic_star_black" />
 
 </android.support.design.widget.CoordinatorLayout>

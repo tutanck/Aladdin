@@ -78,11 +78,7 @@ public class UserNeedsFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), UserNeedActivity.class);
-                intent.putExtra(UserNeedActivity._ID, "joan");
-                intent.setAction(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                startActivity(intent);
+                startActivity(new Intent(getContext(), UserNeedActivity.class));
             }
         });
 

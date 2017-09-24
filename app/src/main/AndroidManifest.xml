@@ -29,13 +29,17 @@
 
         <activity
             android:name=".domain.components.keywords.UtherKeywordsActivity" >
-
         </activity>
 
         <activity
             android:name=".domain.components.needs.UserNeedActivity"
             android:label="Besoin"
             android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
+        <activity
+            android:name=".domain.components.needs.UserNeedSaveActivity"
+            android:label="Sauvegarde">
         </activity>
 
     </application>

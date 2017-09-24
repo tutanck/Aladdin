@@ -73,22 +73,24 @@ public class FormField extends Fragment {
     }
 
 
-    public void toggle(){
-        if (!isOpen) { //open the selectable view as input
-            etContent.setText(tvContent.getText());
-            etContent.setVisibility(View.VISIBLE);
-            tvContent.setVisibility(View.GONE);
-            tvDescription.setVisibility(View.GONE);
-            isOpen = true;
-        } else {//close the selectable view
-            tvContent.setText(etContent.getText());
-            etContent.setVisibility(View.GONE);
-            tvContent.setVisibility(View.VISIBLE);
-            tvDescription.setVisibility(View.VISIBLE);
-            isOpen = false;
+    public void open() {
+        if (isOpen) return;
+        etContent.setText(tvContent.getText());
+        etContent.setVisibility(View.VISIBLE);
+        tvContent.setVisibility(View.GONE);
+        tvDescription.setVisibility(View.GONE);
+        isOpen = true;
+    }
 
-            KeyboardServices.dismiss(getContext(), etContent);
-        }
+
+    public void close() {
+        if (!isOpen) return;
+        tvContent.setText(etContent.getText());
+        etContent.setVisibility(View.GONE);
+        tvContent.setVisibility(View.VISIBLE);
+        tvDescription.setVisibility(View.VISIBLE);
+        isOpen = false;
+        KeyboardServices.dismiss(getContext(), etContent);
     }
 
 
@@ -110,5 +112,9 @@ public class FormField extends Fragment {
 
     public TextView getTvDescription() {
         return tvDescription;
+    }
+
+    public boolean isOpen() {
+        return isOpen;
     }
 }
