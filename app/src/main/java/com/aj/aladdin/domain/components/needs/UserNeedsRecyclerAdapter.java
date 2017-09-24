@@ -1,10 +1,10 @@
 package com.aj.aladdin.domain.components.needs;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.aj.aladdin.R;
@@ -43,13 +43,12 @@ public class UserNeedsRecyclerAdapter extends RecyclerView.Adapter<UserNeedsRecy
     }
 
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private TextView mTitleTextView;
         private TextView mSearchTextView;
-        private Switch mSwitch;
-
-        private boolean haveSwitchListener = false;
+        private TextView mApplicantTextView;
+        private FloatingActionButton fabNeedStatus;
 
         private UserNeed mUserNeed;
 
@@ -59,30 +58,22 @@ public class UserNeedsRecyclerAdapter extends RecyclerView.Adapter<UserNeedsRecy
 
             mTitleTextView = (TextView) v.findViewById(R.id.need_title_textview);
             mSearchTextView = (TextView) v.findViewById(R.id.need_search_textview);
-            mSwitch = (Switch) v.findViewById(R.id.need_switch);
+            mApplicantTextView = (TextView) v.findViewById(R.id.need_nb_pokes_textview);
+            fabNeedStatus = (FloatingActionButton) v.findViewById(R.id.fab_need_status);
+            v.setOnClickListener(this);
         }
 
         public void bindItem(UserNeed userNeed) {
             this.mUserNeed = userNeed;
             mTitleTextView.setText(mUserNeed.getTitle());
             mSearchTextView.setText(mUserNeed.getSearch());
-           // mSwitch.setChecked(mUserNeed.isActive());
-
-            /*if (!haveSwitchListener) {
-                mSwitch.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //mUserNeed.getActivity().setNeedStatus(mUserNeed.get_id(), !mUserNeed.isActive(), false);
-                    }
-                });
-
-                haveSwitchListener = true;
-            }*/
+            //todo color
+            //// TODO: 24/09/2017 nb pokes
         }
 
-        void deleteNeed() {
-            //mUserNeed.getActivity().setNeedStatus(mUserNeed.get_id(), mUserNeed.isActive(), true);
+        @Override
+        public void onClick(View view) {
+            UserNeedActivity.start(mUserNeed.getContext(), mUserNeed.get_id());
         }
-
     }
 }

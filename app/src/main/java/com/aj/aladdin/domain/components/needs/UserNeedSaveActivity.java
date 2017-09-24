@@ -1,5 +1,7 @@
 package com.aj.aladdin.domain.components.needs;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -104,6 +106,13 @@ public class UserNeedSaveActivity extends AppCompatActivity {
     }
 
 
+    public static void start(Context context, String _id) {
+        Intent intent = new Intent(context, UserNeedSaveActivity.class);
+        intent.putExtra(_ID, _id);
+        context.startActivity(intent);
+    }
+
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -114,7 +123,7 @@ public class UserNeedSaveActivity extends AppCompatActivity {
     void saveStatus() {
         try {
             IO.r.update(coll, __.jo().put("_id", _id)
-                    , __.jo().put("$set",__.jo().put("active", needSwitch.isChecked()))
+                    , __.jo().put("$set", __.jo().put("active", needSwitch.isChecked()))
                     , __.jo(), __.jo()
                     , new UIAck(self) {
                         @Override
@@ -152,18 +161,18 @@ public class UserNeedSaveActivity extends AppCompatActivity {
 
     private void saveState() {
         try {
-            JSONObject need = __.jo()
-                    .put("active", needSwitch.isChecked())
-                    .put("ownerID", "joan") //// TODO: 24/09/2017
-                    .put("deleted", false);
+            JSONObject need = __.jo().put("active", needSwitch.isChecked()).put("ownerID", "joan"); //// TODO: 24/09/2017
 
             for (String key : formFields.keySet())
-                need.put(key, formFields.get(key).getEtContent().getText());
+                if (key.equals("search"))
+                    need.put(key, formFields.get(key).getTvContent().getText());
+                else
+                    need.put(key, formFields.get(key).getEtContent().getText());
 
             if (_id == null)
-                IO.r.insert(coll, need, __.jo(), __.jo(), ackIn());
+                IO.r.insert(coll, need.put("deleted", false), __.jo(), __.jo(), ackIn());
             else
-                IO.r.update(coll, __.jo().put("_id", _id), need, __.jo(), __.jo(), ackIn());
+                IO.r.update(coll, __.jo().put("_id", _id), __.jo().put("$set", need), __.jo(), __.jo(), ackIn());
 
         } catch (JSONException | Regina.NullRequiredParameterException e) {
             __.fatalError(e);

@@ -18,12 +18,18 @@ import com.aj.aladdin.tools.oths.PageFragment;
 
 public class UserNeedActivity extends AppCompatActivity {
 
+    public final static String _ID = "_ID";
+
+    private String _id = null;
+
     UserNeedActivity self = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_need);
+
+        _id = getIntent().getStringExtra(_ID);
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.user_need_results_viewpager);
@@ -42,11 +48,20 @@ public class UserNeedActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(self,UserNeedSaveActivity.class);
-                intent.putExtra(UserNeedSaveActivity._ID,"59c7bc522d1ceb027bfbd818");//// TODO: 24/09/2017
-                startActivity(intent);
+                UserNeedSaveActivity.start(self,_id);
             }
         });
+    }
+
+
+    public static void start(Context context) {
+        context.startActivity(new Intent(context, UserNeedActivity.class));
+    }
+
+    public static void start(Context context, String _id) {
+        Intent intent = new Intent(context, UserNeedActivity.class);
+        intent.putExtra(_ID,_id);
+        context.startActivity(intent);
     }
 
 

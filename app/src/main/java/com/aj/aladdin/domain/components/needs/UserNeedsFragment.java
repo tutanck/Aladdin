@@ -65,7 +65,7 @@ public class UserNeedsFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getContext(), UserNeedActivity.class));
+                UserNeedActivity.start(getContext());
             }
         });
 
@@ -94,7 +94,7 @@ public class UserNeedsFragment extends Fragment {
                                 mUserNeeds.clear();
                                 for (int i = 0; i < jar.length(); i++) {
                                     JSONObject jo = jar.getJSONObject(i);
-                                    mUserNeeds.add(new UserNeed(jo.getString("_id"), jo.getString("title"), jo.getString("search"), jo.getBoolean("active")));
+                                    mUserNeeds.add(new UserNeed(jo.getString("_id"), jo.getString("title"), jo.getString("search"), jo.getBoolean("active"), getContext()));
                                 }
                                 mAdapter.notifyDataSetChanged();
                             } catch (JSONException e) {
@@ -118,7 +118,7 @@ public class UserNeedsFragment extends Fragment {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                ((UserNeedsRecyclerAdapter.ViewHolder) viewHolder).deleteNeed();
+                //((UserNeedsRecyclerAdapter.ViewHolder) viewHolder).deleteNeed(); // TODO: 24/09/2017  
             }
         };
 

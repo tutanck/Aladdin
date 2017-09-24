@@ -1,10 +1,14 @@
 package com.aj.aladdin.domain.components.needs;
 
+import android.content.Context;
+
 /**
  * Created by joan on 21/09/2017.
  */
 
 class UserNeed {
+
+    private Context context;
 
     private String _id;
     private String title;
@@ -16,7 +20,9 @@ class UserNeed {
             , String title
             , String search
             , boolean active
+            , Context context
     ) {
+        this.context = context;
         this._id = _id;
         this.title = title;
         this.search = search;
@@ -38,5 +44,9 @@ class UserNeed {
 
     public String getSearch() {
         return search;
+    }
+
+    public Context getContext() {
+        return context;
     }
 }
