@@ -9,7 +9,7 @@ import android.widget.RadioGroup;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.tools.components.model.AutonomousQueryUpdateByIDFragment;
-import com.aj.aladdin.tools.components.services.IO;
+import com.aj.aladdin.tools.oths.db.IO;
 import com.aj.aladdin.tools.oths.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
 

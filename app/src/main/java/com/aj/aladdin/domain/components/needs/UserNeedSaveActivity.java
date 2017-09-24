@@ -11,11 +11,13 @@ import com.aj.aladdin.R;
 import com.aj.aladdin.tools.components.fragments.ItemDividerFragment;
 import com.aj.aladdin.tools.components.fragments.simple.FormField;
 import com.aj.aladdin.tools.components.services.FormFieldKindTranslator;
-import com.aj.aladdin.tools.components.services.IO;
+import com.aj.aladdin.tools.oths.db.IO;
 import com.aj.aladdin.tools.oths.db.Colls;
 import com.aj.aladdin.tools.oths.utils.JSONServices;
 import com.aj.aladdin.tools.oths.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
+import com.aj.aladdin.tools.utils.UIAck;
+import com.aj.aladdin.tools.utils.BAck;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,8 +25,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import io.socket.client.Ack;
 
 public class UserNeedSaveActivity extends AppCompatActivity {
 
@@ -101,33 +101,27 @@ public class UserNeedSaveActivity extends AppCompatActivity {
 
     private void loadState() {
         try {
-            IO.r.find(Colls.USER_NEEDS, __.jo().put("_id", _id), __.jo(), __.jo(), new Ack() {
+            IO.r.find(Colls.USER_NEEDS, __.jo().put("_id", _id), __.jo(), __.jo(), new UIAck(self) {
                 @Override
-                public void call(Object... args) {
-                    runOnUiThread(new Runnable() { //mandatory to modify an activity's ui view
-                        @Override
-                        public void run() {
-                            if (args[0] != null)
-                                __.showShortToast(self, "Une erreur s'est produite");
-                            else {
-                                JSONArray jar = (JSONArray) args[1];
-                                try {
-                                    JSONObject need = jar.getJSONObject(0);
-                                    for (String key : formFields.keySet())
-                                        formFields.get(key).getTvContent().setText(need.getString(key));
-                                    needSwitch.setChecked(need.getBoolean("active"));
-                                } catch (JSONException e) {
-                                    __.fatalError(e);
-                                }
-                            }
-                        }
-                    });
+                protected void onRes(Object res, JSONObject ctx) {
+                    JSONArray jar = (JSONArray) res;
+                    try {
+                        JSONObject need = jar.getJSONObject(0);
+                        for (String key : formFields.keySet())
+                            formFields.get(key).getTvContent().setText(need.getString(key));
+                        needSwitch.setChecked(need.getBoolean("active"));
+                    } catch (JSONException e) {
+                        __.fatalError(e);
+                    }
                 }
             });
         } catch (Regina.NullRequiredParameterException | JSONException e) {
             __.fatalError(e);
         }
     }
+
+
+
 
 
     private void saveState() {
@@ -148,18 +142,12 @@ public class UserNeedSaveActivity extends AppCompatActivity {
     }
 
 
-    private Ack ackIn() {
-        return new Ack() {
+    private UIAck ackIn() {
+        return new UIAck(self) {
             @Override
-            public void call(Object... args) {
-                runOnUiThread(new Runnable() { //mandatory to modify an activity's ui view
-                    @Override
-                    public void run() {
-                        close();
-                        __.showShortToast
-                                (self, args[0] != null ? "Une erreur s'est produite" : "Recherche enregistrée");
-                    }
-                });
+            protected void onRes(Object res, JSONObject ctx) {
+                close();
+                __.showShortToast(self,  "Recherche enregistrée");
             }
         };
     }

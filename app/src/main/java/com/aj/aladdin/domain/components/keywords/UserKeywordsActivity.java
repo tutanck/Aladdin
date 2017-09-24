@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.components.services.IO;
+import com.aj.aladdin.tools.oths.db.IO;
 import com.aj.aladdin.tools.oths.db.Colls;
 import com.aj.aladdin.tools.oths.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
