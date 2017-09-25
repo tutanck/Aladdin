@@ -10,4 +10,5 @@ public interface DB {
     String USER_RATING = "USER_RATING";
     String USER_KEYWORDS = "USER_KEYWORDS";
     String USER_NEEDS = "USER_NEEDS";
+    String MESSAGES= "MESSAGES";
 }

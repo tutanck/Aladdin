@@ -73,7 +73,6 @@
                 android:textSize="12dp" />
 
             <TextView
-                android:id="@+id/need_pokes_indication_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/small"

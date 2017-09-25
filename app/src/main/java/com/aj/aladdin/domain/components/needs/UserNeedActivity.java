@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.oths.PageFragment;
 
 
 public class UserNeedActivity extends AppCompatActivity {
@@ -80,9 +79,9 @@ public class UserNeedActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return PageFragment.newInstance(position + 1);
+                    return NeedProfilesFragment.newInstance();
                 case 1:
-                    return PageFragment.newInstance(position + 1);
+                    return NeedProfilesFragment.newInstance();
                 default:
                     throw new RuntimeException("PagerAdapter's top level tab menu");
             }

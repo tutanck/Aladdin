@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <include layout="@layout/item_list_divider" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:background="?attr/selectableItemBackground"
+        android:orientation="horizontal">
+
+        <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/medium"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ln_logo" />
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/small"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/username_textview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/small"
+                    android:layout_marginLeft="@dimen/large"
+                    android:layout_marginRight="@dimen/large"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="hjgkjhjyguijughiojiutyguihkjhuyfytugyhuityuguhtuyg"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#212121"
+                    android:textSize="16dp" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab_user_status"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/medium"
+                    android:layout_marginRight="@dimen/large"
+                    android:clickable="false"
+                    app:backgroundTint="@color/Red" />
+
+            </LinearLayout>
+
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/large"
+                android:orientation="horizontal">
+
+                <RatingBar xmlns:android="http://schemas.android.com/apk/res/android"
+                    style="@style/Widget.AppCompat.RatingBar.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numStars="5"
+                    android:rating="0"
+                    android:stepSize="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/large"
+                    android:text="|"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/Gray"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/user_distance_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/large"
+                    android:text="0"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#212121"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/small"
+                    android:layout_marginRight="@dimen/medium"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="km"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#212121"
+                    android:textSize="12dp" />
+
+            </LinearLayout>
+
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/small"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/message_textview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/large"
+                    android:layout_marginRight="@dimen/large"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="hjgkjhjyguijughiojiutyguihkjhuyfytugyhuityuguhtuyg"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#212121"
+                    android:textSize="16dp" />
+
+
+                <TextView
+                    android:id="@+id/message_date_textview"
+                    android:layout_width="64dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/small"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="hjgkjhjyguijughiojiutyguihkjhuyfytugyhuityuguhtuyg"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#212121"
+                    android:textSize="16dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
