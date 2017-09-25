@@ -79,7 +79,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
             IO.r.find(
                     coll
                     , __.jo().put(USERID, getIntent().getStringExtra(USERID)).put("deleted",false)
-                    , __.jo().put("sort", __.jo().put("keyword", 1))
+                    , __.jo().put("sort", __.jo().put("active", -1).put("keyword", 1))
                     , __.jo()
                     , new Ack() {
                         @Override
