@@ -14,9 +14,9 @@
     "kind": 1
   },
   "title": {
-    "label": "Titre de la recherche",
-    "indication": "Donnez un titre à votre recherche",
-    "indication2": "Entrez le titre de ce recherche",
+    "label": "Titre du besoin",
+    "indication": "Donnez un titre à votre besoin",
+    "indication2": "Entrez le titre de ce besoin",
     "kind": 1
   },
   "description": {

@@ -3,15 +3,16 @@ package com.aj.aladdin.domain.components.needs;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.components.fragments.ItemDividerFragment;
 import com.aj.aladdin.tools.components.fragments.simple.FormField;
 import com.aj.aladdin.tools.components.services.FormFieldKindTranslator;
 import com.aj.aladdin.tools.oths.db.IO;
@@ -110,15 +111,21 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
     }
 
 
-    private void stretchForm(boolean fromUser){
+    private void stretchForm(boolean fromUser) {
         if (needSwitch.isChecked()) {
-            if(fromUser)open();
+            if (fromUser) open();
             for (FormField ff : adFormFields)
-                ff.getLayout().setVisibility(View.VISIBLE);
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .show(ff)
+                        .commit();
         } else {
-            if(fromUser) close();
+            if (fromUser) close();
             for (FormField ff : adFormFields)
-                ff.getLayout().setVisibility(View.GONE);
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .hide(ff)
+                        .commit();
             deactivateNeed();
         }
     }
@@ -127,7 +134,10 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
     @Override
     public void onFormFieldCreated(int id, FormField formField) {
         if (id > 1)
-            formField.getLayout().setVisibility(View.GONE);
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .hide(formField)
+                    .commit();
     }
 
 
@@ -243,4 +253,25 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
     }
 
 
+    /**
+     * Secure mode style for app exit
+     */
+    private Boolean exitMode = false;
+
+    @Override
+    public void onBackPressed() {
+        if (!isFormOpen || exitMode)
+            super.onBackPressed();
+        else if (isFormOpen) {
+            __.showShortToast(this, "Cliquez de nouveau : les modifications ne seront pas sauvegardées.");
+            exitMode = true;
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    exitMode = false;
+                }
+            }, 3 * 1000);
+        }
+    }
 }
