@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/scroll_body"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <FrameLayout
+    <ScrollView
+        android:id="@+id/scroll_body"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/save_need_layout"
@@ -75,25 +75,20 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
-
         </LinearLayout>
 
+    </ScrollView>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_save_need"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right|end"
-            android:layout_margin="@dimen/fab_margin"
-            android:elevation="8dp"
-            android:src="@drawable/ic_star_black" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_save_need"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:elevation="8dp"
+        android:src="@drawable/ic_star_black" />
 
-    </FrameLayout>
-
-</ScrollView>
-
-
-
+</FrameLayout>
 
 
 
