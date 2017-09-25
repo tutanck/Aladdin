@@ -1,6 +1,10 @@
 package com.aj.aladdin.domain.components.needs;
 
+import android.app.Activity;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +12,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.tools.oths.db.DB;
+import com.aj.aladdin.tools.oths.db.IO;
+import com.aj.aladdin.tools.oths.utils.__;
+import com.aj.aladdin.tools.regina.Regina;
+import com.aj.aladdin.tools.utils.UIAck;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -43,7 +55,7 @@ public class UserNeedsRecyclerAdapter extends RecyclerView.Adapter<UserNeedsRecy
     }
 
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView mTitleTextView;
         private TextView mSearchTextView;
@@ -67,13 +79,35 @@ public class UserNeedsRecyclerAdapter extends RecyclerView.Adapter<UserNeedsRecy
             this.mUserNeed = userNeed;
             mTitleTextView.setText(mUserNeed.getTitle());
             mSearchTextView.setText(mUserNeed.getSearch());
-            //todo color
+            int color = mUserNeed.isActive() ? R.color.Lime : R.color.Red;
+            fabNeedStatus.setBackgroundTintList(
+                    ColorStateList.valueOf
+                            (ContextCompat.getColor(mUserNeed.getContext(), color))
+            );
             //// TODO: 24/09/2017 nb pokes
         }
+
 
         @Override
         public void onClick(View view) {
             UserNeedActivity.start(mUserNeed.getContext(), mUserNeed.get_id());
+        }
+
+
+        void deleteNeed() {
+            try {
+                IO.r.update(DB.USER_NEEDS, __.jo().put("_id", mUserNeed.get_id())
+                        , __.jo().put("$set", __.jo().put("deleted", true))
+                        , __.jo(), __.jo()
+                        , new UIAck((Activity) mUserNeed.getContext()) {
+                            @Override
+                            protected void onRes(Object res, JSONObject ctx) {
+                                __.chill("deleteNeed");
+                            }
+                        });
+            } catch (Regina.NullRequiredParameterException | JSONException e) {
+                __.fatalError(e);
+            }
         }
     }
 }

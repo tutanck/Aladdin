@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -24,11 +25,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class UserNeedSaveActivity extends AppCompatActivity {
+public class UserNeedSaveActivity extends AppCompatActivity implements FormField.Listener {
 
     private final String coll = DB.USER_NEEDS;
 
@@ -42,6 +44,8 @@ public class UserNeedSaveActivity extends AppCompatActivity {
 
     private Map<String, FormField> formFields = new HashMap<>();
 
+    ArrayList<FormField> adFormFields = new ArrayList<>();
+
     private JSONObject formParams;
 
     private Switch needSwitch;
@@ -54,43 +58,43 @@ public class UserNeedSaveActivity extends AppCompatActivity {
 
         _id = getIntent().getStringExtra(_ID);
 
-        needSwitch = (Switch) findViewById(R.id.need_switch);
 
-        formParams = JSONServices.loadJsonFromAsset("form_params_user_need.json", this);
-        JSONArray orderedFieldsKeys;
-        try {
-            orderedFieldsKeys = formParams.getJSONArray("ordered_fields_names");
+        if (savedInstanceState == null) //no duplicated fragments // TODO: 25/09/2017  check if frag only or else like listener on needSwitch
+            try {
+                formParams = JSONServices.loadJsonFromAsset("form_params_user_need.json", this);
+                JSONArray orderedFieldsKeys = formParams.getJSONArray("ordered_fields_names");
 
-            for (int i = 0; i < orderedFieldsKeys.length(); i++) {
-                String key = orderedFieldsKeys.getString(i);
+                for (int i = 0; i < orderedFieldsKeys.length(); i++) {
+                    String key = orderedFieldsKeys.getString(i);
 
-                JSONObject fieldParam = formParams.getJSONObject(key);
+                    JSONObject fieldParam = formParams.getJSONObject(key);
 
-                FormField formField = FormField.newInstance(
-                        fieldParam.getString("label"), FormFieldKindTranslator.tr(fieldParam.getInt("kind")));
+                    FormField formField = FormField.newInstance(i,
+                            fieldParam.getString("label"), FormFieldKindTranslator.tr(fieldParam.getInt("kind")));
 
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .add(R.id.form_layout, formField, key)
-                        .commit();
+                    FragmentManager fragmentManager = getSupportFragmentManager();
 
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .add(R.id.form_layout, ItemDividerFragment.newInstance(false), "item_divider" + i)
-                        .commit();
+                    fragmentManager
+                            .beginTransaction()
+                            .add(R.id.need_form_layout, formField, key)
+                            .commit();
 
-                formFields.put(key, formField);
+                    if (i > 1)
+                        adFormFields.add(formField);
+
+                    formFields.put(key, formField);
+                }
+
+            } catch (JSONException e) {
+                __.fatalError(e);
             }
 
-        } catch (JSONException e) {
-            __.fatalError(e);
-        }
-
+        needSwitch = (Switch) findViewById(R.id.need_switch);
         needSwitch.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        saveStatus();
+                        stretchForm(true);
                     }
                 }
         );
@@ -103,6 +107,27 @@ public class UserNeedSaveActivity extends AppCompatActivity {
                 else if (validState(view)) saveState();
             }
         });
+    }
+
+
+    private void stretchForm(boolean fromUser){
+        if (needSwitch.isChecked()) {
+            if(fromUser)open();
+            for (FormField ff : adFormFields)
+                ff.getLayout().setVisibility(View.VISIBLE);
+        } else {
+            if(fromUser) close();
+            for (FormField ff : adFormFields)
+                ff.getLayout().setVisibility(View.GONE);
+            deactivateNeed();
+        }
+    }
+
+
+    @Override
+    public void onFormFieldCreated(int id, FormField formField) {
+        if (id > 1)
+            formField.getLayout().setVisibility(View.GONE);
     }
 
 
@@ -120,10 +145,10 @@ public class UserNeedSaveActivity extends AppCompatActivity {
     }
 
 
-    void saveStatus() {
+    void deactivateNeed() {
         try {
             IO.r.update(coll, __.jo().put("_id", _id)
-                    , __.jo().put("$set", __.jo().put("active", needSwitch.isChecked()))
+                    , __.jo().put("$set", __.jo().put("active", false))
                     , __.jo(), __.jo()
                     , new UIAck(self) {
                         @Override
@@ -148,6 +173,7 @@ public class UserNeedSaveActivity extends AppCompatActivity {
                         for (String key : formFields.keySet())
                             formFields.get(key).getTvContent().setText(need.getString(key));
                         needSwitch.setChecked(need.getBoolean("active"));
+                        stretchForm(false);
                     } catch (JSONException e) {
                         __.fatalError(e);
                     }
@@ -215,5 +241,6 @@ public class UserNeedSaveActivity extends AppCompatActivity {
             formFields.get(key).close();
         isFormOpen = false;
     }
+
 
 }

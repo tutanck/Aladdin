@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -43,7 +42,7 @@
                 android:textSize="12dp" />
 
             <LinearLayout
-                android:id="@+id/form_layout"
+                android:id="@+id/need_form_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/activity_horizontal_margin"
@@ -75,6 +74,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </LinearLayout>
+
 
         </LinearLayout>
 

@@ -29,8 +29,6 @@ public class UserNeedsFragment extends Fragment {
 
     public final static String coll = DB.USER_NEEDS;
 
-    public final static String OWNER_ID = "ownerID";
-
     private ArrayList<UserNeed> mUserNeeds = new ArrayList<>();
 
     private RecyclerView mRecyclerView;
@@ -83,8 +81,8 @@ public class UserNeedsFragment extends Fragment {
         try {
             IO.r.find(
                     coll
-                    , __.jo().put(OWNER_ID, "joan").put("deleted", false) //// TODO: 24/09/2017
-                    , __.jo().put("sort", __.jo().put("active", 1).put("title", 1)) // TODO: 22/09/2017 check
+                    , __.jo().put("ownerID", "joan").put("deleted", false) //// TODO: 24/09/2017 joan
+                    , __.jo().put("sort", __.jo().put("active", -1).put("title", 1))
                     , __.jo()
                     , new UIAck(getActivity()) {
                         @Override
@@ -118,7 +116,7 @@ public class UserNeedsFragment extends Fragment {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                //((UserNeedsRecyclerAdapter.ViewHolder) viewHolder).deleteNeed(); // TODO: 24/09/2017  
+                ((UserNeedsRecyclerAdapter.ViewHolder) viewHolder).deleteNeed();
             }
         };
 
