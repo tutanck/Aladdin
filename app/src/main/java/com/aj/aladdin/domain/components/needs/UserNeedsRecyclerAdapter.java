@@ -102,7 +102,7 @@ public class UserNeedsRecyclerAdapter extends RecyclerView.Adapter<UserNeedsRecy
                         , new UIAck((Activity) mUserNeed.getContext()) {
                             @Override
                             protected void onRes(Object res, JSONObject ctx) {
-                                __.chill("deleteNeed");
+                                //// TODO: 26/09/2017 reload list : loadNeeds
                             }
                         });
             } catch (Regina.NullRequiredParameterException | JSONException e) {

@@ -15,7 +15,7 @@ import com.aj.aladdin.domain.components.profile.UserProfilesRecyclerAdapter;
 import java.util.ArrayList;
 
 
-public class MessagesFragment extends Fragment {
+public class ConverstationsFragment extends Fragment {
 
     private ArrayList<UserProfile> mProfiles = new ArrayList<>();
 
@@ -24,8 +24,8 @@ public class MessagesFragment extends Fragment {
     private UserProfilesRecyclerAdapter mAdapter;
 
 
-    public static MessagesFragment newInstance() {
-        MessagesFragment fragment = new MessagesFragment();
+    public static ConverstationsFragment newInstance() {
+        ConverstationsFragment fragment = new ConverstationsFragment();
         return fragment;
     }
 
@@ -51,6 +51,7 @@ public class MessagesFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        loadMessages();
     }
 
 

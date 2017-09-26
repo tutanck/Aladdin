@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.aj.aladdin.R;
@@ -46,10 +48,13 @@ public class UserProfilesRecyclerAdapter extends RecyclerView.Adapter<UserProfil
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView mTitleTextView;
-        private TextView mSearchTextView;
-        private TextView mApplicantTextView;
-        private FloatingActionButton fabNeedStatus;
+        private ImageView userProfileIV;
+        private TextView usernameTV;
+        private FloatingActionButton userStatusFAB;
+        private RatingBar userReputationRBar;
+        private TextView userDistanceTV;
+        private TextView messageTV;
+        private TextView messageDateTV;
 
         private UserProfile mNeedProfile;
 
@@ -57,15 +62,18 @@ public class UserProfilesRecyclerAdapter extends RecyclerView.Adapter<UserProfil
         public ViewHolder(View v) {
             super(v);
 
-            mTitleTextView = (TextView) v.findViewById(R.id.need_title_textview);
-            mSearchTextView = (TextView) v.findViewById(R.id.need_search_textview);
-            mApplicantTextView = (TextView) v.findViewById(R.id.need_nb_pokes_textview);
-            fabNeedStatus = (FloatingActionButton) v.findViewById(R.id.fab_need_status);
+            userProfileIV = (ImageView) v.findViewById(R.id.userProfileIV);
+            usernameTV = (TextView) v.findViewById(R.id.usernameTV);
+            userStatusFAB = (FloatingActionButton) v.findViewById(R.id.userStatusFAB);
+            userReputationRBar = (RatingBar) v.findViewById(R.id.userReputationRBar);
+            userDistanceTV = (TextView) v.findViewById(R.id.userDistanceTV);
+            messageTV = (TextView) v.findViewById(R.id.messageTV);
+            messageDateTV = (TextView) v.findViewById(R.id.messageDateTV);
             v.setOnClickListener(this);
         }
 
-        public void bindItem(UserProfile needProfile) {
-            this.mNeedProfile = needProfile;
+        public void bindItem(UserProfile userProfile) {
+            this.mNeedProfile = userProfile;
            /* mTitleTextView.setText(mNeedProfile.getTitle());
             mSearchTextView.setText(mNeedProfile.getSearch());
             int color = mNeedProfile.isActive() ? R.color.Lime : R.color.Red;
@@ -73,7 +81,7 @@ public class UserProfilesRecyclerAdapter extends RecyclerView.Adapter<UserProfil
                     ColorStateList.valueOf
                             (ContextCompat.getColor(mNeedProfile.getContext(), color))
             );*/
-         }
+        }
 
 
         @Override

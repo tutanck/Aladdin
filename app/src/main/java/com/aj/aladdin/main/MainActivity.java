@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.domain.components.messages.ConverstationsFragment;
 import com.aj.aladdin.domain.components.needs.UserNeedsFragment;
 import com.aj.aladdin.domain.components.profile.ProfileFragment;
 import com.aj.aladdin.tools.oths.db.IO;
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 case 2:
                     return UserNeedsFragment.newInstance();
                 case 3:
-                    return PageFragment.newInstance(position + 1);
+                    return ConverstationsFragment.newInstance();
                 default:
                     throw new RuntimeException("Unknown top level tab menu");
             }

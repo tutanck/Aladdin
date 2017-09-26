@@ -37,9 +37,9 @@ public class NeedProfilesFragment extends Fragment {
             , ViewGroup container
             , Bundle savedInstanceState
     ) {
-        View view = inflater.inflate(R.layout.fragment_need_profiles, container, false);
+        View view = inflater.inflate(R.layout.component_recycler_view, container, false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.need_profiles_recycler_view);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
