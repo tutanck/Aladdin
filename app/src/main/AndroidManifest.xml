@@ -20,28 +20,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".domain.components.keywords.UserKeywordsActivity" >
-
-
-        </activity>
-
-        <activity
-            android:name=".domain.components.keywords.UtherKeywordsActivity" >
-        </activity>
-
+        <activity android:name=".domain.components.keywords.UserKeywordsActivity"></activity>
+        <activity android:name=".domain.components.keywords.UtherKeywordsActivity"></activity>
         <activity
             android:name=".domain.components.needs.UserNeedActivity"
             android:label="Besoin"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".domain.components.needs.UserNeedSaveActivity"
-            android:label="Sauvegarde">
-        </activity>
-
+            android:label="Sauvegarde"></activity>
+        <activity
+            android:name=".domain.components.messages.MessagesActivity"
+            android:label="@string/title_activity_messages"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

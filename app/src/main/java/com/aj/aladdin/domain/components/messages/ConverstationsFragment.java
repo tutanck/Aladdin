@@ -1,6 +1,7 @@
 package com.aj.aladdin.domain.components.messages;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.domain.components.needs.UserNeedActivity;
 import com.aj.aladdin.domain.components.profile.UserProfile;
 import com.aj.aladdin.domain.components.profile.UserProfilesRecyclerAdapter;
 
@@ -44,6 +46,16 @@ public class ConverstationsFragment extends Fragment {
 
         mAdapter = new UserProfilesRecyclerAdapter(mProfiles);
         mRecyclerView.setAdapter(mAdapter);
+
+
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab_add_need);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MessagesActivity.start(getContext());
+            }
+        });
+
 
         return view;
     }

@@ -23,13 +23,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class UserNeedsFragment extends Fragment {
 
     public final static String coll = DB.USER_NEEDS;
 
-    private ArrayList<UserNeed> mUserNeeds = new ArrayList<>();
+    private List<UserNeed> mUserNeeds = new ArrayList<>();
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;

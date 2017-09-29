@@ -13,6 +13,7 @@ import com.aj.aladdin.tools.regina.Regina;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -42,6 +43,29 @@ public class UtherKeywordsActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        try {
+            IO.r.find(
+                    "users"
+                    , new JSONObject().put("username", "luffy")
+                    , new JSONObject()
+                    , new JSONObject()
+                    , new Ack() {
+                        @Override
+                        public void call(Object... args) {
+                            if (args[0] != null)
+                                System.out.println("result: " + args[1]);
+                            else
+                                System.out.println("error : " + args[0] + " context :" + args[2]);
+                        }
+                    }
+            );
+        } catch (Regina.NullRequiredParameterException | JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
         try {
             IO.r.find(
                     DB.USER_KEYWORDS

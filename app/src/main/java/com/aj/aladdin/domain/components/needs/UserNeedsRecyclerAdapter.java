@@ -21,17 +21,17 @@ import com.aj.aladdin.tools.utils.UIAck;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by joan on 21/09/17.
  */
 public class UserNeedsRecyclerAdapter extends RecyclerView.Adapter<UserNeedsRecyclerAdapter.ViewHolder> {
 
-    private ArrayList<UserNeed> mUserNeeds;
+    private List<UserNeed> mUserNeeds;
 
     public UserNeedsRecyclerAdapter(
-            ArrayList<UserNeed> userNeeds
+            List<UserNeed> userNeeds
     ) {
         mUserNeeds = userNeeds;
     }

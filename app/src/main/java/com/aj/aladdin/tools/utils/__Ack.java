@@ -28,12 +28,14 @@ public abstract class __Ack implements Ack {
             JSONObject ctx
     ) {
         __.showShortToast(activity, "Une erreur s'est produite");
+        Log.e("__Ack/onErr","err=##"+err+"## ctx="+ctx);
     }
 
 
     protected void onReginaFail(
     ) {
         __.showShortToast(activity, "Une erreur s'est produite!");//note the exclamation mark : !
+        Log.e("__Ack/onReginaFail","Regina Failed");
     }
 
 
