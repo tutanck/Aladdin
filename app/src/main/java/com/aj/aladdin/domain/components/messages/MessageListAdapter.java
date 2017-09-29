@@ -36,19 +36,18 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     public int getItemViewType(int position) {
         Message message = (Message) mMessageList.get(position);
 
-        if (message.getSenderID().equals( "TODO")) {
-            // If the current user is the sender of the message
+        if (message.getSenderID().equals("joan")) //// TODO: 29/09/2017
             return VIEW_TYPE_MESSAGE_SENT;
-        } else {
-            // If some other user sent the message
+        else
             return VIEW_TYPE_MESSAGE_RECEIVED;
-        }
     }
 
     // Inflates the appropriate layout according to the ViewType.
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
+
+       // return new ViewHolder(
 
         if (viewType == VIEW_TYPE_MESSAGE_SENT) {
             view = LayoutInflater.from(parent.getContext())
@@ -60,7 +59,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             return new ReceivedMessageHolder(view);
         }
 
-        return null;
+        throw new RuntimeException("MessageListAdapter : Unknown Message Type Exception");
     }
 
     // Passes the message object to a ViewHolder so that the contents can be bound to UI.
@@ -77,10 +76,10 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         }
     }
 
-    private class SentMessageHolder extends RecyclerView.ViewHolder {
+    public class SentMessageHolder extends RecyclerView.ViewHolder {
         TextView messageText, timeText;
 
-        SentMessageHolder(View itemView) {
+        public SentMessageHolder(View itemView) {
             super(itemView);
 
             messageText = (TextView) itemView.findViewById(R.id.text_message_body);
@@ -95,11 +94,11 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         }
     }
 
-    private class ReceivedMessageHolder extends RecyclerView.ViewHolder {
+    public class ReceivedMessageHolder extends RecyclerView.ViewHolder {
         TextView messageText, timeText, nameText;
         ImageView profileImage;
 
-        ReceivedMessageHolder(View itemView) {
+        public ReceivedMessageHolder(View itemView) {
             super(itemView);
 
             messageText = (TextView) itemView.findViewById(R.id.text_message_body);

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,10 +15,8 @@ import android.widget.EditText;
 import com.aj.aladdin.R;
 import com.aj.aladdin.tools.oths.db.DB;
 import com.aj.aladdin.tools.oths.db.IO;
-import com.aj.aladdin.tools.oths.utils.MongoUtils;
 import com.aj.aladdin.tools.oths.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
-import com.aj.aladdin.tools.utils.BAck;
 import com.aj.aladdin.tools.utils.UIAck;
 
 import org.json.JSONArray;
@@ -32,10 +31,12 @@ public class MessagesActivity extends AppCompatActivity {
 
     public final static String coll = DB.MESSAGES;
 
+    private List<Message> messageList = new ArrayList<>();
+
     private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLinearLayoutManager;
     private MessageListAdapter mAdapter;
 
-    private List<Message> messageList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,9 @@ public class MessagesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_messages);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.reyclerview_message_list);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mLinearLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+
         mAdapter = new MessageListAdapter(this, messageList);
         mRecyclerView.setAdapter(mAdapter);
 
@@ -99,10 +102,10 @@ public class MessagesActivity extends AppCompatActivity {
     private void loadMessages() {
         try {
             IO.r.find(
-                    coll//// TODO: 29/09/2017 joan
+                    coll
                     , __.jo().put(
                             "$or"
-                            , __.jar()
+                            , __.jar() //// TODO: 29/09/2017 joan
                                     .put(__.jo().put("senderID", "joan").put("toID", "joan"))
                                     .put(__.jo().put("senderID", "joan").put("toID", "joan"))
                     )
@@ -118,9 +121,10 @@ public class MessagesActivity extends AppCompatActivity {
                                     JSONObject jo = jar.getJSONObject(i);
                                     messageList.add(new Message(jo.getString("message"), jo.getString("senderID"), jo.getString("date")));
                                 }
+                                Log.i("messageList", messageList.toString());
                                 mAdapter.notifyDataSetChanged();
                             } catch (JSONException e) {
-                                __.fatalError(e); //SNO : if a doc exist the Need field should exist too
+                                __.fatalError(e); //SNO : if a doc exist the Message field should exist too
                             }
                         }
                     }
