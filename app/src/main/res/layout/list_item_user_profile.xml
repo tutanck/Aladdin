@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <include layout="@layout/item_list_divider" />
+    android:layout_margin="4dp"
+    android:padding="1dp"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="2dp">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -18,6 +21,7 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_gravity="center"
+            android:background="@drawable/circle"
             android:layout_marginLeft="@dimen/medium"
             android:adjustViewBounds="true"
             android:src="@drawable/ln_logo" />
@@ -149,4 +153,4 @@
 
     </LinearLayout>
 
-</LinearLayout>
+</android.support.v7.widget.CardView>
