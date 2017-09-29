@@ -83,7 +83,9 @@ public class MessagesActivity extends AppCompatActivity {
         try {
             IO.r.insert(
                     coll
-                    , __.jo().put("senderID", "joan").put("toID", "joan").put("message", text).put("date", new Date())//// TODO: 29/09/2017 joan + date
+                    , __.jo()
+                            .put("senderID", "joan").put("toID", "joan")
+                            .put("message", text).put("date", new Date())//// TODO: 29/09/2017 joan + date
                     , __.jo()
                     , __.jo()
                     , new UIAck(this) {
