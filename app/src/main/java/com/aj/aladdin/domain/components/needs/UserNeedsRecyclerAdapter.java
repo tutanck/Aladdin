@@ -2,7 +2,6 @@ package com.aj.aladdin.domain.components.needs;
 
 import android.app.Activity;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -59,7 +58,7 @@ public class UserNeedsRecyclerAdapter extends RecyclerView.Adapter<UserNeedsRecy
 
         private TextView mTitleTextView;
         private TextView mSearchTextView;
-        private TextView mApplicantTextView;
+        private TextView mNbPokesTextView;
         private FloatingActionButton fabNeedStatus;
 
         private UserNeed mUserNeed;
@@ -67,10 +66,9 @@ public class UserNeedsRecyclerAdapter extends RecyclerView.Adapter<UserNeedsRecy
 
         public ViewHolder(View v) {
             super(v);
-
             mTitleTextView = (TextView) v.findViewById(R.id.need_title_textview);
             mSearchTextView = (TextView) v.findViewById(R.id.need_search_textview);
-            mApplicantTextView = (TextView) v.findViewById(R.id.need_nb_pokes_textview);
+            mNbPokesTextView = (TextView) v.findViewById(R.id.need_nb_pokes_textview);
             fabNeedStatus = (FloatingActionButton) v.findViewById(R.id.fab_need_status);
             v.setOnClickListener(this);
         }
