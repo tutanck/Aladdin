@@ -80,15 +80,17 @@ public class Regina {
 
         //regina_warning
 
-        /*socket.on(ReginaEvent.noack.rawValue) {
-            dataArray, ack in
-            delegate.handle(reginaEvent: .noack, message :dataArray[0] as !String) //TODO TEST
-        }*/
-
+        socket.on(ReginaEvent.NOACK.toString(), new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                delegate.handle(ReginaEvent.NOACK, ""+args[0]); //TODO TEST
+            }
+        });
     }
 
 
     //SocketIO io communication convenience methods
+
     public final void connect() {
         socket.connect();
     }

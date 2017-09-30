@@ -66,7 +66,8 @@ public class AutoRatingBar extends AutonomousFragment {
 
     @Override
     protected void loadState() throws JSONException, Regina.NullRequiredParameterException {
-        getRegina().aggregate(getColl(), pipeline() , loadStateOpt(), loadStateMeta(), loadStateAck());
+        getRegina().socket.emit("getUserRating",__.jo().put("userID",toIDVal),loadStateMeta(),loadStateAck());
+        //getRegina().aggregate(getColl(), pipeline() , loadStateOpt(), loadStateMeta(), loadStateAck());
     }
 
     private JSONArray pipeline() {

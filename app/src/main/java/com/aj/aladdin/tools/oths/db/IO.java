@@ -20,7 +20,7 @@ public class IO implements Regina.SocketClientEventDelegate {
     public static Socket socket;
     static {
         try {
-            r = new Regina("http://192.168.1.15:3009", new IO());
+            r = new Regina("http://192.168.1.15:1210", new IO());
             socket = r.socket;
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
