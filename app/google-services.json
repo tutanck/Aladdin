@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "116509183000",
+    "firebase_url": "https://aladdin-281b1.firebaseio.com",
+    "project_id": "aladdin-281b1",
+    "storage_bucket": "aladdin-281b1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:116509183000:android:49389c9b0839ffa3",
+        "android_client_info": {
+          "package_name": "com.aj.aladdin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "116509183000-9iprco1mfvm4ou367cr1eiohnojuh4qa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6KwkFpXCscJ_5ZRDYIfoLNkE2q1m0Ohw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -11,28 +11,58 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+
         <activity
             android:name=".main.MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".domain.components.keywords.UserKeywordsActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".domain.components.keywords.UtherKeywordsActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".domain.components.needs.UserNeedActivity"
+            android:screenOrientation="portrait"
+            android:label="Besoin"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".domain.components.needs.UserNeedSaveActivity"
+            android:screenOrientation="portrait"
+            android:label="Sauvegarde" />
+
+        <activity
+            android:name=".domain.components.messages.MessagesActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_messages"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".welcome.SignupActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".welcome.ResetPasswordActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".welcome.LoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".domain.components.keywords.UserKeywordsActivity"></activity>
-        <activity android:name=".domain.components.keywords.UtherKeywordsActivity"></activity>
-        <activity
-            android:name=".domain.components.needs.UserNeedActivity"
-            android:label="Besoin"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity
-            android:name=".domain.components.needs.UserNeedSaveActivity"
-            android:label="Sauvegarde"></activity>
-        <activity
-            android:name=".domain.components.messages.MessagesActivity"
-            android:label="@string/title_activity_messages"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+
     </application>
 
 </manifest>
