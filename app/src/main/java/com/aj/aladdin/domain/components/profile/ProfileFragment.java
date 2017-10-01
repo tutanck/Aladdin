@@ -68,7 +68,7 @@ public class ProfileFragment extends Fragment {
 
         if (savedInstanceState == null) //no duplicated fragments // TODO: 25/09/2017  check if frag only or else like listener on needSwitch
             try {
-                String _id = MainActivity.user_id;
+                String _id = MainActivity.user_id();
 
                 formParams = JSONServices.loadJsonFromAsset("form_params_user_profile.json", getContext());
                 JSONArray orderedFieldsKeys = formParams.getJSONArray("ordered_fields_names");

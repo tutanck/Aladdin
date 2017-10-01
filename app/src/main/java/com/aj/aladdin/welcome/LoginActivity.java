@@ -1,5 +1,7 @@
 package com.aj.aladdin.welcome;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +14,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.domain.components.messages.MessagesActivity;
 import com.aj.aladdin.main.MainActivity;
 import com.aj.aladdin.tools.oths.db.IO;
 import com.aj.aladdin.tools.oths.utils.__;
@@ -24,21 +27,23 @@ import com.google.firebase.auth.FirebaseAuth;
 public class LoginActivity extends AppCompatActivity {
 
     private EditText inputEmail, inputPassword;
-    private FirebaseAuth auth;
     private RelativeLayout progressBarLayout;
     private Button btnSignup, btnLogin, btnReset;
+
+    private FirebaseAuth auth;
+
+
+    public static void start(Activity context) {
+        context.startActivity(new Intent(context, LoginActivity.class));
+        context.finish();
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         auth = FirebaseAuth.getInstance();
-
-        //todo A deplacer ds la splash activity
-        if (auth.getCurrentUser() != null) {
-            IO.r.connect();
-            MainActivity.start(LoginActivity.this,auth.getCurrentUser().getUid());
-        }
 
         setContentView(R.layout.activity_login);
 
@@ -48,8 +53,6 @@ public class LoginActivity extends AppCompatActivity {
         btnSignup = (Button) findViewById(R.id.btn_signup);
         btnLogin = (Button) findViewById(R.id.btn_login);
         btnReset = (Button) findViewById(R.id.btn_reset_password);
-
-        auth = FirebaseAuth.getInstance();
 
         btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,14 +88,12 @@ public class LoginActivity extends AppCompatActivity {
                                     __.showShortToast(LoginActivity.this, getString(R.string.signin_auth_failed));
                                     Log.d("FirebaseAuth", "" + task.getException());//// TODO: 01/10/2017 check what exc and swow the right msg error
                                 } else
-                                    MainActivity.start(LoginActivity.this,auth.getCurrentUser().getUid());
+                                    MainActivity.start(LoginActivity.this, auth.getCurrentUser().getUid());
                             }
                         });
             }
         });
     }
-
-
 
 
     private boolean validateForm(String email, String password) {

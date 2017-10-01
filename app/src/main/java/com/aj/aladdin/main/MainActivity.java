@@ -31,7 +31,11 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
-    public static String user_id = null;
+    private static String user_id = null;
+
+    public static String user_id() {
+        return user_id;
+    }
 
     public static void start(Activity caller, String authID) {
         try {
