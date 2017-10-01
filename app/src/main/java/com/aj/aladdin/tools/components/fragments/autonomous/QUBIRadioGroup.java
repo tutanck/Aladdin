@@ -13,9 +13,11 @@ import com.aj.aladdin.tools.components.model.AutonomousQueryUpdateByIDFragment;
 import com.aj.aladdin.tools.oths.db.IO;
 import com.aj.aladdin.tools.oths.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
+import com.aj.aladdin.tools.utils.UIAck;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import io.socket.client.Ack;
 
@@ -53,7 +55,7 @@ public class QUBIRadioGroup extends AutonomousQueryUpdateByIDFragment {
             , ViewGroup container
             , Bundle savedInstanceState
     ) {
-        super.onCreateView(inflater,container,savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
 
         final Bundle args = getArguments();
 
@@ -102,24 +104,18 @@ public class QUBIRadioGroup extends AutonomousQueryUpdateByIDFragment {
 
     @Override
     protected Ack loadStateAck() {
-        return new Ack() {
+        return new UIAck(getActivity()) {
             @Override
-            public void call(Object... args) {
-                getActivity().runOnUiThread(new Runnable() { //mandatory to modify an activity's ui view
-                    @Override
-                    public void run() {
-                        if (args[0] != null)
-                            __.showLongToast(getContext(), "Une erreur s'est produite");
-                        else try {
-                            int selectedIndex = ((JSONArray) args[1]).getJSONObject(0).optInt(getKey(), 0);
-                            ((RadioButton) radioGroup.getChildAt(selectedIndex)).setChecked(true);
-
-                        } catch (JSONException e) {
-                            fatalError(e); //SNO or means that DB is inconsistent if there is no profile found getJSONObject(0)
-                        }
-                    }
-                });
+            protected void onRes(Object res, JSONObject ctx) {
+                try {
+                    int selectedIndex = ((JSONArray) res).getJSONObject(0).optInt(getKey(), 0);
+                    ((RadioButton) radioGroup.getChildAt(selectedIndex)).setChecked(true);
+                } catch (JSONException e) {
+                    fatalError(e); //SNO or means that DB is inconsistent if there is no profile found getJSONObject(0)
+                }
             }
         };
     }
+
+
 }

@@ -57,8 +57,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                progressBarLayout.setVisibility(View.GONE);
                                 if (!task.isSuccessful()) {
+                                    progressBarLayout.setVisibility(View.GONE);
                                     __.showLongToast(ResetPasswordActivity.this, "Echec de la réinitialisation du mot de passe!");
                                     Log.d("FirebaseAuth", "" + task.getException());//// TODO: 01/10/2017 check what exc and swow the right msg error
                                 } else
