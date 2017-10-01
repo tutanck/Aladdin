@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.main.MainActivity;
+import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 import com.aj.aladdin.tools.oths.utils.__;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,7 +24,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private EditText inputEmail, inputPassword;
     private Button btnSignIn, btnSignUp, btnResetPassword;
-    private RelativeLayout progressBarLayout;
+    private ProgressBarFragment progressBarFragment;
     private FirebaseAuth auth;
 
     @Override
@@ -37,7 +38,8 @@ public class SignupActivity extends AppCompatActivity {
         btnSignUp = (Button) findViewById(R.id.sign_up_button);
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
-        progressBarLayout = (RelativeLayout) findViewById(R.id.progressBarLayout);
+        progressBarFragment = (ProgressBarFragment) getSupportFragmentManager().findFragmentById(R.id.waiter_modal_fragment);
+
         btnResetPassword = (Button) findViewById(R.id.btn_reset_password);
 
         btnResetPassword.setOnClickListener(new View.OnClickListener() {
@@ -63,21 +65,20 @@ public class SignupActivity extends AppCompatActivity {
 
                 if (!validateForm(email, password)) return;
 
-                progressBarLayout.setVisibility(View.VISIBLE);
+                progressBarFragment.show();
 
                 auth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                progressBarLayout.setVisibility(View.GONE);
                                 if (!task.isSuccessful()) {
+                                    progressBarFragment.hide();
                                     __.showShortToast(SignupActivity.this, getString(R.string.singup_auth_failed));
                                     Log.d("FirebaseAuth", "" + task.getException());//// TODO: 01/10/2017 check what exc and swow the right msg error
                                 } else
                                     MainActivity.start(SignupActivity.this, auth.getCurrentUser().getUid());
                             }
                         });
-
             }
         });
     }
@@ -109,6 +110,6 @@ public class SignupActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        progressBarLayout.setVisibility(View.GONE);
+        progressBarFragment.hide();
     }
 }

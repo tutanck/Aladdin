@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 import com.aj.aladdin.tools.oths.utils.__;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,7 +24,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
     private EditText inputEmail;
     private Button btnReset, btnBack;
     private FirebaseAuth auth;
-    private RelativeLayout progressBarLayout;
+    private ProgressBarFragment progressBarFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +34,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
         inputEmail = (EditText) findViewById(R.id.email);
         btnReset = (Button) findViewById(R.id.btn_reset_password);
         btnBack = (Button) findViewById(R.id.btn_back);
-        progressBarLayout = (RelativeLayout) findViewById(R.id.progressBarLayout);
+        progressBarFragment = (ProgressBarFragment) getSupportFragmentManager().findFragmentById(R.id.waiter_modal_fragment);
+
 
         auth = FirebaseAuth.getInstance();
 
@@ -52,13 +54,13 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
                 if (!validateForm(email)) return;
 
-                progressBarLayout.setVisibility(View.VISIBLE);
+                progressBarFragment.show();
                 auth.sendPasswordResetEmail(email)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (!task.isSuccessful()) {
-                                    progressBarLayout.setVisibility(View.GONE);
+                                    progressBarFragment.hide();
                                     __.showLongToast(ResetPasswordActivity.this, "Echec de la réinitialisation du mot de passe!");
                                     Log.d("FirebaseAuth", "" + task.getException());//// TODO: 01/10/2017 check what exc and swow the right msg error
                                 } else

@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import com.aj.aladdin.R;
 import com.aj.aladdin.domain.components.messages.MessagesActivity;
 import com.aj.aladdin.main.MainActivity;
+import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 import com.aj.aladdin.tools.oths.db.IO;
 import com.aj.aladdin.tools.oths.utils.__;
 
@@ -27,7 +28,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class LoginActivity extends AppCompatActivity {
 
     private EditText inputEmail, inputPassword;
-    private RelativeLayout progressBarLayout;
+    private ProgressBarFragment progressBarFragment;
     private Button btnSignup, btnLogin, btnReset;
 
     private FirebaseAuth auth;
@@ -49,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
 
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
-        progressBarLayout = (RelativeLayout) findViewById(R.id.progressBarLayout);
+        progressBarFragment = (ProgressBarFragment) getSupportFragmentManager().findFragmentById(R.id.waiter_modal_fragment);
         btnSignup = (Button) findViewById(R.id.btn_signup);
         btnLogin = (Button) findViewById(R.id.btn_login);
         btnReset = (Button) findViewById(R.id.btn_reset_password);
@@ -77,14 +78,14 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (!validateForm(email, password)) return;
 
-                progressBarLayout.setVisibility(View.VISIBLE);
+                progressBarFragment.show();
 
                 auth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (!task.isSuccessful()) {
-                                    progressBarLayout.setVisibility(View.GONE);
+                                    progressBarFragment.hide();
                                     __.showShortToast(LoginActivity.this, getString(R.string.signin_auth_failed));
                                     Log.d("FirebaseAuth", "" + task.getException());//// TODO: 01/10/2017 check what exc and swow the right msg error
                                 } else
