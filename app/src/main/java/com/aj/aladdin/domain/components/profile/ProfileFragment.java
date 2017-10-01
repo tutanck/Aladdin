@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import com.aj.aladdin.R;
 import com.aj.aladdin.domain.components.keywords.UserKeywordsActivity;
 import com.aj.aladdin.domain.components.keywords.UtherKeywordsActivity;
+import com.aj.aladdin.domain.components.messages.MessagesActivity;
 import com.aj.aladdin.tools.components.fragments.autonomous.AutoRatingBar;
 import com.aj.aladdin.tools.components.fragments.autonomous.QUBIFormField;
 import com.aj.aladdin.tools.components.fragments.ImageFragment;
@@ -132,6 +133,17 @@ public class ProfileFragment extends Fragment {
 
             }
         });
+
+        FloatingActionButton fabContact = (FloatingActionButton) view.findViewById(R.id.fabContact);
+        if (isEditable)
+            fabContact.setVisibility(View.GONE);
+        else
+            fabContact.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    MessagesActivity.start(getContext());
+                }
+            });
 
         return view;
     }
