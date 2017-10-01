@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.tools.oths.utils.__;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,28 +48,39 @@ public class ResetPasswordActivity extends AppCompatActivity {
             public void onClick(View v) {
  
                 String email = inputEmail.getText().toString().trim();
- 
-                if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(getApplication(), "Enter your registered email id", Toast.LENGTH_SHORT).show();
-                    return;
-                }
- 
+
+                if (!validateForm(email)) return;
+
                 progressBar.setVisibility(View.VISIBLE);
                 auth.sendPasswordResetEmail(email)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(ResetPasswordActivity.this, "We have sent you instructions to reset your password!", Toast.LENGTH_SHORT).show();
+                                    __.showLongToast(ResetPasswordActivity.this, "Nous vous avons envoyé des instructions pour réinitialiser votre mot de passe!");
                                 } else {
-                                    Toast.makeText(ResetPasswordActivity.this, "Failed to send reset email!", Toast.LENGTH_SHORT).show();
+                                    __.showLongToast(ResetPasswordActivity.this, "Echec de la réinitialisation du mot de passe!");
+                                    Log.d("FirebaseAuth", "" + task.getException());//// TODO: 01/10/2017 check what exc and swow the right msg error
                                 }
- 
                                 progressBar.setVisibility(View.GONE);
                             }
                         });
             }
         });
     }
- 
+
+
+    private boolean validateForm(String email) {
+        if (TextUtils.isEmpty(email)) {
+            inputEmail.setError("Email obligatoire!");
+            return false;
+        } else if (!email.contains("@")) {
+            inputEmail.setError("Entrez votre email d'inscription!");
+            return false;
+        } else
+            inputEmail.setError(null);
+
+        return true;
+    }
+
 }
