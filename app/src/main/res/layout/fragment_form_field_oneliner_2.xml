@@ -71,7 +71,7 @@
                 android:maxLines="1"
                 android:inputType="text"
                 android:scrollHorizontally="true"
-                android:maxLength="37"/>
+                android:maxLength="30"/>
 
         </android.support.design.widget.TextInputLayout>
 
