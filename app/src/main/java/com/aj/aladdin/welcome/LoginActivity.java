@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.main.MainActivity;
@@ -23,7 +23,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText inputEmail, inputPassword;
     private FirebaseAuth auth;
-    private ProgressBar progressBar;
+    private RelativeLayout progressBarLayout;
     private Button btnSignup, btnLogin, btnReset;
 
     @Override
@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         if (auth.getCurrentUser() != null) {
-            // startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            //startActivity(new Intent(LoginActivity.this, MainActivity.class));
             //finish();
         }
 
@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
 
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBarLayout = (RelativeLayout) findViewById(R.id.progressBarLayout);
         btnSignup = (Button) findViewById(R.id.btn_signup);
         btnLogin = (Button) findViewById(R.id.btn_login);
         btnReset = (Button) findViewById(R.id.btn_reset_password);
@@ -71,13 +71,13 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (!validateForm(email, password)) return;
 
-                progressBar.setVisibility(View.VISIBLE);
+                progressBarLayout.setVisibility(View.VISIBLE);
 
                 auth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                progressBar.setVisibility(View.GONE);
+                                progressBarLayout.setVisibility(View.GONE);
                                 if (!task.isSuccessful()) {
                                     __.showShortToast(LoginActivity.this, getString(R.string.signin_auth_failed));
                                     Log.d("FirebaseAuth", "" + task.getException());//// TODO: 01/10/2017 check what exc and swow the right msg error

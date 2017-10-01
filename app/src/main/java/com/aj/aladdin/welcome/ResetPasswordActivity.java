@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.aj.aladdin.R;
@@ -22,7 +23,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
     private EditText inputEmail;
     private Button btnReset, btnBack;
     private FirebaseAuth auth;
-    private ProgressBar progressBar;
+    private RelativeLayout progressBarLayout;
  
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         inputEmail = (EditText) findViewById(R.id.email);
         btnReset = (Button) findViewById(R.id.btn_reset_password);
         btnBack = (Button) findViewById(R.id.btn_back);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBarLayout = (RelativeLayout) findViewById(R.id.progressBarLayout);
  
         auth = FirebaseAuth.getInstance();
  
@@ -51,7 +52,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
                 if (!validateForm(email)) return;
 
-                progressBar.setVisibility(View.VISIBLE);
+                progressBarLayout.setVisibility(View.VISIBLE);
                 auth.sendPasswordResetEmail(email)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -62,7 +63,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
                                     __.showLongToast(ResetPasswordActivity.this, "Echec de la réinitialisation du mot de passe!");
                                     Log.d("FirebaseAuth", "" + task.getException());//// TODO: 01/10/2017 check what exc and swow the right msg error
                                 }
-                                progressBar.setVisibility(View.GONE);
+                                progressBarLayout.setVisibility(View.GONE);
                             }
                         });
             }

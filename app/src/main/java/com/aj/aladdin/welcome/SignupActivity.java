@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.main.MainActivity;
@@ -23,7 +23,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private EditText inputEmail, inputPassword;
     private Button btnSignIn, btnSignUp, btnResetPassword;
-    private ProgressBar progressBar;
+    private RelativeLayout progressBarLayout;
     private FirebaseAuth auth;
 
     @Override
@@ -37,7 +37,7 @@ public class SignupActivity extends AppCompatActivity {
         btnSignUp = (Button) findViewById(R.id.sign_up_button);
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBarLayout = (RelativeLayout) findViewById(R.id.progressBarLayout);
         btnResetPassword = (Button) findViewById(R.id.btn_reset_password);
 
         btnResetPassword.setOnClickListener(new View.OnClickListener() {
@@ -64,13 +64,13 @@ public class SignupActivity extends AppCompatActivity {
 
                 if (!validateForm(email, password)) return;
 
-                progressBar.setVisibility(View.VISIBLE);
+                progressBarLayout.setVisibility(View.VISIBLE);
 
                 auth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                progressBar.setVisibility(View.GONE);
+                                progressBarLayout.setVisibility(View.GONE);
                                 if (!task.isSuccessful()) {
                                     __.showShortToast(SignupActivity.this, getString(R.string.singup_auth_failed));
                                     Log.d("FirebaseAuth", "" + task.getException());//// TODO: 01/10/2017 check what exc and swow the right msg error
@@ -112,6 +112,6 @@ public class SignupActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        progressBar.setVisibility(View.GONE);
+        progressBarLayout.setVisibility(View.GONE);
     }
 }
