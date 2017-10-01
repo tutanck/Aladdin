@@ -1,7 +1,3 @@
-/**
- * Created by joan on 01/10/2017.
- */
-
 package com.aj.aladdin.welcome;
 
 import android.app.Activity;
@@ -13,6 +9,10 @@ import com.aj.aladdin.main.MainActivity;
 import com.aj.aladdin.tools.oths.db.IO;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+/**
+ * Created by joan on 01/10/2017.
+ */
 
 public class SplashActivity extends Activity {
 
