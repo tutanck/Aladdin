@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +23,15 @@ import com.aj.aladdin.tools.components.fragments.ImageFragment;
 import com.aj.aladdin.tools.components.fragments.ItemDividerFragment;
 import com.aj.aladdin.tools.components.fragments.autonomous.QUBIRadioGroup;
 import com.aj.aladdin.tools.components.fragments.autonomous.QUBIRatingBar;
+import com.aj.aladdin.tools.components.fragments.simple.FormField;
+import com.aj.aladdin.tools.components.services.FormFieldKindTranslator;
 import com.aj.aladdin.tools.oths.db.DB;
+import com.aj.aladdin.tools.oths.utils.JSONServices;
+import com.aj.aladdin.tools.oths.utils.__;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class ProfileFragment extends Fragment {
@@ -31,19 +41,7 @@ public class ProfileFragment extends Fragment {
     private final String coll = DB.USER_PROFILE;
     private final String _id = "59c13a29457ba52f74884c89";
 
-    AppCompatActivity activity;
-
-
-    //rg : radio_group
-    private String[] rgKeys;
-    private String[] rgLabels;
-
-    //ff : form_field
-    private String[] ffLabels;
-    private String[] ffKeys;
-    private int[] ffTypes;
-    private String[] ffIndics; // TODO: 19/09/2017 See what to do
-
+    private JSONObject formParams;
 
     public static ProfileFragment newInstance(
             boolean editable
@@ -57,24 +55,6 @@ public class ProfileFragment extends Fragment {
 
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        activity = (AppCompatActivity) getActivity();
-
-        final Resources resources = context.getResources();
-
-        rgKeys = resources.getStringArray(R.array.profile_radio_group_keys);
-        rgLabels = resources.getStringArray(R.array.profile_radio_group_labels);
-
-        ffLabels = resources.getStringArray(R.array.profile_form_field_labels);
-        ffKeys = resources.getStringArray(R.array.profile_form_field_keys);
-        ffTypes = resources.getIntArray(R.array.profile_form_field_type);
-        ffIndics = resources.getStringArray(R.array.profile_form_field_indications);
-    }
-
-
-    @Override
     public View onCreateView(
             LayoutInflater inflater
             , ViewGroup container
@@ -84,47 +64,55 @@ public class ProfileFragment extends Fragment {
 
         final boolean isEditable = args.getBoolean(EDITABLE);
 
-
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
-       activity.getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.profile_image_layout, ImageFragment.newInstance(
-                        ffLabels[0], ffIndics[0], 0, "" //todo
-                ), "profile_image")
-                .commit();
-
-        activity.getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.rating_layout, AutoRatingBar.newInstance(
-                        DB.USER_RATING, "fictivID"
-                ), "rating")
-                .commit();
-
-        if (!isEditable)
-            activity.getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.rating_control_layout, QUBIRatingBar.newInstance(
-                            DB.USER_RATING, _id, "fictivID"
-                    ), "rating_control")
-                    .commit();
-
-        activity.getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.radio_group_layout, QUBIRadioGroup.newInstance(
-                        coll, _id, rgKeys[0], rgLabels, isEditable
-                ), "radio_group")
-                .commit();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
 
-        for (int i = 0; i < ffLabels.length; i++)
-            activity.getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.form_layout, QUBIFormField.newInstance(
-                            coll, _id, ffKeys[i], ffLabels[i], R.layout.fragment_form_field_multiline_2, isEditable
-                    ), "form_field_" + i)//// TODO: 23/09/2017
-                    .commit();
+        if (savedInstanceState == null) //no duplicated fragments // TODO: 25/09/2017  check if frag only or else like listener on needSwitch
+            try {
 
+                formParams = JSONServices.loadJsonFromAsset("form_params_user_profile.json", getContext());
+                JSONArray orderedFieldsKeys = formParams.getJSONArray("ordered_fields_names");
+
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                fragmentTransaction.add(R.id.profile_image_layout, ImageFragment.newInstance(
+                        _id, isEditable), "profile_image");
+
+                String typeKey = "type";
+                JSONArray typeLabels = formParams.getJSONObject(typeKey).getJSONArray("label");
+
+                fragmentTransaction.add(R.id.radio_group_layout, QUBIRadioGroup.newInstance(
+                        coll, _id, typeKey, new String[]
+                                {typeLabels.getString(0), typeLabels.getString(1)}, isEditable
+                ), "type");
+
+                fragmentTransaction.add(R.id.rating_layout, AutoRatingBar.newInstance(
+                        DB.USER_RATING, "fictivID" //// TODO: 01/10/2017
+                ), "rating");
+
+                if (!isEditable)
+                    fragmentTransaction.add(R.id.rating_control_layout, QUBIRatingBar.newInstance(
+                            DB.USER_RATING, _id, "fictivID" //// TODO: 01/10/2017
+                    ), "rating_control");
+
+                for (int i = 0; i < orderedFieldsKeys.length(); i++) {
+                    String key = orderedFieldsKeys.getString(i);
+                    JSONObject fieldParam = formParams.getJSONObject(key);
+
+                    QUBIFormField qubiFormField = QUBIFormField.newInstance(
+                            coll, _id, key, fieldParam.getString("label")
+                            , FormFieldKindTranslator.tr(fieldParam.getInt("kind"))
+                            , isEditable);
+
+                    fragmentTransaction.add(R.id.form_layout, qubiFormField, key);
+                }
+                fragmentTransaction.commit();
+
+            } catch (JSONException e) {
+                __.fatalError(e);
+            }
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

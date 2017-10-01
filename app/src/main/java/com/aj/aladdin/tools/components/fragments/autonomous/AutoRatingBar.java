@@ -66,22 +66,7 @@ public class AutoRatingBar extends AutonomousFragment {
 
     @Override
     protected void loadState() throws JSONException, Regina.NullRequiredParameterException {
-        getRegina().socket.emit("getUserRating",__.jo().put("userID",toIDVal),loadStateMeta(),loadStateAck());
-        //getRegina().aggregate(getColl(), pipeline() , loadStateOpt(), loadStateMeta(), loadStateAck());
-    }
-
-    private JSONArray pipeline() {
-
-        try {
-            return new JSONArray(
-
-                    "[{\"$match\":{\"toID\":" + toIDVal+ "}},{\"$group\":{\"_id\" : \"$toID\",\"nbStars\" : {\"$sum\": \"$" + ratingKey + "\" },\"nbVoters\": { \"$sum\": 1 }}},{\"$project\": {\"nbStars\": 1,\"nbVoters\": 1,\"reputation\": {\"$divide\": [\"$nbStars\", \"$nbVoters\"]} }}]"
-            );
-        } catch (JSONException e) {
-            fatalError(e);
-            return null;
-        }
-
+        getRegina().socket.emit("getUserRating", __.jo().put("userID", toIDVal), loadStateMeta(), loadStateAck());
     }
 
 

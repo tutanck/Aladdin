@@ -12,25 +12,17 @@ import com.aj.aladdin.R;
 
 
 public class ImageFragment extends Fragment {
-    private static final String RANK = "RANK";
-    private static final String LABEL = "LABEL";
-    private static final String HINT = "HINT";
-    private static final String CONTENT = "CONTENT";
 
-    private Listener mListener;
-
+    private static final String KEY = "KEY";
+    private static final String EDITABLE = "EDITABLE";
 
     public static ImageFragment newInstance(
-            String label
-            , String hint
-            , int rank
-            , String content
+            String key
+            , boolean editable
     ) {
         Bundle args = new Bundle();
-        args.putInt(RANK, rank);
-        args.putString(LABEL, label);
-        args.putString(HINT, hint);
-        args.putString(CONTENT, content);
+        args.putString(KEY, key);
+        args.putBoolean(EDITABLE, editable);
         ImageFragment fragment = new ImageFragment();
         fragment.setArguments(args);
         return fragment;
@@ -47,29 +39,15 @@ public class ImageFragment extends Fragment {
 
         ImageView imageView = (ImageView) inflater.inflate(R.layout.fragment_image_view, container, false);
 
-        imageView.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+        if (args.getBoolean(EDITABLE))
+            imageView.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
 
+                        }
                     }
-                }
-        );
+            );
         return imageView;
-    }
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        /*if (context instanceof Listener)
-            mListener = (Listener) context;
-        else
-            throw new RuntimeException(context.toString()
-                    + " must implement Listener");*/
-    }
-
-
-    public interface Listener {
     }
 }
