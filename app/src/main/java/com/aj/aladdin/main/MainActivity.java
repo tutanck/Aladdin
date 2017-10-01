@@ -33,9 +33,44 @@ public class MainActivity extends AppCompatActivity {
 
     public static String user_id = null;
 
-    public static void start(Activity context) {
-        context.startActivity(new Intent(context, MainActivity.class));
-        context.finish();
+    public static void start(Activity caller, String authID) {
+        try {
+            IO.r.find(DB.USER_PROFILE
+                    , __.jo().put("authID", authID)
+                    , __.jo().put("authID", 1), __.jo()
+                    , new UIAck(caller) {
+                        @Override
+                        protected void onRes(Object res, JSONObject ctx) {
+                            JSONArray userArray = ((JSONArray) res);
+
+                            if (userArray.length() > 1)
+                                __.fatal("MainActivity::onStart : multiple users with the same authID");
+
+                            if (userArray.length() == 1) try {
+                                user_id = userArray.getJSONObject(0).getString("_id");
+                                caller.startActivity(new Intent(caller, MainActivity.class));
+                                caller.finish();
+                            } catch (JSONException e) {
+                                __.fatal(e);
+                            }
+                            else try {
+                                IO.r.insert(DB.USER_PROFILE
+                                        , __.jo().put("authID", authID)
+                                        , __.jo(), __.jo()
+                                        , new UIAck(caller) {
+                                            @Override
+                                            protected void onRes(Object res, JSONObject ctx) {
+                                                start(caller,authID);
+                                            }
+                                        });
+                            } catch (Regina.NullRequiredParameterException | JSONException e) {
+                                __.fatal(e);
+                            }
+                        }
+                    });
+        } catch (Regina.NullRequiredParameterException | JSONException e) {
+            __.fatal(e);
+        }
     }
 
 
@@ -59,57 +94,6 @@ public class MainActivity extends AppCompatActivity {
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
-
-        IO.r.connect();
-
-        defineUserID();
-    }
-
-    private void defineUserID() {
-        try {
-            String authID = mAuth.getCurrentUser().getUid();
-            IO.r.find(DB.USER_PROFILE
-                    , __.jo().put("authID", authID)
-                    , __.jo().put("authID", 1), __.jo()
-                    , new UIAck(MainActivity.this) {
-                        @Override
-                        protected void onRes(Object res, JSONObject ctx) {
-                            JSONArray userArray = ((JSONArray) res);
-
-                            if (userArray.length() > 1)
-                                __.fatal("MainActivity::onStart : multiple users with the same authID");
-
-                            if (userArray.length() == 1) try {
-                                user_id = userArray.getJSONObject(0).getString("_id");
-                            } catch (JSONException e) {
-                                __.fatal(e);
-                            }
-                            else try {
-                                IO.r.insert(DB.USER_PROFILE
-                                        , __.jo().put("authID", authID)
-                                        , __.jo(), __.jo()
-                                        , new UIAck(MainActivity.this) {
-                                            @Override
-                                            protected void onRes(Object res, JSONObject ctx) {
-                                                defineUserID();
-                                            }
-                                        });
-                            } catch (Regina.NullRequiredParameterException | JSONException e) {
-                                __.fatal(e);
-                            }
-                        }
-                    });
-        } catch (Regina.NullRequiredParameterException | JSONException e) {
-            __.fatal(e);
-        }
-    }
-
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        IO.r.disconnect();  //// TODO: 01/10/2017  rem in secure dev context
     }
 
 

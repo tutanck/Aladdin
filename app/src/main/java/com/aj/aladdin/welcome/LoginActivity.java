@@ -13,19 +13,13 @@ import android.widget.RelativeLayout;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.main.MainActivity;
-import com.aj.aladdin.tools.oths.db.DB;
 import com.aj.aladdin.tools.oths.db.IO;
 import com.aj.aladdin.tools.oths.utils.__;
-import com.aj.aladdin.tools.regina.Regina;
-import com.aj.aladdin.tools.utils.UIAck;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -40,8 +34,11 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-        if (auth.getCurrentUser() != null)
-            MainActivity.start(LoginActivity.this);
+        //todo A deplacer ds la splash activity
+        if (auth.getCurrentUser() != null) {
+            IO.r.connect();
+            MainActivity.start(LoginActivity.this,auth.getCurrentUser().getUid());
+        }
 
         setContentView(R.layout.activity_login);
 
@@ -88,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
                                     __.showShortToast(LoginActivity.this, getString(R.string.signin_auth_failed));
                                     Log.d("FirebaseAuth", "" + task.getException());//// TODO: 01/10/2017 check what exc and swow the right msg error
                                 } else
-                                    MainActivity.start(LoginActivity.this);
+                                    MainActivity.start(LoginActivity.this,auth.getCurrentUser().getUid());
                             }
                         });
             }
