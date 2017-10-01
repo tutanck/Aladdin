@@ -24,7 +24,7 @@
         android:layout_toEndOf="@id/ivIndication"
         android:layout_toRightOf="@id/ivIndication"
         android:ellipsize="end"
-        android:text=""
+        android:text="@string/sample_text"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="#212121"
         android:maxLines="1"

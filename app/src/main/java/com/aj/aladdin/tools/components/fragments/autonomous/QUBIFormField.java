@@ -34,6 +34,7 @@ public class QUBIFormField extends AutonomousQueryUpdateByIDFragment {
     private TextView tvContent;
     private EditText etContent;
     private TextView tvDescription;
+    private View divider;
 
 
     //instance parameters
@@ -75,14 +76,13 @@ public class QUBIFormField extends AutonomousQueryUpdateByIDFragment {
         final TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.text_input_layout);
         textInputLayout.setHint(args.getString(LABEL));
 
+        divider = view.findViewById(R.id.divider);
 
         tvDescription = (TextView) view.findViewById(R.id.tvDescription);
         tvDescription.setText(args.getString(LABEL));
 
-
         etContent = (EditText) view.findViewById(R.id.etContent);
         etContent.setVisibility(View.GONE);
-
 
         tvContent = (TextView) view.findViewById(R.id.tvContent);
 
@@ -96,6 +96,7 @@ public class QUBIFormField extends AutonomousQueryUpdateByIDFragment {
                                 etContent.setVisibility(View.VISIBLE);
                                 tvContent.setVisibility(View.GONE);
                                 tvDescription.setVisibility(View.GONE);
+                                divider.setVisibility(View.GONE);
                                 isOpen = true;
                                 __.showShortToast(getContext(), "Enregistrez en cliquant sur l'icone à gauche");
                             } else try {
@@ -141,6 +142,7 @@ public class QUBIFormField extends AutonomousQueryUpdateByIDFragment {
                             etContent.setVisibility(View.GONE);
                             tvContent.setVisibility(View.VISIBLE);
                             tvDescription.setVisibility(View.VISIBLE);
+                            divider.setVisibility(View.VISIBLE);
                             isOpen = false;
 
                             tvContent.setText(((JSONArray) args[1]).getJSONObject(0).optString(getKey(), ""));

@@ -67,7 +67,6 @@ public class ProfileFragment extends Fragment {
         rgKeys = resources.getStringArray(R.array.profile_radio_group_keys);
         rgLabels = resources.getStringArray(R.array.profile_radio_group_labels);
 
-
         ffLabels = resources.getStringArray(R.array.profile_form_field_labels);
         ffKeys = resources.getStringArray(R.array.profile_form_field_keys);
         ffTypes = resources.getIntArray(R.array.profile_form_field_type);
@@ -88,7 +87,7 @@ public class ProfileFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
-        activity.getSupportFragmentManager()
+       activity.getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.profile_image_layout, ImageFragment.newInstance(
                         ffLabels[0], ffIndics[0], 0, "" //todo
@@ -118,19 +117,13 @@ public class ProfileFragment extends Fragment {
                 .commit();
 
 
-        for (int i = 0; i < ffLabels.length; i++) {
+        for (int i = 0; i < ffLabels.length; i++)
             activity.getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.form_layout, QUBIFormField.newInstance(
-                            coll, _id, ffKeys[i], ffLabels[i], R.layout.fragment_form_field_multiline, isEditable
+                            coll, _id, ffKeys[i], ffLabels[i], R.layout.fragment_form_field_multiline_2, isEditable
                     ), "form_field_" + i)//// TODO: 23/09/2017
                     .commit();
-
-            activity.getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.form_layout, ItemDividerFragment.newInstance(false), "item_divider" + i)
-                    .commit();
-        }
 
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
