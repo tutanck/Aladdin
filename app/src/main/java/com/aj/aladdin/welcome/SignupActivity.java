@@ -74,10 +74,8 @@ public class SignupActivity extends AppCompatActivity {
                                 if (!task.isSuccessful()) {
                                     __.showShortToast(SignupActivity.this, getString(R.string.singup_auth_failed));
                                     Log.d("FirebaseAuth", "" + task.getException());//// TODO: 01/10/2017 check what exc and swow the right msg error
-                                } else {
-                                    startActivity(new Intent(SignupActivity.this, MainActivity.class));
-                                    finish();
-                                }
+                                } else
+                                    MainActivity.start(SignupActivity.this);
                             }
                         });
 

@@ -87,7 +87,7 @@ public class UtherKeywordsActivity extends AppCompatActivity {
                                         for (int i = 0; i < jar.length(); i++)
                                             adapter.add(jar.getJSONObject(i).getString("keyword"));
                                     } catch (JSONException e) {
-                                        __.fatalError(e); //SNO : if a doc exist the keyword field should exist too
+                                        __.fatal(e); //SNO : if a doc exist the keyword field should exist too
                                     }
                                 }
                             });
@@ -95,7 +95,7 @@ public class UtherKeywordsActivity extends AppCompatActivity {
                     }
             );
         } catch (Regina.NullRequiredParameterException | JSONException e) {
-            __.fatalError(e);
+            __.fatal(e);
         }
     }
 

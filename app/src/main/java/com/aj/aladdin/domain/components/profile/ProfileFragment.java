@@ -1,15 +1,13 @@
 package com.aj.aladdin.domain.components.profile;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +16,12 @@ import com.aj.aladdin.R;
 import com.aj.aladdin.domain.components.keywords.UserKeywordsActivity;
 import com.aj.aladdin.domain.components.keywords.UtherKeywordsActivity;
 import com.aj.aladdin.domain.components.messages.MessagesActivity;
+import com.aj.aladdin.main.MainActivity;
 import com.aj.aladdin.tools.components.fragments.autonomous.AutoRatingBar;
 import com.aj.aladdin.tools.components.fragments.autonomous.QUBIFormField;
 import com.aj.aladdin.tools.components.fragments.ImageFragment;
-import com.aj.aladdin.tools.components.fragments.ItemDividerFragment;
 import com.aj.aladdin.tools.components.fragments.autonomous.QUBIRadioGroup;
 import com.aj.aladdin.tools.components.fragments.autonomous.QUBIRatingBar;
-import com.aj.aladdin.tools.components.fragments.simple.FormField;
 import com.aj.aladdin.tools.components.services.FormFieldKindTranslator;
 import com.aj.aladdin.tools.oths.db.DB;
 import com.aj.aladdin.tools.oths.utils.JSONServices;
@@ -40,7 +37,6 @@ public class ProfileFragment extends Fragment {
     private static final String EDITABLE = "EDITABLE";
 
     private final String coll = DB.USER_PROFILE;
-    private final String _id = "59c13a29457ba52f74884c89";
 
     private JSONObject formParams;
 
@@ -72,6 +68,7 @@ public class ProfileFragment extends Fragment {
 
         if (savedInstanceState == null) //no duplicated fragments // TODO: 25/09/2017  check if frag only or else like listener on needSwitch
             try {
+                String _id = MainActivity.user_id;
 
                 formParams = JSONServices.loadJsonFromAsset("form_params_user_profile.json", getContext());
                 JSONArray orderedFieldsKeys = formParams.getJSONArray("ordered_fields_names");
@@ -112,7 +109,7 @@ public class ProfileFragment extends Fragment {
                 fragmentTransaction.commit();
 
             } catch (JSONException e) {
-                __.fatalError(e);
+                __.fatal(e);
             }
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);

@@ -96,7 +96,7 @@ public class MessagesActivity extends AppCompatActivity {
                     }
             );
         } catch (JSONException | Regina.NullRequiredParameterException e) {
-            __.fatalError(e);
+            __.fatal(e);
         }
     }
 
@@ -126,13 +126,13 @@ public class MessagesActivity extends AppCompatActivity {
                                 Log.i("messageList", messageList.toString());
                                 mAdapter.notifyDataSetChanged();
                             } catch (JSONException e) {
-                                __.fatalError(e); //SNO : if a doc exist the Message field should exist too
+                                __.fatal(e); //SNO : if a doc exist the Message field should exist too
                             }
                         }
                     }
             );
         } catch (Regina.NullRequiredParameterException | JSONException e) {
-            __.fatalError(e);
+            __.fatal(e);
         }
     }
 

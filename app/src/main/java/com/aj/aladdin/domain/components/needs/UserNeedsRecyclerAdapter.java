@@ -104,7 +104,7 @@ public class UserNeedsRecyclerAdapter extends RecyclerView.Adapter<UserNeedsRecy
                             }
                         });
             } catch (Regina.NullRequiredParameterException | JSONException e) {
-                __.fatalError(e);
+                __.fatal(e);
             }
         }
     }

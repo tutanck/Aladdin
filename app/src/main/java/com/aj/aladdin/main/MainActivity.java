@@ -1,6 +1,8 @@
 package com.aj.aladdin.main;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,14 +15,36 @@ import com.aj.aladdin.R;
 import com.aj.aladdin.domain.components.messages.ConverstationsFragment;
 import com.aj.aladdin.domain.components.needs.UserNeedsFragment;
 import com.aj.aladdin.domain.components.profile.ProfileFragment;
+import com.aj.aladdin.tools.oths.db.DB;
 import com.aj.aladdin.tools.oths.db.IO;
 import com.aj.aladdin.tools.oths.PageFragment;
+import com.aj.aladdin.tools.oths.utils.__;
+import com.aj.aladdin.tools.regina.Regina;
+import com.aj.aladdin.tools.utils.UIAck;
+import com.google.firebase.auth.FirebaseAuth;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
+
+    private FirebaseAuth mAuth;
+
+    public static String user_id = null;
+
+    public static void start(Activity context) {
+        context.startActivity(new Intent(context, MainActivity.class));
+        context.finish();
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mAuth = FirebaseAuth.getInstance();
+
         setContentView(R.layout.activity_main);
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
@@ -36,9 +60,48 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-
         IO.r.connect();
 
+        defineUserID();
+    }
+
+    private void defineUserID() {
+        try {
+            String authID = mAuth.getCurrentUser().getUid();
+            IO.r.find(DB.USER_PROFILE
+                    , __.jo().put("authID", authID)
+                    , __.jo().put("authID", 1), __.jo()
+                    , new UIAck(MainActivity.this) {
+                        @Override
+                        protected void onRes(Object res, JSONObject ctx) {
+                            JSONArray userArray = ((JSONArray) res);
+
+                            if (userArray.length() > 1)
+                                __.fatal("MainActivity::onStart : multiple users with the same authID");
+
+                            if (userArray.length() == 1) try {
+                                user_id = userArray.getJSONObject(0).getString("_id");
+                            } catch (JSONException e) {
+                                __.fatal(e);
+                            }
+                            else try {
+                                IO.r.insert(DB.USER_PROFILE
+                                        , __.jo().put("authID", authID)
+                                        , __.jo(), __.jo()
+                                        , new UIAck(MainActivity.this) {
+                                            @Override
+                                            protected void onRes(Object res, JSONObject ctx) {
+                                                defineUserID();
+                                            }
+                                        });
+                            } catch (Regina.NullRequiredParameterException | JSONException e) {
+                                __.fatal(e);
+                            }
+                        }
+                    });
+        } catch (Regina.NullRequiredParameterException | JSONException e) {
+            __.fatal(e);
+        }
     }
 
 
@@ -46,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
 
-        IO.r.disconnect();
+        IO.r.disconnect();  //// TODO: 01/10/2017  rem in secure dev context
     }
 
 

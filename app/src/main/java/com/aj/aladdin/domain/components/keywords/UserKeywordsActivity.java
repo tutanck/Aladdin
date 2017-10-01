@@ -99,7 +99,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
                                         }
                                         mAdapter.notifyDataSetChanged();
                                     } catch (JSONException e) {
-                                        __.fatalError(e); //SNO : if a doc exist the keyword field should exist too
+                                        __.fatal(e); //SNO : if a doc exist the keyword field should exist too
                                     }
                                 }
                             });
@@ -107,7 +107,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
                     }
             );
         } catch (Regina.NullRequiredParameterException | JSONException e) {
-            __.fatalError(e);
+            __.fatal(e);
         }
     }
 
@@ -156,7 +156,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
                     }
             );
         } catch (Regina.NullRequiredParameterException | JSONException e) {
-            __.fatalError(e);
+            __.fatal(e);
         }
     }
 

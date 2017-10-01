@@ -1,6 +1,5 @@
 package com.aj.aladdin.domain.components.needs;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -97,13 +96,13 @@ public class UserNeedsFragment extends Fragment {
                                 }
                                 mAdapter.notifyDataSetChanged();
                             } catch (JSONException e) {
-                                __.fatalError(e); //SNO : if a doc exist the Need field should exist too
+                                __.fatal(e); //SNO : if a doc exist the Need field should exist too
                             }
                         }
                     }
             );
         } catch (Regina.NullRequiredParameterException | JSONException e) {
-            __.fatalError(e);
+            __.fatal(e);
         }
     }
 

@@ -55,11 +55,11 @@ public class __ {
         return new JSONArray();
     }
 
-    public static void fatalError(Throwable throwable) {
+    public static void fatal(Throwable throwable) {
         throw new RuntimeException(throwable);
     }
 
-    public static void fatalError(String message) {
+    public static void fatal(String message) {
         throw new RuntimeException(message);
     }
 

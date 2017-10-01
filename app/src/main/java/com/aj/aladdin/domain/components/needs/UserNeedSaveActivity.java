@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.tools.components.fragments.simple.FormField;
@@ -87,7 +86,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
                 }
 
             } catch (JSONException e) {
-                __.fatalError(e);
+                __.fatal(e);
             }
 
         needSwitch = (Switch) findViewById(R.id.need_switch);
@@ -167,7 +166,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
                         }
                     });
         } catch (Regina.NullRequiredParameterException | JSONException e) {
-            __.fatalError(e);
+            __.fatal(e);
         }
     }
 
@@ -185,12 +184,12 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
                         needSwitch.setChecked(need.getBoolean("active"));
                         stretchForm(false);
                     } catch (JSONException e) {
-                        __.fatalError(e);
+                        __.fatal(e);
                     }
                 }
             });
         } catch (Regina.NullRequiredParameterException | JSONException e) {
-            __.fatalError(e);
+            __.fatal(e);
         }
     }
 
@@ -211,7 +210,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
                 IO.r.update(coll, __.jo().put("_id", _id), __.jo().put("$set", need), __.jo(), __.jo(), ackIn());
 
         } catch (JSONException | Regina.NullRequiredParameterException e) {
-            __.fatalError(e);
+            __.fatal(e);
         }
     }
 

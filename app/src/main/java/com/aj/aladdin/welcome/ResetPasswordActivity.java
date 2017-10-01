@@ -17,37 +17,37 @@ import com.aj.aladdin.tools.oths.utils.__;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
- 
+
 public class ResetPasswordActivity extends AppCompatActivity {
- 
+
     private EditText inputEmail;
     private Button btnReset, btnBack;
     private FirebaseAuth auth;
     private RelativeLayout progressBarLayout;
- 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
- 
+
         inputEmail = (EditText) findViewById(R.id.email);
         btnReset = (Button) findViewById(R.id.btn_reset_password);
         btnBack = (Button) findViewById(R.id.btn_back);
         progressBarLayout = (RelativeLayout) findViewById(R.id.progressBarLayout);
- 
+
         auth = FirebaseAuth.getInstance();
- 
+
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
- 
+
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
- 
+
                 String email = inputEmail.getText().toString().trim();
 
                 if (!validateForm(email)) return;
@@ -57,13 +57,12 @@ public class ResetPasswordActivity extends AppCompatActivity {
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    __.showLongToast(ResetPasswordActivity.this, "Nous vous avons envoyé des instructions pour réinitialiser votre mot de passe!");
-                                } else {
+                                progressBarLayout.setVisibility(View.GONE);
+                                if (!task.isSuccessful()) {
                                     __.showLongToast(ResetPasswordActivity.this, "Echec de la réinitialisation du mot de passe!");
                                     Log.d("FirebaseAuth", "" + task.getException());//// TODO: 01/10/2017 check what exc and swow the right msg error
-                                }
-                                progressBarLayout.setVisibility(View.GONE);
+                                } else
+                                    __.showLongToast(ResetPasswordActivity.this, "Nous vous avons envoyé des instructions pour réinitialiser votre mot de passe!");
                             }
                         });
             }
