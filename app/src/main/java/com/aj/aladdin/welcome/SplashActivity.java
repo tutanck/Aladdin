@@ -2,7 +2,7 @@
  * Created by joan on 01/10/2017.
  */
 
-package com.aj.aladdin.app;
+package com.aj.aladdin.welcome;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -11,7 +11,6 @@ import android.os.Handler;
 import com.aj.aladdin.R;
 import com.aj.aladdin.main.MainActivity;
 import com.aj.aladdin.tools.oths.db.IO;
-import com.aj.aladdin.welcome.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
