@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.app.A;
 import com.aj.aladdin.domain.components.keywords.UserKeywordsActivity;
 import com.aj.aladdin.domain.components.keywords.UtherKeywordsActivity;
 import com.aj.aladdin.domain.components.messages.MessagesActivity;
@@ -65,11 +66,10 @@ public class ProfileFragment extends Fragment {
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
+        String _id = ((A) getActivity().getApplication()).getUser_id();
 
         if (savedInstanceState == null) //no duplicated fragments // TODO: 25/09/2017  check if frag only or else like listener on needSwitch
             try {
-                String _id = MainActivity.user_id();
-
                 formParams = JSONServices.loadJsonFromAsset("form_params_user_profile.json", getContext());
                 JSONArray orderedFieldsKeys = formParams.getJSONArray("ordered_fields_names");
 

@@ -12,13 +12,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.app.A;
 import com.aj.aladdin.domain.components.messages.ConverstationsFragment;
 import com.aj.aladdin.domain.components.needs.UserNeedsFragment;
 import com.aj.aladdin.domain.components.profile.ProfileFragment;
 import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
+
+import com.aj.aladdin.tools.oths.PageFragment;
+
 import com.aj.aladdin.tools.oths.db.DB;
 import com.aj.aladdin.tools.oths.db.IO;
-import com.aj.aladdin.tools.oths.PageFragment;
 import com.aj.aladdin.tools.oths.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
 import com.aj.aladdin.tools.utils.UIAck;
@@ -28,58 +31,25 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
-    private static String user_id = null;
-
-    public static String user_id() {
-        return user_id;
-    }
-
     public static ProgressBarFragment progressBarFragment;
 
-    public static void start(Activity caller, String authID) {
-        try {
-            IO.r.find(DB.USER_PROFILE
-                    , __.jo().put("authID", authID)
-                    , __.jo().put("authID", 1), __.jo()
-                    , new UIAck(caller) {
-                        @Override
-                        protected void onRes(Object res, JSONObject ctx) {
-                            JSONArray userArray = ((JSONArray) res);
-
-                            if (userArray.length() > 1)
-                                __.fatal("MainActivity::onStart : multiple users with the same authID");
-
-                            if (userArray.length() == 1) try {
-                                user_id = userArray.getJSONObject(0).getString("_id");
-                                caller.startActivity(new Intent(caller, MainActivity.class));
-                                caller.finish();
-                            } catch (JSONException e) {
-                                __.fatal(e);
-                            }
-                            else try {
-                                IO.r.insert(DB.USER_PROFILE
-                                        , __.jo().put("authID", authID)
-                                        , __.jo(), __.jo()
-                                        , new UIAck(caller) {
-                                            @Override
-                                            protected void onRes(Object res, JSONObject ctx) {
-                                                start(caller, authID);
-                                            }
-                                        });
-                            } catch (Regina.NullRequiredParameterException | JSONException e) {
-                                __.fatal(e);
-                            }
-                        }
-                    });
-        } catch (Regina.NullRequiredParameterException | JSONException e) {
-            __.fatal(e);
-        }
+    public static void start(Activity context) {
+        context.startActivity(new Intent(context, MainActivity.class));
+        context.finish();
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(((A)getApplication()).getUser_id() == null)
+            __.fatal("A::user_id is null");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

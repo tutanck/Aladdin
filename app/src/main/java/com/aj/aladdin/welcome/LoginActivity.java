@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.app.A;
 import com.aj.aladdin.main.MainActivity;
 import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 import com.aj.aladdin.tools.oths.utils.__;
@@ -85,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                                     __.showShortToast(LoginActivity.this, getString(R.string.signin_auth_failed));
                                     Log.d("FirebaseAuth", "" + task.getException());//// TODO: 01/10/2017 check what exc and swow the right msg error
                                 } else
-                                    MainActivity.start(LoginActivity.this, auth.getCurrentUser().getUid());
+                                    ((A)getApplication()).start(LoginActivity.this,auth.getCurrentUser().getUid());
                             }
                         });
             }

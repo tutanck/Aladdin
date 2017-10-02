@@ -5,10 +5,9 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.app.A;
 import com.aj.aladdin.main.MainActivity;
 import com.aj.aladdin.tools.oths.db.IO;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 /**
  * Created by joan on 01/10/2017.
@@ -25,13 +24,11 @@ public class SplashActivity extends Activity {
 
         IO.r.connect(); //// TODO: 01/10/2017 Manage reconnection or network unavailability
 
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (currentUser != null)
-                    MainActivity.start(SplashActivity.this, currentUser.getUid());
+                if (((A)getApplication()).getUser_id() != null)
+                    MainActivity.start(SplashActivity.this);
                 else
                     LoginActivity.start(SplashActivity.this);
             }
