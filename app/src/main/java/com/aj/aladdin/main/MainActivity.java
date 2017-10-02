@@ -15,6 +15,7 @@ import com.aj.aladdin.R;
 import com.aj.aladdin.domain.components.messages.ConverstationsFragment;
 import com.aj.aladdin.domain.components.needs.UserNeedsFragment;
 import com.aj.aladdin.domain.components.profile.ProfileFragment;
+import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 import com.aj.aladdin.tools.oths.db.DB;
 import com.aj.aladdin.tools.oths.db.IO;
 import com.aj.aladdin.tools.oths.PageFragment;
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     public static String user_id() {
         return user_id;
     }
+
+    public static ProgressBarFragment progressBarFragment;
 
     public static void start(Activity caller, String authID) {
         try {
@@ -64,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                                         , new UIAck(caller) {
                                             @Override
                                             protected void onRes(Object res, JSONObject ctx) {
-                                                start(caller,authID);
+                                                start(caller, authID);
                                             }
                                         });
                             } catch (Regina.NullRequiredParameterException | JSONException e) {
@@ -98,6 +101,8 @@ public class MainActivity extends AppCompatActivity {
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        progressBarFragment = (ProgressBarFragment) getSupportFragmentManager().findFragmentById(R.id.waiter_modal_fragment);
     }
 
 
