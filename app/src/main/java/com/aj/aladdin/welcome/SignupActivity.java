@@ -11,8 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.app.A;
-import com.aj.aladdin.main.MainActivity;
+import com.aj.aladdin.main.A;
 import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 import com.aj.aladdin.tools.oths.utils.__;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -76,7 +75,7 @@ public class SignupActivity extends AppCompatActivity {
                                     __.showShortToast(SignupActivity.this, getString(R.string.singup_auth_failed));
                                     Log.d("FirebaseAuth", "" + task.getException());//// TODO: 01/10/2017 check what exc and swow the right msg error
                                 } else
-                                    ((A)getApplication()).start(SignupActivity.this,auth.getCurrentUser().getUid());
+                                    ((A)getApplication()).resetUser_id(SignupActivity.this,auth.getCurrentUser().getUid());
                             }
                         });
             }

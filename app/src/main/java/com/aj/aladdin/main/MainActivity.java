@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.app.A;
 import com.aj.aladdin.domain.components.messages.ConverstationsFragment;
 import com.aj.aladdin.domain.components.needs.UserNeedsFragment;
 import com.aj.aladdin.domain.components.profile.ProfileFragment;
@@ -20,25 +19,17 @@ import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 
 import com.aj.aladdin.tools.oths.PageFragment;
 
-import com.aj.aladdin.tools.oths.db.DB;
-import com.aj.aladdin.tools.oths.db.IO;
 import com.aj.aladdin.tools.oths.utils.__;
-import com.aj.aladdin.tools.regina.Regina;
-import com.aj.aladdin.tools.utils.UIAck;
 import com.google.firebase.auth.FirebaseAuth;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
-    public static ProgressBarFragment progressBarFragment;
+    public static ProgressBarFragment progressBarFragment; //// TODO: 02/10/2017  memory leaks
 
-    public static void start(Activity context) {
+     static void start(Activity context) {
         context.startActivity(new Intent(context, MainActivity.class));
         context.finish();
     }

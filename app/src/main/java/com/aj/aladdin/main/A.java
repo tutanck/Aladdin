@@ -1,15 +1,13 @@
-package com.aj.aladdin.app;
+package com.aj.aladdin.main;
 
 import android.app.Activity;
 import android.app.Application;
 
-import com.aj.aladdin.main.MainActivity;
 import com.aj.aladdin.tools.oths.db.DB;
 import com.aj.aladdin.tools.oths.db.IO;
 import com.aj.aladdin.tools.oths.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
 import com.aj.aladdin.tools.utils.UIAck;
-import com.aj.aladdin.welcome.LoginActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,7 +23,7 @@ public class A extends Application {
         return user_id;
     }
 
-    public void start(Activity caller, String authID) {
+    public void resetUser_id(Activity caller, String authID) {
         try {
             IO.r.find(DB.USER_PROFILE
                     , __.jo().put("authID", authID)
@@ -51,7 +49,7 @@ public class A extends Application {
                                         , new UIAck(caller) {
                                             @Override
                                             protected void onRes(Object res, JSONObject ctx) {
-                                                start(caller, authID);
+                                                resetUser_id(caller, authID);
                                             }
                                         });
                             } catch (Regina.NullRequiredParameterException | JSONException e) {

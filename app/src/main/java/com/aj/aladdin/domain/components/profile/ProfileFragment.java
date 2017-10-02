@@ -7,17 +7,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.app.A;
+import com.aj.aladdin.main.A;
 import com.aj.aladdin.domain.components.keywords.UserKeywordsActivity;
 import com.aj.aladdin.domain.components.keywords.UtherKeywordsActivity;
 import com.aj.aladdin.domain.components.messages.MessagesActivity;
-import com.aj.aladdin.main.MainActivity;
 import com.aj.aladdin.tools.components.fragments.autonomous.AutoRatingBar;
 import com.aj.aladdin.tools.components.fragments.autonomous.QUBIFormField;
 import com.aj.aladdin.tools.components.fragments.ImageFragment;
@@ -117,15 +115,12 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent;
-                if (isEditable) {
+                if (isEditable)
                     intent = new Intent(getContext(), UserKeywordsActivity.class);
-                    intent.putExtra(UserKeywordsActivity.USERID, "joan");
-                } else {
+                 else {
                     intent = new Intent(getContext(), UtherKeywordsActivity.class);
-                    intent.putExtra(UtherKeywordsActivity.USERID, "joan");
+                    intent.putExtra(UtherKeywordsActivity.USERID, "joan"); //// TODO: 02/10/2017 joan
                 }
-                intent.setAction(Intent.ACTION_SEND);
-                intent.setType("text/plain");
                 startActivity(intent);
 
             }

@@ -1,13 +1,12 @@
-package com.aj.aladdin.welcome;
+package com.aj.aladdin.main;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.app.A;
-import com.aj.aladdin.main.MainActivity;
 import com.aj.aladdin.tools.oths.db.IO;
+import com.aj.aladdin.welcome.LoginActivity;
 
 /**
  * Created by joan on 01/10/2017.

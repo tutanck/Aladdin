@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.main.A;
 import com.aj.aladdin.tools.oths.db.IO;
 import com.aj.aladdin.tools.oths.db.DB;
 import com.aj.aladdin.tools.oths.utils.__;
@@ -33,7 +34,8 @@ public class UserKeywordsActivity extends AppCompatActivity {
 
     public final static String coll = DB.USER_KEYWORDS;
 
-    public final static String USERID = "userID";
+    private final String USERID = "userID";
+    private String userID;
 
     private ArrayList<UserKeyword> mUserKeywords = new ArrayList<>();
 
@@ -72,13 +74,14 @@ public class UserKeywordsActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         loadKeywords();
+        userID =  ((A)getApplication()).getUser_id();
     }
 
     private void loadKeywords() {
         try {
             IO.r.find(
                     coll
-                    , __.jo().put(USERID, getIntent().getStringExtra(USERID)).put("deleted",false)
+                    , __.jo().put(USERID,userID).put("deleted",false)
                     , __.jo().put("sort", __.jo().put("active", -1).put("keyword", 1))
                     , __.jo()
                     , new Ack() {
@@ -131,7 +134,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
         if (!isKeyword(keyword)) {
             __.showLongSnack(btnAdd, "Un mot-clé est composé d'un seul mot (caractères alphanumériques sans accents).");
         } else try {
-            String userID = getIntent().getStringExtra(USERID);
+
             IO.r.update(coll
                     , __.jo().put(USERID, userID).put("keyword", keyword)
                     , __.jo().put(USERID, userID).put("keyword", keyword).put("active", active).put("deleted",deleted)
