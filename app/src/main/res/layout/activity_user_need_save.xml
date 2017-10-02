@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <ScrollView
         android:id="@+id/scroll_body"
@@ -87,6 +87,14 @@
         android:layout_margin="@dimen/fab_margin"
         android:elevation="8dp"
         android:src="@drawable/ic_star_black" />
+
+
+    <fragment
+        android:id="@+id/waiter_modal_fragment"
+        class="com.aj.aladdin.tools.components.fragments.ProgressBarFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 
 </FrameLayout>
 

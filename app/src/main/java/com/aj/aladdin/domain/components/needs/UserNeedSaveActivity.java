@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Switch;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.main.MainActivity;
+import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 import com.aj.aladdin.tools.components.fragments.simple.FormField;
 import com.aj.aladdin.tools.components.services.FormFieldKindTranslator;
 import com.aj.aladdin.tools.oths.db.IO;
@@ -50,6 +52,9 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
 
     private Switch needSwitch;
 
+    private FloatingActionButton fab;
+
+    ProgressBarFragment progressBarFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +62,8 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
         setContentView(R.layout.activity_user_need_save);
 
         _id = getIntent().getStringExtra(_ID);
+
+        progressBarFragment = (ProgressBarFragment) getSupportFragmentManager().findFragmentById(R.id.waiter_modal_fragment);
 
 
         if (savedInstanceState == null) //no duplicated fragments // TODO: 25/09/2017  check if frag only or else like listener on needSwitch
@@ -99,7 +106,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
                 }
         );
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_save_need);
+         fab = (FloatingActionButton) findViewById(R.id.fab_save_need);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -150,6 +157,11 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
     @Override
     protected void onStart() {
         super.onStart();
+
+        fab.setVisibility(View.GONE);
+
+        progressBarFragment.show();
+
         if (_id != null) loadState();
     }
 
@@ -186,6 +198,8 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
                     } catch (JSONException e) {
                         __.fatal(e);
                     }
+                    progressBarFragment.hide();
+                    fab.setVisibility(View.VISIBLE);
                 }
             });
         } catch (Regina.NullRequiredParameterException | JSONException e) {
