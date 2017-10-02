@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.aj.aladdin.R;
 import com.aj.aladdin.tools.components.model.AutonomousQueryUpdateByIDFragment;
 import com.aj.aladdin.tools.components.services.ComponentsServices;
+import com.aj.aladdin.tools.components.services.Ic;
 import com.aj.aladdin.tools.oths.db.IO;
 import com.aj.aladdin.tools.oths.utils.KeyboardServices;
 import com.aj.aladdin.tools.oths.utils.__;
@@ -35,6 +36,7 @@ public class QUBIFormField extends AutonomousQueryUpdateByIDFragment {
     private EditText etContent;
     private TextView tvDescription;
     private View divider;
+    private ImageView ivIndication;
 
 
     //instance parameters
@@ -70,8 +72,9 @@ public class QUBIFormField extends AutonomousQueryUpdateByIDFragment {
 
         View view = inflater.inflate(args.getInt(LAYOUT_ID), container, false);
 
-        final ImageView ivIndication = (ImageView) view.findViewById(R.id.ivIndication);
+         ivIndication = (ImageView) view.findViewById(R.id.ivIndication);
 
+        ivIndication.setImageResource(Ic.icon(getKey()));
 
         final TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.text_input_layout);
         textInputLayout.setHint(args.getString(LABEL));
@@ -97,8 +100,8 @@ public class QUBIFormField extends AutonomousQueryUpdateByIDFragment {
                                 tvContent.setVisibility(View.GONE);
                                 tvDescription.setVisibility(View.GONE);
                                 divider.setVisibility(View.GONE);
+                                ivIndication.setImageResource(R.drawable.ic_done_24dp);
                                 isOpen = true;
-                                __.showShortToast(getContext(), "Enregistrez en cliquant sur l'icone à gauche");
                             } else try {
                                 saveState(etContent.getText().toString());
                             } catch (InvalidStateException | JSONException | Regina.NullRequiredParameterException e) {
@@ -143,6 +146,7 @@ public class QUBIFormField extends AutonomousQueryUpdateByIDFragment {
                             tvContent.setVisibility(View.VISIBLE);
                             tvDescription.setVisibility(View.VISIBLE);
                             divider.setVisibility(View.VISIBLE);
+                            ivIndication.setImageResource(Ic.icon(getKey()));
                             isOpen = false;
 
                             tvContent.setText(((JSONArray) args[1]).getJSONObject(0).optString(getKey(), ""));

@@ -106,7 +106,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
                 }
         );
 
-         fab = (FloatingActionButton) findViewById(R.id.fab_save_need);
+        fab = (FloatingActionButton) findViewById(R.id.fab_save_need);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -158,11 +158,11 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
     protected void onStart() {
         super.onStart();
 
-        fab.setVisibility(View.GONE);
-
-        progressBarFragment.show();
-
-        if (_id != null) loadState();
+        if (_id != null) {
+            fab.setVisibility(View.GONE);
+            progressBarFragment.show();
+            loadState();
+        }
     }
 
 
