@@ -9,16 +9,12 @@ class UserKeyword {
     private String keyword;
     private boolean active;
 
-    private UserKeywordsActivity userKeywordsActivity;
-
     UserKeyword(
             String keyword
             , boolean active
-            , UserKeywordsActivity userKeywordsActivity
     ) {
         this.keyword = keyword;
         this.active = active;
-        this.userKeywordsActivity = userKeywordsActivity;
     }
 
     String getKeyword() {
@@ -27,9 +23,5 @@ class UserKeyword {
 
     boolean isActive() {
         return active;
-    }
-
-    UserKeywordsActivity getActivity() {
-        return userKeywordsActivity;
     }
 }

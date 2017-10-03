@@ -49,7 +49,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.keywords_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        mAdapter = new UserKeywordsRecyclerAdapter(mUserKeywords);
+        mAdapter = new UserKeywordsRecyclerAdapter(UserKeywordsActivity.this,mUserKeywords);
         mRecyclerView.setAdapter(mAdapter);
 
         functionalizeETKeyword();
@@ -76,8 +76,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
                         JSONObject jo = jar.getJSONObject(i);
                         mUserKeywords.add(new UserKeyword(
                                 jo.getString(USER_KEYWORDS.keywordKey)
-                                , jo.getBoolean(USER_KEYWORDS.activeKey)
-                                , UserKeywordsActivity.this)
+                                , jo.getBoolean(USER_KEYWORDS.activeKey))
                         );
                     }
                     mAdapter.notifyDataSetChanged();

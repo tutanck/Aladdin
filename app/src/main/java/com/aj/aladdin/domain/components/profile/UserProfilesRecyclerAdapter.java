@@ -1,5 +1,6 @@
 package com.aj.aladdin.domain.components.profile;
 
+import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,10 +21,13 @@ import java.util.ArrayList;
 public class UserProfilesRecyclerAdapter extends RecyclerView.Adapter<UserProfilesRecyclerAdapter.ViewHolder> {
 
     private ArrayList<UserProfile> mProfiles;
+    private Context mContext;
 
     public UserProfilesRecyclerAdapter(
+            Context context,
             ArrayList<UserProfile> profiles
     ) {
+        mContext = context;
         mProfiles = profiles;
     }
 
@@ -37,7 +41,7 @@ public class UserProfilesRecyclerAdapter extends RecyclerView.Adapter<UserProfil
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bindItem(mProfiles.get(position));
+        holder.bindItem(mProfiles.get(position),mContext);
     }
 
     @Override
@@ -58,22 +62,26 @@ public class UserProfilesRecyclerAdapter extends RecyclerView.Adapter<UserProfil
 
         private UserProfile mNeedProfile;
 
+        private Context mContext;
+
 
         public ViewHolder(View v) {
             super(v);
 
-            userProfileIV = (ImageView) v.findViewById(R.id.userProfileIV);
-            usernameTV = (TextView) v.findViewById(R.id.usernameTV);
-            userStatusFAB = (FloatingActionButton) v.findViewById(R.id.userStatusFAB);
-            userReputationRBar = (RatingBar) v.findViewById(R.id.userReputationRBar);
-            userDistanceTV = (TextView) v.findViewById(R.id.userDistanceTV);
-            messageTV = (TextView) v.findViewById(R.id.messageTV);
-            messageDateTV = (TextView) v.findViewById(R.id.messageDateTV);
+            userProfileIV = v.findViewById(R.id.userProfileIV);
+            usernameTV = v.findViewById(R.id.usernameTV);
+            userStatusFAB = v.findViewById(R.id.userStatusFAB);
+            userReputationRBar = v.findViewById(R.id.userReputationRBar);
+            userDistanceTV = v.findViewById(R.id.userDistanceTV);
+            messageTV = v.findViewById(R.id.messageTV);
+            messageDateTV = v.findViewById(R.id.messageDateTV);
             v.setOnClickListener(this);
         }
 
-        public void bindItem(UserProfile userProfile) {
+        public void bindItem(UserProfile userProfile,Context context) {
             this.mNeedProfile = userProfile;
+            this.mContext = context;
+
            /* mTitleTextView.setText(mNeedProfile.getTitle());
             mSearchTextView.setText(mNeedProfile.getSearch());
             int color = mNeedProfile.isActive() ? R.color.Lime : R.color.Red;
@@ -86,7 +94,7 @@ public class UserProfilesRecyclerAdapter extends RecyclerView.Adapter<UserProfil
 
         @Override
         public void onClick(View view) {
-            UserNeedActivity.start(mNeedProfile.getContext(), mNeedProfile.get_id());
+            UserNeedActivity.start(mContext, mNeedProfile.get_id());
         }
     }
 }

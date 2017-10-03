@@ -45,7 +45,7 @@ public class UserNeedsRecyclerAdapter extends RecyclerView.Adapter<UserNeedsRecy
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bindItem(mUserNeeds.get(position),mContext);
+        holder.bindItem(mUserNeeds.get(position), mContext);
     }
 
     @Override
@@ -67,7 +67,6 @@ public class UserNeedsRecyclerAdapter extends RecyclerView.Adapter<UserNeedsRecy
             return mUserNeed;
         }
 
-
         public ViewHolder(View v) {
             super(v);
             mTitleTextView = v.findViewById(R.id.need_title_textview);
@@ -76,11 +75,12 @@ public class UserNeedsRecyclerAdapter extends RecyclerView.Adapter<UserNeedsRecy
             fabNeedStatus = v.findViewById(R.id.fab_need_status);
         }
 
-        public void bindItem(UserNeed userNeed,Context context) {
+        public void bindItem(UserNeed userNeed, Context context) {
             this.mUserNeed = userNeed;
-            mTitleTextView.setText(mUserNeed.getTitle());
-            mSearchTextView.setText(mUserNeed.getSearch());
-            int color = mUserNeed.isActive() ? R.color.Lime : R.color.Red;
+
+            mTitleTextView.setText(userNeed.getTitle());
+            mSearchTextView.setText(userNeed.getSearch());
+            int color = userNeed.isActive() ? R.color.Lime : R.color.Red;
             fabNeedStatus.setBackgroundTintList(
                     ColorStateList.valueOf
                             (ContextCompat.getColor(context, color))

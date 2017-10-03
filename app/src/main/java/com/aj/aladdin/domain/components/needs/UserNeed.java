@@ -18,7 +18,6 @@ class UserNeed {
             , String title
             , String search
             , boolean active
-            , Context context
     ) {
         this._id = _id;
         this.title = title;

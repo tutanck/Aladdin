@@ -41,7 +41,7 @@ public class NeedProfilesFragment extends Fragment {
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        mAdapter = new UserProfilesRecyclerAdapter(mProfiles);
+        mAdapter = new UserProfilesRecyclerAdapter(getContext(),mProfiles);
         mRecyclerView.setAdapter(mAdapter);
 
         return view;

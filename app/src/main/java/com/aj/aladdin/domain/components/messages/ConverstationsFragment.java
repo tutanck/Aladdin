@@ -44,7 +44,7 @@ public class ConverstationsFragment extends Fragment {
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        mAdapter = new UserProfilesRecyclerAdapter(mProfiles);
+        mAdapter = new UserProfilesRecyclerAdapter(getContext(),mProfiles);
         mRecyclerView.setAdapter(mAdapter);
 
 

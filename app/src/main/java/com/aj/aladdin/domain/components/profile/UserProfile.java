@@ -8,8 +8,6 @@ import android.content.Context;
 
 public class UserProfile {
 
-    private Context context;
-
     private String _id;
     private String username;
     private int reputation;
@@ -20,18 +18,13 @@ public class UserProfile {
             , String username
             , int reputation
             , boolean online
-            , Context context
     ) {
-        this.context = context;
         this._id = _id;
         this.username = username;
         this.reputation = reputation;
         this.online = online;
     }
 
-    public Context getContext() {
-        return context;
-    }
 
     public String get_id() {
         return _id;

@@ -89,7 +89,7 @@ public class UserNeedsFragment extends Fragment {
                 JSONObject jo = jar.getJSONObject(i);
                 userNeeds.add(new UserNeed(
                         jo.getString(Coll._idKey), jo.getString(NEEDS.titleKey)
-                        , jo.getString(NEEDS.searchKey), jo.getBoolean(NEEDS.activeKey), context)
+                        , jo.getString(NEEDS.searchKey), jo.getBoolean(NEEDS.activeKey))
                 );
             }
             adapter.notifyDataSetChanged();

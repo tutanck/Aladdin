@@ -1,5 +1,6 @@
 package com.aj.aladdin.domain.components.keywords;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +19,13 @@ import java.util.List;
 public class UserKeywordsRecyclerAdapter extends RecyclerView.Adapter<UserKeywordsRecyclerAdapter.ViewHolder> {
 
     private List<UserKeyword> mUserKeywords;
+    private Context mContext;
 
     public UserKeywordsRecyclerAdapter(
+            Context context,
             List<UserKeyword> userKeywords
     ) {
+        mContext = context;
         mUserKeywords = userKeywords;
     }
 
@@ -35,7 +39,7 @@ public class UserKeywordsRecyclerAdapter extends RecyclerView.Adapter<UserKeywor
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bindItem(mUserKeywords.get(position));
+        holder.bindItem(mUserKeywords.get(position),mContext);
     }
 
     @Override
@@ -53,6 +57,8 @@ public class UserKeywordsRecyclerAdapter extends RecyclerView.Adapter<UserKeywor
 
         private UserKeyword mUserKeyword;
 
+        private Context mContext;
+
 
         public ViewHolder(View v) {
             super(v);
@@ -61,16 +67,18 @@ public class UserKeywordsRecyclerAdapter extends RecyclerView.Adapter<UserKeywor
             mSwitch = v.findViewById(R.id.keyword_switch);
         }
 
-        public void bindItem(UserKeyword userKeyword) {
+        public void bindItem(UserKeyword userKeyword,Context context) {
             this.mUserKeyword = userKeyword;
-            mTextView.setText(mUserKeyword.getKeyword());
-            mSwitch.setChecked(mUserKeyword.isActive());
+            this.mContext = context;
+
+            mTextView.setText(userKeyword.getKeyword());
+            mSwitch.setChecked(userKeyword.isActive());
 
             if (!haveSwitchListener) {
                 mSwitch.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        userKeyword.getActivity()
+                        ((UserKeywordsActivity)context)
                                 .saveKeyword(mUserKeyword.getKeyword(), !mUserKeyword.isActive(), false);
                     }
                 });
@@ -80,7 +88,7 @@ public class UserKeywordsRecyclerAdapter extends RecyclerView.Adapter<UserKeywor
         }
 
         void deleteKeyword() {
-            mUserKeyword.getActivity().saveKeyword(mUserKeyword.getKeyword(), mUserKeyword.isActive(), true);
+            ((UserKeywordsActivity)mContext).saveKeyword(mUserKeyword.getKeyword(), mUserKeyword.isActive(), true);
         }
 
     }
