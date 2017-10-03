@@ -15,7 +15,7 @@ import io.socket.client.Ack;
  * Created by joan on 24/09/2017.
  */
 
-public abstract class __Ack implements Ack {
+public abstract class _Ack implements Ack {
 
     protected final Activity activity;
     protected boolean isDebugOn = true;
@@ -28,24 +28,24 @@ public abstract class __Ack implements Ack {
             JSONObject ctx
     ) {
         __.showShortToast(activity, "Une erreur s'est produite");
-        Log.e("__Ack/onErr","err=##"+err+"## ctx="+ctx);
+        Log.e("_Ack/onErr","err=##"+err+"## ctx="+ctx);
     }
 
 
     protected void onReginaFail(
     ) {
         __.showShortToast(activity, "Une erreur s'est produite!");//note the exclamation mark : !
-        Log.e("__Ack/onReginaFail","Regina Failed");
+        Log.e("_Ack/onReginaFail","Regina Failed");
     }
 
 
-    public __Ack(
+    public _Ack(
             Activity activity
     ) {
         this.activity = activity;
     }
 
-    public __Ack(
+    public _Ack(
             Activity activity
             , boolean isDebugOn
     ) {

@@ -70,7 +70,7 @@ public class UserKeywordsRecyclerAdapter extends RecyclerView.Adapter<UserKeywor
                     @Override
                     public void onClick(View v) {
                         userKeyword.getActivity()
-                                .setKeyword(mUserKeyword.getKeyword(), !mUserKeyword.isActive(), false);
+                                .saveKeyword(mUserKeyword.getKeyword(), !mUserKeyword.isActive(), false);
                     }
                 });
 
@@ -79,7 +79,7 @@ public class UserKeywordsRecyclerAdapter extends RecyclerView.Adapter<UserKeywor
         }
 
         void deleteKeyword() {
-            mUserKeyword.getActivity().setKeyword(mUserKeyword.getKeyword(), mUserKeyword.isActive(), true);
+            mUserKeyword.getActivity().saveKeyword(mUserKeyword.getKeyword(), mUserKeyword.isActive(), true);
         }
 
     }

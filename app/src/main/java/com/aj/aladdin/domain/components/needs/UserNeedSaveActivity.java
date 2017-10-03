@@ -12,14 +12,14 @@ import android.view.View;
 import android.widget.Switch;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.db.itf.MongoColl;
+import com.aj.aladdin.db.NEEDS;
+import com.aj.aladdin.main.A;
 import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 import com.aj.aladdin.tools.components.fragments.FormField;
 import com.aj.aladdin.tools.components.services.FormFieldKindTranslator;
-import com.aj.aladdin.db.IO;
+import com.aj.aladdin.tools.regina.ack.VoidBAck;
 import com.aj.aladdin.utils.JSONServices;
 import com.aj.aladdin.utils.__;
-import com.aj.aladdin.tools.regina.Regina;
 import com.aj.aladdin.tools.regina.ack.UIAck;
 
 import org.json.JSONArray;
@@ -76,7 +76,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
                     JSONObject fieldParam = formParams.getJSONObject(key);
 
                     FormField formField = FormField.newInstance(i,
-                            fieldParam.getString("label"),"resume", FormFieldKindTranslator.tr(fieldParam.getInt("kind")));
+                            fieldParam.getString("label"), "resume", FormFieldKindTranslator.tr(fieldParam.getInt("kind")));
 
                     FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -109,8 +109,17 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isFormOpen) open();
-                else if (validState(view)) saveState();
+                if (!isFormOpen)
+                    open();
+                else if (validState(view))
+                    NEEDS.saveNeed(_id, ((A) getApplication()).getUser_id()
+                            , needSwitch.isChecked(), formFields, new UIAck(self) {
+                                @Override
+                                protected void onRes(Object res, JSONObject ctx) {
+                                    close();
+                                    __.showShortToast(self, "Recherche enregistrée");
+                                }
+                            });
             }
         });
     }
@@ -131,7 +140,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
                         .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                         .hide(ff)
                         .commit();
-            deactivateNeed();
+            NEEDS.deactivateNeed(_id, new VoidBAck(this));
         }
     }
 
@@ -160,31 +169,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
         if (_id != null) {
             fab.setVisibility(View.GONE);
             progressBarFragment.show();
-            loadState();
-        }
-    }
-
-
-    void deactivateNeed() {
-        try {
-            IO.r.update(coll, __.jo().put(MongoColl._idKey, _id)
-                    , __.jo().put("$set", __.jo().put("active", false))
-                    , __.jo(), __.jo()
-                    , new UIAck(self) {
-                        @Override
-                        protected void onRes(Object res, JSONObject ctx) {
-                            __.chill("saveStatus");
-                        }
-                    });
-        } catch (Regina.NullRequiredParameterException | JSONException e) {
-            __.fatal(e);
-        }
-    }
-
-
-    private void loadState() {
-        try {
-            IO.r.find(coll, __.jo().put(MongoColl._idKey, _id), __.jo(), __.jo(), new UIAck(self) {
+            NEEDS.loadNeed(_id, new UIAck(self) {
                 @Override
                 protected void onRes(Object res, JSONObject ctx) {
                     JSONArray jar = (JSONArray) res;
@@ -201,41 +186,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
                     fab.setVisibility(View.VISIBLE);
                 }
             });
-        } catch (Regina.NullRequiredParameterException | JSONException e) {
-            __.fatal(e);
         }
-    }
-
-
-    private void saveState() {
-        try {
-            JSONObject need = __.jo().put("active", needSwitch.isChecked()).put("ownerID", "joan"); //// TODO: 24/09/2017
-
-            for (String key : formFields.keySet())
-                if (key.equals("search"))
-                    need.put(key, formFields.get(key).getTvContent().getText());
-                else
-                    need.put(key, formFields.get(key).getEtContent().getText());
-
-            if (_id == null)
-                IO.r.insert(coll, need.put("deleted", false), __.jo(), __.jo(), ackIn());
-            else
-                IO.r.update(coll, __.jo().put(MongoColl._idKey, _id), __.jo().put("$set", need), __.jo(), __.jo(), ackIn());
-
-        } catch (JSONException | Regina.NullRequiredParameterException e) {
-            __.fatal(e);
-        }
-    }
-
-
-    private UIAck ackIn() {
-        return new UIAck(self) {
-            @Override
-            protected void onRes(Object res, JSONObject ctx) {
-                close();
-                __.showShortToast(self, "Recherche enregistrée");
-            }
-        };
     }
 
 

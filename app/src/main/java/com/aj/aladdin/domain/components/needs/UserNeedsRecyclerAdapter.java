@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.db.IO;
-import com.aj.aladdin.db.itf.MongoColl;
+import com.aj.aladdin.db.itf.Coll;
 import com.aj.aladdin.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
 import com.aj.aladdin.tools.regina.ack.UIAck;
@@ -94,7 +94,7 @@ public class UserNeedsRecyclerAdapter extends RecyclerView.Adapter<UserNeedsRecy
 
         void deleteNeed() {
             try {
-                IO.r.update("NEEDS", __.jo().put(MongoColl._idKey, mUserNeed.get_id())
+                IO.r.update("NEEDS", __.jo().put(Coll._idKey, mUserNeed.get_id())
                         , __.jo().put("$set", __.jo().put("deleted", true))
                         , __.jo(), __.jo()
                         , new UIAck((Activity) mUserNeed.getContext()) {

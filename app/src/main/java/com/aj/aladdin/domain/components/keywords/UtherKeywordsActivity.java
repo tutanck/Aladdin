@@ -6,17 +6,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.db.IO;
+import com.aj.aladdin.db.USER_KEYWORDS;
+import com.aj.aladdin.tools.regina.ack.UIAck;
 import com.aj.aladdin.utils.__;
-import com.aj.aladdin.tools.regina.Regina;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-
-import io.socket.client.Ack;
 
 public class UtherKeywordsActivity extends AppCompatActivity {
 
@@ -43,59 +41,21 @@ public class UtherKeywordsActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        try {
-            IO.r.find(
-                    "users"
-                    , new JSONObject().put("username", "luffy")
-                    , new JSONObject()
-                    , new JSONObject()
-                    , new Ack() {
-                        @Override
-                        public void call(Object... args) {
-                            if (args[0] != null)
-                                System.out.println("result: " + args[1]);
-                            else
-                                System.out.println("error : " + args[0] + " context :" + args[2]);
+        USER_KEYWORDS.loadUtherKeywords(getIntent().getStringExtra(USERID)
+                , new UIAck(this) {
+                    @Override
+                    protected void onRes(Object res, JSONObject ctx) {
+                        try {
+                            JSONArray jar = (JSONArray) res;
+                            adapter.clear();
+                            for (int i = 0; i < jar.length(); i++)
+                                adapter.add(jar.getJSONObject(i).getString(USER_KEYWORDS.keywordKey));
+                        } catch (JSONException e) {
+                            __.fatal(e); //SNO : if a doc exist the keyword field should exist too
                         }
+
                     }
-            );
-        } catch (Regina.NullRequiredParameterException | JSONException e) {
-            e.printStackTrace();
-        }
-
-
-
-        try {
-            IO.r.find(
-                    "USER_KEYWORDS"
-                    , __.jo().put(USERID, getIntent().getStringExtra(USERID)).put("active",true).put("deleted",false)
-                    , __.jo()
-                    , __.jo()
-                    , new Ack() {
-                        @Override
-                        public void call(Object... args) {
-                            runOnUiThread(new Runnable() { //mandatory to modify an activity's ui view
-                                @Override
-                                public void run() {
-                                    if (args[0] != null) {
-                                        __.showLongToast(self, "Une erreur s'est produite");
-                                        finish();
-                                    } else try {
-                                        JSONArray jar = (JSONArray) args[1];
-                                        adapter.clear();
-                                        for (int i = 0; i < jar.length(); i++)
-                                            adapter.add(jar.getJSONObject(i).getString("keyword"));
-                                    } catch (JSONException e) {
-                                        __.fatal(e); //SNO : if a doc exist the keyword field should exist too
-                                    }
-                                }
-                            });
-                        }
-                    }
-            );
-        } catch (Regina.NullRequiredParameterException | JSONException e) {
-            __.fatal(e);
-        }
+                });
     }
 
 }

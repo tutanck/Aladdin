@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +20,6 @@ import com.aj.aladdin.main.A;
 import com.aj.aladdin.domain.components.keywords.UserKeywordsActivity;
 import com.aj.aladdin.domain.components.keywords.UtherKeywordsActivity;
 import com.aj.aladdin.domain.components.messages.MessagesActivity;
-import com.aj.aladdin.tools.components.fragments.FormField;
 import com.aj.aladdin.tools.components.fragments.IDKeyFormField;
 import com.aj.aladdin.tools.components.fragments.ImageFragment;
 import com.aj.aladdin.tools.components.services.FormFieldKindTranslator;
@@ -78,7 +76,7 @@ public class ProfileFragment extends Fragment {
 
         RatingBar userRating = view.findViewById(R.id.user_rating);
 
-        USER_RATINGS.getUserRating(_id, "todo", new UIAck(getActivity()) {
+        USER_RATINGS.computeUserRating(_id, new UIAck(getActivity()) {
             @Override
             protected void onRes(Object res, JSONObject ctx) {
                 JSONObject ratingDoc = ((JSONArray) res).optJSONObject(0);
@@ -90,16 +88,16 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        if (isEditable) {
-            RatingBar ratingControl = view.findViewById(R.id.rating_control);
-            ratingControl.setIsIndicator(false);
+        RatingBar ratingControl = view.findViewById(R.id.rating_control);
 
-            USER_RATINGS.computeUserRating(_id, new UIAck(getActivity()) {
+        if (!isEditable) {
+            ratingControl.setIsIndicator(false);
+            USER_RATINGS.getUserRating(_id, "todo", new UIAck(getActivity()) {
                 @Override
                 protected void onRes(Object res, JSONObject ctx) {
                     JSONObject ratingDoc = ((JSONArray) res).optJSONObject(0);
                     try {
-                        userRating.setRating(ratingDoc != null ? ratingDoc.getInt("reputation") : 0);
+                        ratingControl.setRating(ratingDoc != null ? ratingDoc.getInt(USER_RATINGS.ratingKey) : 0);
                     } catch (JSONException e) {
                         __.fatal(e); //SNO : if a doc exist the reputation should exist too
                     }
@@ -114,11 +112,11 @@ public class ProfileFragment extends Fragment {
                                 , boolean fromUser
                         ) {
                             if (fromUser)
-                                USER_RATINGS.setUserRating(rating, _id, "todo", new VoidBAck(getActivity()));
+                                USER_RATINGS.setUtherRating(rating, _id, "todo", new VoidBAck(getActivity()));
                         }
                     }
             );
-        }
+        } else ratingControl.setVisibility(View.GONE);
 
 
         try {
@@ -144,9 +142,7 @@ public class ProfileFragment extends Fragment {
 
             if (savedInstanceState == null) {//no duplicated fragments // TODO: 25/09/2017  check if frag only or else like listener on needSwitch
 
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
 
                 fragmentTransaction.add(R.id.profile_image_layout, ImageFragment.newInstance(
                         _id, isEditable), "profile_image");
@@ -170,7 +166,7 @@ public class ProfileFragment extends Fragment {
         }
 
 
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -186,7 +182,8 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        FloatingActionButton fabContact = (FloatingActionButton) view.findViewById(R.id.fabContact);
+
+        FloatingActionButton fabContact = view.findViewById(R.id.fabContact);
         if (isEditable)
             fabContact.setVisibility(View.GONE);
         else
@@ -199,6 +196,7 @@ public class ProfileFragment extends Fragment {
 
         return view;
     }
+
 
     @Override
     public void onStart() {

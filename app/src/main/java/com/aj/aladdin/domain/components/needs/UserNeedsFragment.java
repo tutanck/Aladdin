@@ -11,10 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.db.IO;
-import com.aj.aladdin.db.itf.MongoColl;
+import com.aj.aladdin.db.NEEDS;
+import com.aj.aladdin.db.itf.Coll;
+import com.aj.aladdin.main.A;
 import com.aj.aladdin.utils.__;
-import com.aj.aladdin.tools.regina.Regina;
 import com.aj.aladdin.tools.regina.ack.UIAck;
 
 import org.json.JSONArray;
@@ -74,36 +74,22 @@ public class UserNeedsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        loadNeeds();
-    }
-
-    private void loadNeeds() {
-        try {
-            IO.r.find(
-                    coll
-                    , __.jo().put("ownerID", "joan").put("deleted", false) //// TODO: 24/09/2017 joan
-                    , __.jo().put("sort", __.jo().put("active", -1).put("title", 1))
-                    , __.jo()
-                    , new UIAck(getActivity()) {
-                        @Override
-                        protected void onRes(Object res, JSONObject ctx) {
-                            try {
-                                JSONArray jar = (JSONArray) res;
-                                mUserNeeds.clear();
-                                for (int i = 0; i < jar.length(); i++) {
-                                    JSONObject jo = jar.getJSONObject(i);
-                                    mUserNeeds.add(new UserNeed(jo.getString(MongoColl._idKey), jo.getString("title"), jo.getString("search"), jo.getBoolean("active"), getContext()));
-                                }
-                                mAdapter.notifyDataSetChanged();
-                            } catch (JSONException e) {
-                                __.fatal(e); //SNO : if a doc exist the Need field should exist too
-                            }
-                        }
+        NEEDS.loadNeeds(((A) getActivity().getApplication()).getUser_id(), new UIAck(getActivity()) {
+            @Override
+            protected void onRes(Object res, JSONObject ctx) {
+                try {
+                    JSONArray jar = (JSONArray) res;
+                    mUserNeeds.clear();
+                    for (int i = 0; i < jar.length(); i++) {
+                        JSONObject jo = jar.getJSONObject(i);
+                        mUserNeeds.add(new UserNeed(jo.getString(Coll._idKey), jo.getString("title"), jo.getString("search"), jo.getBoolean("active"), getContext()));
                     }
-            );
-        } catch (Regina.NullRequiredParameterException | JSONException e) {
-            __.fatal(e);
-        }
+                    mAdapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    __.fatal(e); //SNO : if a doc exist the Need field should exist too
+                }
+            }
+        });
     }
 
 

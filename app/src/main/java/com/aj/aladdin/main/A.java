@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 
 import com.aj.aladdin.db.IO;
-import com.aj.aladdin.db.itf.MongoColl;
+import com.aj.aladdin.db.itf.Coll;
 import com.aj.aladdin.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
 import com.aj.aladdin.tools.regina.ack.UIAck;
@@ -37,7 +37,7 @@ public class A extends Application {
                                 __.fatal("MainActivity::onStart : multiple users with the same authID");
 
                             if (userArray.length() == 1) try {
-                                user_id = userArray.getJSONObject(0).getString(MongoColl._idKey);
+                                user_id = userArray.getJSONObject(0).getString(Coll._idKey);
                                 MainActivity.start(caller);
                             } catch (JSONException e) {
                                 __.fatal(e);

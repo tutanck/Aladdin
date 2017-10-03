@@ -14,6 +14,9 @@ import android.widget.EditText;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.db.IO;
+import com.aj.aladdin.db.MESSAGES;
+import com.aj.aladdin.db.itf.Coll;
+import com.aj.aladdin.main.A;
 import com.aj.aladdin.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
 import com.aj.aladdin.tools.regina.ack.UIAck;
@@ -79,60 +82,33 @@ public class MessagesActivity extends AppCompatActivity {
 
 
     private void sendMessage(String text) {
-        try {
-            IO.r.insert(
-                    coll
-                    , __.jo()
-                            .put("senderID", "joan").put("toID", "joan")
-                            .put("message", text).put("date", new Date())//// TODO: 29/09/2017 joan + date
-                    , __.jo()
-                    , __.jo()
-                    , new UIAck(this) {
-                        @Override
-                        protected void onRes(Object res, JSONObject ctx) {
-                            loadMessages();
-                        }
-                    }
-            );
-        } catch (JSONException | Regina.NullRequiredParameterException e) {
-            __.fatal(e);
-        }
+        MESSAGES.sendMessage(((A) getApplication()).getUser_id(), "todo", text, new UIAck(this) {
+            @Override
+            protected void onRes(Object res, JSONObject ctx) {
+                loadMessages();
+            }
+        });
     }
 
 
     private void loadMessages() {
-        try {
-            IO.r.find(
-                    coll
-                    , __.jo().put(
-                            "$or"
-                            , __.jar() //// TODO: 29/09/2017 joan
-                                    .put(__.jo().put("senderID", "joan").put("toID", "joan"))
-                                    .put(__.jo().put("senderID", "joan").put("toID", "joan"))
-                    )
-                    , __.jo().put("sort", __.jo().put("date", -1))
-                    , __.jo()
-                    , new UIAck(this) {
-                        @Override
-                        protected void onRes(Object res, JSONObject ctx) {
-                            try {
-                                JSONArray jar = (JSONArray) res;
-                                messageList.clear();
-                                for (int i = 0; i < jar.length(); i++) {
-                                    JSONObject jo = jar.getJSONObject(i);
-                                    messageList.add(new Message(jo.getString("message"), jo.getString("senderID"), jo.getString("date")));
-                                }
-                                Log.i("messageList", messageList.toString());
-                                mAdapter.notifyDataSetChanged();
-                            } catch (JSONException e) {
-                                __.fatal(e); //SNO : if a doc exist the Message field should exist too
-                            }
-                        }
+        MESSAGES.loadMessages(((A) getApplication()).getUser_id(), "todo", new UIAck(this) {
+            @Override
+            protected void onRes(Object res, JSONObject ctx) {
+                try {
+                    JSONArray jar = (JSONArray) res;
+                    messageList.clear();
+                    for (int i = 0; i < jar.length(); i++) {
+                        JSONObject jo = jar.getJSONObject(i);
+                        messageList.add(new Message(jo.getString(MESSAGES.messageKey), jo.getString(MESSAGES.senderIDKey), jo.getString(Coll.dateKey)));
                     }
-            );
-        } catch (Regina.NullRequiredParameterException | JSONException e) {
-            __.fatal(e);
-        }
+                    Log.i("messageList", messageList.toString());
+                    mAdapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    __.fatal(e); //SNO : if a doc exist the Message field should exist too
+                }
+            }
+        });
     }
 
 }

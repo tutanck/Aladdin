@@ -13,18 +13,16 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.db.USER_KEYWORDS;
 import com.aj.aladdin.main.A;
-import com.aj.aladdin.db.IO;
+import com.aj.aladdin.tools.regina.ack.UIAck;
 import com.aj.aladdin.utils.__;
-import com.aj.aladdin.tools.regina.Regina;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-
-import io.socket.client.Ack;
 
 public class UserKeywordsActivity extends AppCompatActivity {
 
@@ -73,44 +71,43 @@ public class UserKeywordsActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         loadKeywords();
-        userID =  ((A)getApplication()).getUser_id();
+        userID = ((A) getApplication()).getUser_id();
     }
 
     private void loadKeywords() {
-        try {
-            IO.r.find(
-                    coll
-                    , __.jo().put(USERID,userID).put("deleted",false)
-                    , __.jo().put("sort", __.jo().put("active", -1).put("keyword", 1))
-                    , __.jo()
-                    , new Ack() {
-                        @Override
-                        public void call(Object... args) {
-                            runOnUiThread(new Runnable() { //mandatory to modify an activity's ui view
-                                @Override
-                                public void run() {
-                                    if (args[0] != null) {
-                                        __.showLongToast(self, "Une erreur s'est produite");
-                                        finish();
-                                    } else try {
-                                        JSONArray jar = (JSONArray) args[1];
-                                        mUserKeywords.clear();
-                                        for (int i = 0; i < jar.length(); i++) {
-                                            JSONObject jo = jar.getJSONObject(i);
-                                            mUserKeywords.add(new UserKeyword(jo.getString("keyword"), jo.getBoolean("active"),self));
-                                        }
-                                        mAdapter.notifyDataSetChanged();
-                                    } catch (JSONException e) {
-                                        __.fatal(e); //SNO : if a doc exist the keyword field should exist too
-                                    }
-                                }
-                            });
-                        }
+        USER_KEYWORDS.loadUserKeywords(userID, new UIAck(this) {
+            @Override
+            protected void onRes(Object res, JSONObject ctx) {
+                try {
+                    JSONArray jar = (JSONArray) res;
+                    mUserKeywords.clear();
+                    for (int i = 0; i < jar.length(); i++) {
+                        JSONObject jo = jar.getJSONObject(i);
+                        mUserKeywords.add(new UserKeyword(jo.getString("keyword"), jo.getBoolean("active"), self));
                     }
-            );
-        } catch (Regina.NullRequiredParameterException | JSONException e) {
-            __.fatal(e);
-        }
+                    mAdapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    __.fatal(e); //SNO : if a doc exist the keyword field should exist too
+                }
+            }
+        });
+    }
+
+
+    void saveKeyword(String input, boolean active, boolean deleted) {
+        String keyword = input.trim();
+        if (isKeyword(keyword))
+            USER_KEYWORDS.saveUserKeyword(keyword, userID, active, deleted,
+                    new UIAck(this) {
+                        @Override
+                        protected void onRes(Object res, JSONObject ctx) {
+                            etKeyword.setText("");
+                            loadKeywords();
+                        }
+                    });
+        else
+            __.showLongSnack(btnAdd, "Un mot-clé est composé d'un seul mot (caractères alphanumériques sans accents).");
+
     }
 
 
@@ -118,7 +115,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setKeyword(etKeyword.getText().toString(),true,false);
+                saveKeyword(etKeyword.getText().toString(), true, false);
             }
         });
     }
@@ -126,40 +123,6 @@ public class UserKeywordsActivity extends AppCompatActivity {
 
     private boolean isKeyword(String input) {
         return !TextUtils.isEmpty(input) && !__.found("[^a-zA-Z0-9]", input);
-    }
-
-    void setKeyword(String input, boolean active, boolean deleted) {
-        String keyword = input.trim();
-        if (!isKeyword(keyword)) {
-            __.showLongSnack(btnAdd, "Un mot-clé est composé d'un seul mot (caractères alphanumériques sans accents).");
-        } else try {
-
-            IO.r.update(coll
-                    , __.jo().put(USERID, userID).put("keyword", keyword)
-                    , __.jo().put(USERID, userID).put("keyword", keyword).put("active", active).put("deleted",deleted)
-                    , __.jo().put("upsert", true)
-                    , __.jo()
-                    , new Ack() {
-                        @Override
-                        public void call(Object... args) {
-                            runOnUiThread(new Runnable() { //mandatory to modify an activity's ui view
-                                @Override
-                                public void run() {
-                                    if (args[0] != null) {
-                                        __.showLongToast(self, "Une erreur s'est produite");
-                                        finish();
-                                    } else {
-                                        etKeyword.setText("");
-                                        loadKeywords();
-                                    }
-                                }
-                            });
-                        }
-                    }
-            );
-        } catch (Regina.NullRequiredParameterException | JSONException e) {
-            __.fatal(e);
-        }
     }
 
 
@@ -181,7 +144,6 @@ public class UserKeywordsActivity extends AppCompatActivity {
     }
 
 
-
     private void setRecyclerViewItemTouchListener() {
         ItemTouchHelper.SimpleCallback itemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
@@ -191,7 +153,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                ((UserKeywordsRecyclerAdapter.ViewHolder)viewHolder).deleteKeyword();
+                ((UserKeywordsRecyclerAdapter.ViewHolder) viewHolder).deleteKeyword();
             }
         };
 

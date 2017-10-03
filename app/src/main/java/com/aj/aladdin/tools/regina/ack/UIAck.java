@@ -8,7 +8,7 @@ import org.json.JSONObject;
  * Created by joan on 24/09/2017.
  */
 
-public abstract class UIAck extends __Ack {
+public abstract class UIAck extends _Ack {
 
     @Override
     public final void call(Object... args) {
