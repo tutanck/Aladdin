@@ -16,7 +16,7 @@ import com.aj.aladdin.db.colls.PROFILES;
 import com.aj.aladdin.tools.components.services.ComponentsServices;
 import com.aj.aladdin.tools.components.services.Ic;
 import com.aj.aladdin.tools.regina.ack.UIAck;
-import com.aj.aladdin.utils.KeyboardServices;
+import com.aj.aladdin.tools.utils.KeyboardServices;
 
 import org.json.JSONObject;
 

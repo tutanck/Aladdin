@@ -13,8 +13,6 @@ class UserNeed {
     private String search;
     private boolean active;
 
-    private Context context;
-
     UserNeed(
             String _id
             , String title
@@ -22,7 +20,6 @@ class UserNeed {
             , boolean active
             , Context context
     ) {
-        this.context = context;
         this._id = _id;
         this.title = title;
         this.search = search;
@@ -44,9 +41,5 @@ class UserNeed {
 
     public String getSearch() {
         return search;
-    }
-
-    public Context getContext() {
-        return context;
     }
 }

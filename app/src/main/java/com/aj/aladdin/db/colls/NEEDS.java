@@ -1,14 +1,11 @@
 package com.aj.aladdin.db.colls;
 
-import android.app.Activity;
-
 import com.aj.aladdin.db.IO;
 import com.aj.aladdin.db.colls.itf.Coll;
 import com.aj.aladdin.tools.components.fragments.FormField;
 import com.aj.aladdin.tools.regina.Regina;
-import com.aj.aladdin.tools.regina.ack.UIAck;
 import com.aj.aladdin.tools.regina.ack._Ack;
-import com.aj.aladdin.utils.__;
+import com.aj.aladdin.tools.utils.__;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -16,7 +16,7 @@ import com.aj.aladdin.R;
 import com.aj.aladdin.db.colls.MESSAGES;
 import com.aj.aladdin.db.colls.itf.Coll;
 import com.aj.aladdin.main.A;
-import com.aj.aladdin.utils.__;
+import com.aj.aladdin.tools.utils.__;
 import com.aj.aladdin.tools.regina.ack.UIAck;
 
 import org.json.JSONArray;

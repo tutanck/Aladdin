@@ -1,4 +1,4 @@
-package com.aj.aladdin.utils;
+package com.aj.aladdin.tools.utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;

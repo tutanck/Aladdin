@@ -8,7 +8,7 @@ import android.widget.ListView;
 import com.aj.aladdin.R;
 import com.aj.aladdin.db.colls.USER_KEYWORDS;
 import com.aj.aladdin.tools.regina.ack.UIAck;
-import com.aj.aladdin.utils.__;
+import com.aj.aladdin.tools.utils.__;
 
 import org.json.JSONArray;
 import org.json.JSONException;

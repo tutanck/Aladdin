@@ -20,7 +20,7 @@ import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 
 import com.aj.aladdin.tools.oths.PageFragment;
 
-import com.aj.aladdin.utils.__;
+import com.aj.aladdin.tools.utils.__;
 import com.google.firebase.auth.FirebaseAuth;
 
 

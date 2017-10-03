@@ -1,4 +1,4 @@
-package com.aj.aladdin.utils;
+package com.aj.aladdin.tools.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;

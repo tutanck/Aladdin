@@ -5,7 +5,7 @@ import android.app.Application;
 
 import com.aj.aladdin.db.IO;
 import com.aj.aladdin.db.colls.itf.Coll;
-import com.aj.aladdin.utils.__;
+import com.aj.aladdin.tools.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
 import com.aj.aladdin.tools.regina.ack.UIAck;
 

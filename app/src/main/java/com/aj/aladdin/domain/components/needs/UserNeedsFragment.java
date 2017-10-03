@@ -7,15 +7,19 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.db.colls.NEEDS;
 import com.aj.aladdin.db.colls.itf.Coll;
 import com.aj.aladdin.main.A;
-import com.aj.aladdin.utils.__;
+import com.aj.aladdin.tools.components.others._Recycler;
+import com.aj.aladdin.tools.utils.__;
 import com.aj.aladdin.tools.regina.ack.UIAck;
 
 import org.json.JSONArray;
@@ -49,7 +53,7 @@ public class UserNeedsFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.needs_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        mAdapter = new UserNeedsRecyclerAdapter(mUserNeeds);
+        mAdapter = new UserNeedsRecyclerAdapter(getContext(),mUserNeeds);
         mRecyclerView.setAdapter(mAdapter);
 
         setRecyclerViewItemTouchListener();
@@ -72,12 +76,12 @@ public class UserNeedsFragment extends Fragment {
         NEEDS.loadNeeds(((A) getActivity().getApplication()).getUser_id(), new UIAck(getActivity()) {
             @Override
             protected void onRes(Object res, JSONObject ctx) {
-                reloadList(res,mUserNeeds,mAdapter,getContext());
+                reloadList(res, mUserNeeds, mAdapter, getContext());
             }
         });
     }
 
-    static void reloadList(Object res, List<UserNeed> userNeeds, UserNeedsRecyclerAdapter adapter, Context context){
+    static void reloadList(Object res, List<UserNeed> userNeeds, UserNeedsRecyclerAdapter adapter, Context context) {
         try {
             JSONArray jar = (JSONArray) res;
             userNeeds.clear();
@@ -95,22 +99,23 @@ public class UserNeedsFragment extends Fragment {
     }
 
 
-
     private void setRecyclerViewItemTouchListener() {
-        ItemTouchHelper.SimpleCallback itemTouchCallback = new ItemTouchHelper.SimpleCallback(0,  ItemTouchHelper.LEFT) {
+        mRecyclerView.addOnItemTouchListener(new _Recycler.ItemTouchListener(
+                getContext(), mRecyclerView, new _Recycler.ClickListener() {
+
             @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder viewHolder1) {
-                return false;
+            public void onClick(RecyclerView.ViewHolder viewHolder, int position) {
+                UserNeedActivity.start(getContext()
+                        , ((UserNeedsRecyclerAdapter.ViewHolder) viewHolder).getUserNeed().get_id());
             }
 
             @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                ((UserNeedsRecyclerAdapter.ViewHolder) viewHolder).deleteNeed
-                        (((A)getActivity().getApplication()).getUser_id(),mUserNeeds,mAdapter);
+            public void onLongClick(RecyclerView.ViewHolder viewHolder, int position) {
+                ((UserNeedsRecyclerAdapter.ViewHolder) viewHolder).deleteNeed(getActivity(),
+                        ((A) getActivity().getApplication()).getUser_id(), mUserNeeds, mAdapter);
             }
-        };
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+        }));
     }
+
+
 }

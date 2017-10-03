@@ -9,7 +9,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -17,7 +16,7 @@ import com.aj.aladdin.R;
 import com.aj.aladdin.db.colls.USER_KEYWORDS;
 import com.aj.aladdin.main.A;
 import com.aj.aladdin.tools.regina.ack.UIAck;
-import com.aj.aladdin.utils.__;
+import com.aj.aladdin.tools.utils.__;
 
 import org.json.JSONArray;
 import org.json.JSONException;

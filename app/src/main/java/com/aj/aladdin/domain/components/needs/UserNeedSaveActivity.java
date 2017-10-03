@@ -18,8 +18,8 @@ import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 import com.aj.aladdin.tools.components.fragments.FormField;
 import com.aj.aladdin.tools.components.services.FormFieldKindTranslator;
 import com.aj.aladdin.tools.regina.ack.VoidBAck;
-import com.aj.aladdin.utils.JSONServices;
-import com.aj.aladdin.utils.__;
+import com.aj.aladdin.tools.utils.JSONServices;
+import com.aj.aladdin.tools.utils.__;
 import com.aj.aladdin.tools.regina.ack.UIAck;
 
 import org.json.JSONArray;

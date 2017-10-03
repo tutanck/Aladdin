@@ -13,7 +13,7 @@ import android.widget.EditText;
 import com.aj.aladdin.R;
 import com.aj.aladdin.main.A;
 import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
-import com.aj.aladdin.utils.__;
+import com.aj.aladdin.tools.utils.__;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;

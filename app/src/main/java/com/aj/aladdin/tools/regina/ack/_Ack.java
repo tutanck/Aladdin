@@ -3,7 +3,7 @@ package com.aj.aladdin.tools.regina.ack;
 import android.app.Activity;
 import android.util.Log;
 
-import com.aj.aladdin.utils.__;
+import com.aj.aladdin.tools.utils.__;
 
 import org.json.JSONObject;
 
