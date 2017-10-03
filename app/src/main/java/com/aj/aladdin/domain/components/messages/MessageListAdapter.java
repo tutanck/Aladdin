@@ -1,5 +1,6 @@
 package com.aj.aladdin.domain.components.messages;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.main.A;
 
 import java.util.List;
 
@@ -17,11 +19,11 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     private static final int VIEW_TYPE_MESSAGE_SENT = 1;
     private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
 
-    private Context mContext;
+    private Activity mContext;
     private List<Message> mMessageList;
 
     public MessageListAdapter(Context context, List<Message> messageList) {
-        mContext = context;
+        mContext = (Activity) context;
         mMessageList = messageList;
     }
 
@@ -33,7 +35,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     // Determines the appropriate ViewType according to the sender of the message.
     @Override
     public int getItemViewType(int position) {
-        if (mMessageList.get(position).getSenderID().equals("joan")) //// TODO: 29/09/2017
+        if (mMessageList.get(position).getSenderID().equals(((A)mContext.getApplication()).getUser_id()))
             return VIEW_TYPE_MESSAGE_SENT;
         else
             return VIEW_TYPE_MESSAGE_RECEIVED;

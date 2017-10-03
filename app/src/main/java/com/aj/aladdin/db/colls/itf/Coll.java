@@ -1,4 +1,4 @@
-package com.aj.aladdin.db.itf;
+package com.aj.aladdin.db.colls.itf;
 
 /**
  * Created by joan on 02/10/2017.

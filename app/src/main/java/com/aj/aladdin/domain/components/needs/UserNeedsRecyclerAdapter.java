@@ -12,11 +12,14 @@ import android.widget.TextView;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.db.IO;
-import com.aj.aladdin.db.itf.Coll;
+import com.aj.aladdin.db.colls.NEEDS;
+import com.aj.aladdin.db.colls.itf.Coll;
+import com.aj.aladdin.main.A;
 import com.aj.aladdin.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
 import com.aj.aladdin.tools.regina.ack.UIAck;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,6 +31,8 @@ import java.util.List;
 public class UserNeedsRecyclerAdapter extends RecyclerView.Adapter<UserNeedsRecyclerAdapter.ViewHolder> {
 
     private List<UserNeed> mUserNeeds;
+
+    private UserNeedsRecyclerAdapter self = this;
 
     public UserNeedsRecyclerAdapter(
             List<UserNeed> userNeeds
@@ -92,20 +97,21 @@ public class UserNeedsRecyclerAdapter extends RecyclerView.Adapter<UserNeedsRecy
         }
 
 
-        void deleteNeed() {
-            try {
-                IO.r.update("NEEDS", __.jo().put(Coll._idKey, mUserNeed.get_id())
-                        , __.jo().put("$set", __.jo().put("deleted", true))
-                        , __.jo(), __.jo()
-                        , new UIAck((Activity) mUserNeed.getContext()) {
-                            @Override
-                            protected void onRes(Object res, JSONObject ctx) {
-                                //// TODO: 26/09/2017 reload list : loadNeeds
-                            }
-                        });
-            } catch (Regina.NullRequiredParameterException | JSONException e) {
-                __.fatal(e);
-            }
+        void deleteNeed(String userID, List<UserNeed> userNeeds, UserNeedsRecyclerAdapter adapter) {
+            Activity contextActivity = (Activity) mUserNeed.getContext();
+            NEEDS.deleteNeed(mUserNeed.get_id(),
+                    new UIAck(contextActivity) {
+                        @Override
+                        protected void onRes(Object res, JSONObject ctx) {
+                            NEEDS.loadNeeds(userID, new UIAck(contextActivity) {
+                                        @Override
+                                        protected void onRes(Object res, JSONObject ctx) {
+                                            UserNeedsFragment.reloadList(res,userNeeds,adapter,contextActivity);
+                                        }
+                                    }
+                            );
+                        }
+                    });
         }
     }
 }

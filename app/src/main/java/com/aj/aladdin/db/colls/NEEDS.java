@@ -1,8 +1,12 @@
-package com.aj.aladdin.db;
+package com.aj.aladdin.db.colls;
 
-import com.aj.aladdin.db.itf.Coll;
+import android.app.Activity;
+
+import com.aj.aladdin.db.IO;
+import com.aj.aladdin.db.colls.itf.Coll;
 import com.aj.aladdin.tools.components.fragments.FormField;
 import com.aj.aladdin.tools.regina.Regina;
+import com.aj.aladdin.tools.regina.ack.UIAck;
 import com.aj.aladdin.tools.regina.ack._Ack;
 import com.aj.aladdin.utils.__;
 
@@ -73,6 +77,17 @@ public class NEEDS implements Coll {
                 IO.r.update(coll, __.jo().put(_idKey, _id), __.jo().put("$set", need), __.jo(), __.jo(), ack);
 
         } catch (JSONException | Regina.NullRequiredParameterException e) {
+            __.fatal(e);
+        }
+    }
+
+
+    public static void deleteNeed(String needID,_Ack ack) {
+        try {
+            IO.r.update(coll, __.jo().put(_idKey, needID)
+                    , __.jo().put("$set", __.jo().put(deletedKey, true))
+                    , __.jo(), __.jo(), ack);
+        } catch (Regina.NullRequiredParameterException | JSONException e) {
             __.fatal(e);
         }
     }

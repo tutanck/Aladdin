@@ -14,8 +14,8 @@ import android.widget.RadioGroup;
 import android.widget.RatingBar;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.db.PROFILES;
-import com.aj.aladdin.db.USER_RATINGS;
+import com.aj.aladdin.db.colls.PROFILES;
+import com.aj.aladdin.db.colls.USER_RATINGS;
 import com.aj.aladdin.main.A;
 import com.aj.aladdin.domain.components.keywords.UserKeywordsActivity;
 import com.aj.aladdin.domain.components.keywords.UtherKeywordsActivity;
@@ -48,6 +48,8 @@ public class ProfileFragment extends Fragment {
 
     private Map<String, IDKeyFormField> formFields = new HashMap<>();
 
+    private RadioGroup userTypeRG;
+
     public static ProfileFragment newInstance(
             boolean editable
     ) {
@@ -74,6 +76,7 @@ public class ProfileFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
+
         RatingBar userRating = view.findViewById(R.id.user_rating);
 
         USER_RATINGS.computeUserRating(_id, new UIAck(getActivity()) {
@@ -87,6 +90,7 @@ public class ProfileFragment extends Fragment {
                 }
             }
         });
+
 
         RatingBar ratingControl = view.findViewById(R.id.rating_control);
 
@@ -123,7 +127,7 @@ public class ProfileFragment extends Fragment {
             formParams = JSONServices.loadJsonFromAsset("form_params_user_profile.json", getContext());
             JSONArray orderedFieldsKeys = formParams.getJSONArray("ordered_fields_names");
 
-            RadioGroup userTypeRG = view.findViewById(R.id.user_type_radio_group);
+            userTypeRG = view.findViewById(R.id.user_type_radio_group);
 
             for (int i = 0; i < userTypeRG.getChildCount(); i++) {
                 RadioButton radioButton = (RadioButton) userTypeRG.getChildAt(i);
@@ -134,7 +138,7 @@ public class ProfileFragment extends Fragment {
                         int radioButtonID = userTypeRG.getCheckedRadioButtonId();
                         RadioButton radioButton = userTypeRG.findViewById(radioButtonID);
                         int index = userTypeRG.indexOfChild(radioButton);
-                        PROFILES.setField(_id, "type", index, new VoidBAck(getActivity()));
+                        PROFILES.setField(_id, PROFILES.typeKey, index, new VoidBAck(getActivity()));
                     }
                 });
             }
@@ -171,12 +175,10 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent;
-                if (isEditable)
-                    intent = new Intent(getContext(), UserKeywordsActivity.class);
-                else {
+                if (!isEditable) {
                     intent = new Intent(getContext(), UtherKeywordsActivity.class);
-                    intent.putExtra(UtherKeywordsActivity.USERID, "todo"); //// TODO: 02/10/2017 joan
-                }
+                    intent.putExtra(UtherKeywordsActivity.USERID, "todo");
+                } else intent = new Intent(getContext(), UserKeywordsActivity.class);
                 startActivity(intent);
 
             }
@@ -184,15 +186,15 @@ public class ProfileFragment extends Fragment {
 
 
         FloatingActionButton fabContact = view.findViewById(R.id.fabContact);
-        if (isEditable)
-            fabContact.setVisibility(View.GONE);
-        else
+        if (!isEditable)
             fabContact.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     MessagesActivity.start(getContext());
                 }
             });
+        else fabContact.setVisibility(View.GONE);
+
 
         return view;
     }
@@ -207,6 +209,12 @@ public class ProfileFragment extends Fragment {
                 JSONArray jar = (JSONArray) res;
                 try {
                     JSONObject profile = jar.getJSONObject(0);
+
+                    //RadioGroup::userTypeRG
+                    int selectedIndex = ((JSONArray) res).getJSONObject(0).optInt(PROFILES.typeKey, 0);
+                    ((RadioButton) userTypeRG.getChildAt(selectedIndex)).setChecked(true);
+
+                    //FormField::all
                     for (String key : formFields.keySet())
                         formFields.get(key).getTvContent().setText(profile.optString(key));
 

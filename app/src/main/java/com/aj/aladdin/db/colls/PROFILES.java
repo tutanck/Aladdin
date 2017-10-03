@@ -1,6 +1,7 @@
-package com.aj.aladdin.db;
+package com.aj.aladdin.db.colls;
 
-import com.aj.aladdin.db.itf.Coll;
+import com.aj.aladdin.db.IO;
+import com.aj.aladdin.db.colls.itf.Coll;
 import com.aj.aladdin.tools.regina.Regina;
 import com.aj.aladdin.tools.regina.ack._Ack;
 import com.aj.aladdin.utils.__;
@@ -14,6 +15,8 @@ import org.json.JSONException;
 public class PROFILES implements Coll {
 
     private final static String coll = "PROFILES";
+
+    public final static String typeKey = "type";
 
     public static void setField(String _id, String key, Object val, _Ack ack) {
         try {

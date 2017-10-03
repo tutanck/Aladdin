@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.Switch;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.db.NEEDS;
+import com.aj.aladdin.db.colls.NEEDS;
 import com.aj.aladdin.main.A;
 import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 import com.aj.aladdin.tools.components.fragments.FormField;

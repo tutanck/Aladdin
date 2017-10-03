@@ -1,5 +1,6 @@
 package com.aj.aladdin.domain.components.needs;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -11,8 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.db.NEEDS;
-import com.aj.aladdin.db.itf.Coll;
+import com.aj.aladdin.db.colls.NEEDS;
+import com.aj.aladdin.db.colls.itf.Coll;
 import com.aj.aladdin.main.A;
 import com.aj.aladdin.utils.__;
 import com.aj.aladdin.tools.regina.ack.UIAck;
@@ -77,20 +78,25 @@ public class UserNeedsFragment extends Fragment {
         NEEDS.loadNeeds(((A) getActivity().getApplication()).getUser_id(), new UIAck(getActivity()) {
             @Override
             protected void onRes(Object res, JSONObject ctx) {
-                try {
-                    JSONArray jar = (JSONArray) res;
-                    mUserNeeds.clear();
-                    for (int i = 0; i < jar.length(); i++) {
-                        JSONObject jo = jar.getJSONObject(i);
-                        mUserNeeds.add(new UserNeed(jo.getString(Coll._idKey), jo.getString("title"), jo.getString("search"), jo.getBoolean("active"), getContext()));
-                    }
-                    mAdapter.notifyDataSetChanged();
-                } catch (JSONException e) {
-                    __.fatal(e); //SNO : if a doc exist the Need field should exist too
-                }
+                reloadList(res,mUserNeeds,mAdapter,getContext());
             }
         });
     }
+
+    static void reloadList(Object res, List<UserNeed> userNeeds, UserNeedsRecyclerAdapter adapter, Context context){
+        try {
+            JSONArray jar = (JSONArray) res;
+            userNeeds.clear();
+            for (int i = 0; i < jar.length(); i++) {
+                JSONObject jo = jar.getJSONObject(i);
+                userNeeds.add(new UserNeed(jo.getString(Coll._idKey), jo.getString("title"), jo.getString("search"), jo.getBoolean("active"), context));
+            }
+            adapter.notifyDataSetChanged();
+        } catch (JSONException e) {
+            __.fatal(e); //SNO : if a doc exist the Need field should exist too
+        }
+    }
+
 
 
     private void setRecyclerViewItemTouchListener() {
@@ -102,7 +108,8 @@ public class UserNeedsFragment extends Fragment {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                ((UserNeedsRecyclerAdapter.ViewHolder) viewHolder).deleteNeed();
+                ((UserNeedsRecyclerAdapter.ViewHolder) viewHolder).deleteNeed
+                        (((A)getActivity().getApplication()).getUser_id(),mUserNeeds,mAdapter);
             }
         };
 

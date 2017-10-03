@@ -1,6 +1,7 @@
-package com.aj.aladdin.db;
+package com.aj.aladdin.db.colls;
 
-import com.aj.aladdin.db.itf.Coll;
+import com.aj.aladdin.db.IO;
+import com.aj.aladdin.db.colls.itf.Coll;
 import com.aj.aladdin.tools.regina.Regina;
 import com.aj.aladdin.tools.regina.ack._Ack;
 import com.aj.aladdin.utils.__;

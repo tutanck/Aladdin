@@ -6,7 +6,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.db.USER_KEYWORDS;
+import com.aj.aladdin.db.colls.USER_KEYWORDS;
 import com.aj.aladdin.tools.regina.ack.UIAck;
 import com.aj.aladdin.utils.__;
 

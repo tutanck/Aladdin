@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.db.PROFILES;
+import com.aj.aladdin.db.colls.PROFILES;
 import com.aj.aladdin.tools.components.services.ComponentsServices;
 import com.aj.aladdin.tools.components.services.Ic;
 import com.aj.aladdin.tools.regina.ack.UIAck;
@@ -23,8 +23,8 @@ import org.json.JSONObject;
 
 public class IDKeyFormField extends Fragment {
 
-    private static final String ID = "ID";
-    private static final String _ID = "ID";
+    private static final String FORM_FIELD_ID = "FORM_FIELD_ID";
+    private static final String _ID = "_ID";
     private static final String LAYOUT_ID = "LAYOUT_ID";
     private static final String KEY = "KEY";
     private static final String LABEL = "LABEL";
@@ -42,7 +42,7 @@ public class IDKeyFormField extends Fragment {
 
     private String key;
 
-    private int id;
+    private int formFieldId;
 
     private String _id;
 
@@ -52,8 +52,8 @@ public class IDKeyFormField extends Fragment {
     //instance parameters
 
     public static IDKeyFormField newInstance(
-            int id
-            ,String _id
+            int formFieldId
+            , String _id
             , String label
             , String key
             , int layoutID
@@ -62,7 +62,7 @@ public class IDKeyFormField extends Fragment {
         IDKeyFormField fragment = new IDKeyFormField();
 
         Bundle args = new Bundle();
-        args.putInt(ID, id);
+        args.putInt(FORM_FIELD_ID, formFieldId);
         args.putBoolean(EDITABLE, editable);
         args.putString(KEY, key);
         args.putString(_ID, _id);
@@ -84,11 +84,11 @@ public class IDKeyFormField extends Fragment {
 
         final Bundle args = getArguments();
 
-        id = args.getInt(ID);
+        formFieldId = args.getInt(FORM_FIELD_ID);
 
         key = args.getString(KEY);
 
-        _id= args.getString(_ID);
+        _id = args.getString(_ID);
 
         editable = args.getBoolean(EDITABLE);
 
@@ -190,7 +190,7 @@ public class IDKeyFormField extends Fragment {
         return isOpen;
     }
 
-    private String getETText(){
+    private String getETText() {
         return getEtContent().getText().toString().trim();
     }
 }
