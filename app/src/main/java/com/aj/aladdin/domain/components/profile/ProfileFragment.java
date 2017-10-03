@@ -177,7 +177,7 @@ public class ProfileFragment extends Fragment {
                 Intent intent;
                 if (!isEditable) {
                     intent = new Intent(getContext(), UtherKeywordsActivity.class);
-                    intent.putExtra(UtherKeywordsActivity.USER_ID, "todo");
+                    intent.putExtra(UtherKeywordsActivity.USER_ID, "todo"); //// TODO: 04/10/2017  deplaacer ds un start
                 } else intent = new Intent(getContext(), UserKeywordsActivity.class);
                 startActivity(intent);
             }

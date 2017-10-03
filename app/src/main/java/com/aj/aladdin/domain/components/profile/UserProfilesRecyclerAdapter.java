@@ -94,7 +94,6 @@ public class UserProfilesRecyclerAdapter extends RecyclerView.Adapter<UserProfil
 
         @Override
         public void onClick(View view) {
-            UserNeedActivity.start(mContext, mNeedProfile.get_id());
         }
     }
 }

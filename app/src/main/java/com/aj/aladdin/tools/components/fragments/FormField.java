@@ -160,6 +160,11 @@ public class FormField extends Fragment {
         return isOpen;
     }
 
+    public void setText(String text) {
+        getEtContent().setText(text);
+        getTvContent().setText(text);
+    }
+
 
     @Override
     public void onAttach(Context context) {

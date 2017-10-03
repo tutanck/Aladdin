@@ -106,7 +106,7 @@ public class UserNeedsFragment extends Fragment {
             @Override
             public void onClick(RecyclerView.ViewHolder viewHolder, int position) {
                 UserNeedActivity.start(getContext()
-                        , ((UserNeedsRecyclerAdapter.ViewHolder) viewHolder).getUserNeed().get_id());
+                        , ((UserNeedsRecyclerAdapter.ViewHolder) viewHolder).getUserNeed());
             }
 
             @Override

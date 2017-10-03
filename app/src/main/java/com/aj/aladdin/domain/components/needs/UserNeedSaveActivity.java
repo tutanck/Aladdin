@@ -8,11 +8,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Switch;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.db.colls.NEEDS;
+import com.aj.aladdin.db.colls.itf.Coll;
 import com.aj.aladdin.main.A;
 import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 import com.aj.aladdin.tools.components.fragments.FormField;
@@ -33,8 +35,8 @@ import java.util.Map;
 
 public class UserNeedSaveActivity extends AppCompatActivity implements FormField.Listener {
 
-    public final static String _ID = "_ID";
-    public final static String SEARCH_TEXT = "SEARCH_TEXT";
+    private final static String _ID = "_ID";
+    private final static String SEARCH_TEXT = "SEARCH_TEXT";
 
     private String _id = null;
 
@@ -51,6 +53,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
     private FloatingActionButton fab;
 
     ProgressBarFragment progressBarFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,9 +78,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
                     FormField formField = FormField.newInstance(i,
                             fieldParam.getString("label"), key, FormFieldKindTranslator.tr(fieldParam.getInt("kind")));
 
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-
-                    fragmentManager
+                    getSupportFragmentManager()
                             .beginTransaction()
                             .add(R.id.need_form_layout, formField, key)
                             .commit();
@@ -113,12 +114,40 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
                             , needSwitch.isChecked(), formFields, new UIAck(UserNeedSaveActivity.this) {
                                 @Override
                                 protected void onRes(Object res, JSONObject ctx) {
+
+                                    JSONArray jar = (JSONArray) res;
+
+                                    if (jar.length() != 1)
+                                        __.fatal("Inconsistent database");
+
+                                    try {
+                                        JSONObject need = jar.getJSONObject(0);
+                                        _id = need.getString(Coll._idKey);
+                                    } catch (JSONException e) {
+                                        __.fatal(e);
+                                    }
+
                                     close();
                                     __.showShortToast(UserNeedSaveActivity.this, "Recherche enregistrée");
                                 }
                             });
             }
         });
+    }
+
+
+    @Override
+    public void onFormFieldCreated(int id, FormField formField) {
+        formField.setText("");
+
+        if (id == 0)
+            formField.setText(getIntent().getStringExtra(SEARCH_TEXT));
+
+        if (id > 1)
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .hide(formField)
+                    .commit();
     }
 
 
@@ -139,16 +168,6 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
                         .commit();
             NEEDS.deactivateNeed(_id, new VoidBAck(this));
         }
-    }
-
-
-    @Override
-    public void onFormFieldCreated(int id, FormField formField) {
-        if (id > 1)
-            getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                    .hide(formField)
-                    .commit();
     }
 
 
@@ -202,7 +221,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
 
     private void open() {
         for (String key : formFields.keySet())
-            if (!key.equals("search"))
+            if (!key.equals(NEEDS.searchKey))
                 formFields.get(key).open();
         fab.setImageResource(R.drawable.ic_done_24dp);
         isFormOpen = true;
@@ -211,6 +230,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
     private void close() {
         for (String key : formFields.keySet())
             formFields.get(key).close();
+        fab.setImageResource(R.drawable.ic_mode_edit_24dp);
         isFormOpen = false;
     }
 

@@ -67,7 +67,7 @@ public class NEEDS implements Coll {
                 else
                     need.put(key, formFields.get(key).getEtContent().getText());
 
-            //it could be lead to a bug if upserted docs on update mode
+            //it could be lead to a bug if upserted docs on update mode (_id = null upsert / new doc iof update)
             if (_id == null)
                 IO.r.insert(coll, need.put(deletedKey, false), __.jo(), __.jo(), ack);
             else

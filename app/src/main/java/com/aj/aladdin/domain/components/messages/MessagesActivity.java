@@ -28,7 +28,7 @@ import java.util.List;
 
 public class MessagesActivity extends AppCompatActivity {
 
-    public final static String coll = "MESSAGES";
+    private final static String coll = "MESSAGES";
 
     private List<Message> messageList = new ArrayList<>();
 

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class UtherKeywordsActivity extends AppCompatActivity {
 
-    public final static String USER_ID = "USER_ID";
+    public final static String USER_ID = "USER_ID"; //// TODO: 04/10/2017  make private
 
     private ListView mListView;
     private ArrayAdapter adapter;

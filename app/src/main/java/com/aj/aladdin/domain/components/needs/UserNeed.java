@@ -1,16 +1,16 @@
 package com.aj.aladdin.domain.components.needs;
 
-import android.content.Context;
+import java.io.Serializable;
 
 /**
  * Created by joan on 21/09/2017.
  */
 
-class UserNeed {
+class UserNeed implements Serializable {
 
     private String _id;
     private String title;
-    private String search;
+    private String searchText;
     private boolean active;
 
     UserNeed(
@@ -21,7 +21,7 @@ class UserNeed {
     ) {
         this._id = _id;
         this.title = title;
-        this.search = search;
+        this.searchText = search;
         this.active = active;
     }
 
@@ -38,7 +38,7 @@ class UserNeed {
         return active;
     }
 
-    public String getSearch() {
-        return search;
+    public String getSearchText() {
+        return searchText;
     }
 }

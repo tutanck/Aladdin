@@ -23,9 +23,9 @@ import com.aj.aladdin.tools.utils.__;
 
 public class UserNeedActivity extends AppCompatActivity {
 
-    public final static String _ID = "_ID";
+    private final static String USER_NEED = "USER_NEED";
 
-    private String _id = null;
+    private UserNeed mUserNeed = null;
 
     private EditText searchET;
     private ImageButton searchBtn;
@@ -35,9 +35,10 @@ public class UserNeedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_need);
 
-        _id = getIntent().getStringExtra(_ID);
+        mUserNeed = (UserNeed) getIntent().getSerializableExtra(USER_NEED);
 
         searchET = (EditText) findViewById(R.id.need_search_bar_et);
+        searchET.setText(mUserNeed.getSearchText());
 
         searchBtn = (ImageButton) findViewById(R.id.need_search_bar_btn);
         searchBtn.setEnabled(false);
@@ -52,7 +53,6 @@ public class UserNeedActivity extends AppCompatActivity {
                 )
         );
 
-
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.user_need_results_sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
@@ -63,10 +63,13 @@ public class UserNeedActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String searchText = searchET.getText().toString().trim();
-                UserNeedSaveActivity.start(UserNeedActivity.this, _id, searchText);
+
+                if (TextUtils.isEmpty(searchText))
+                    __.showShortSnack(view, "Impossible de sauvegarder une recherche vide!");
+                else //send old need's _id but new searchText
+                    UserNeedSaveActivity.start(UserNeedActivity.this, mUserNeed.get_id(), searchText);
             }
         });
-
 
         functionalizeSearchBtn();
         functionalizeSearchET();
@@ -101,17 +104,16 @@ public class UserNeedActivity extends AppCompatActivity {
     }
 
 
-    public static void start(Context context) {
-        context.startActivity(new Intent(context, UserNeedActivity.class));
-    }
-
-
-    public static void start(Context context, String _id) {
+    public static void start(Context context, UserNeed userNeed) {
         Intent intent = new Intent(context, UserNeedActivity.class);
-        intent.putExtra(_ID, _id);
+        intent.putExtra(USER_NEED, userNeed);
         context.startActivity(intent);
     }
 
+
+    public static void start(Context context) {
+        context.startActivity(new Intent(context, UserNeedActivity.class));
+    }
 
     private static class PagerAdapter extends FragmentPagerAdapter {
 
