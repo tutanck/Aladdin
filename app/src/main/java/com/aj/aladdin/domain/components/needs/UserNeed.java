@@ -8,12 +8,12 @@ import android.content.Context;
 
 class UserNeed {
 
-    private Context context;
-
     private String _id;
     private String title;
     private String search;
     private boolean active;
+
+    private Context context;
 
     UserNeed(
             String _id

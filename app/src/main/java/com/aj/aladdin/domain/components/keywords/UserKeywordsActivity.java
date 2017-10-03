@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.db.colls.USER_KEYWORDS;
@@ -33,7 +34,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
     private UserKeywordsRecyclerAdapter mAdapter;
 
     private EditText etKeyword;
-    private Button btnAdd;
+    private ImageButton btnAdd;
 
 
     @Override
@@ -41,7 +42,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_keywords);
 
-        btnAdd = (Button) findViewById(R.id.add_keyword_button);
+        btnAdd = (ImageButton) findViewById(R.id.add_keyword_button);
         btnAdd.setEnabled(false);
 
         etKeyword = (EditText) findViewById(R.id.add_keyword_input);

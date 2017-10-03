@@ -53,14 +53,18 @@
                 android:hint="Nouveau mot-clé de mon activité"/>
         </android.support.design.widget.TextInputLayout>
 
-        <Button
+
+
+        <ImageButton
             android:id="@+id/add_keyword_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
             android:layout_gravity="right"
             android:enabled="false"
             android:backgroundTint="@color/Gold"
-            android:text="+"/>
+            android:src="@drawable/ic_list_add_24dp"
+            android:background="@drawable/rounded_rectangle_colored" />
+
 
     </LinearLayout>
 

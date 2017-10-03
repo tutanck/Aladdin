@@ -28,18 +28,13 @@ import java.util.List;
 
 public class UserNeedsFragment extends Fragment {
 
-    public final static String coll = "NEEDS";
-
     private List<UserNeed> mUserNeeds = new ArrayList<>();
 
     private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLinearLayoutManager;
     private UserNeedsRecyclerAdapter mAdapter;
 
-
     public static UserNeedsFragment newInstance() {
-        UserNeedsFragment fragment = new UserNeedsFragment();
-        return fragment;
+        return new UserNeedsFragment();
     }
 
 
@@ -51,16 +46,15 @@ public class UserNeedsFragment extends Fragment {
     ) {
         View view = inflater.inflate(R.layout.fragment_user_needs, container, false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.needs_recycler_view);
-        mLinearLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mRecyclerView = view.findViewById(R.id.needs_recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mAdapter = new UserNeedsRecyclerAdapter(mUserNeeds);
         mRecyclerView.setAdapter(mAdapter);
 
         setRecyclerViewItemTouchListener();
 
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab_add_need);
+        FloatingActionButton fab = view.findViewById(R.id.fab_add_need);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,7 +83,10 @@ public class UserNeedsFragment extends Fragment {
             userNeeds.clear();
             for (int i = 0; i < jar.length(); i++) {
                 JSONObject jo = jar.getJSONObject(i);
-                userNeeds.add(new UserNeed(jo.getString(Coll._idKey), jo.getString("title"), jo.getString("search"), jo.getBoolean("active"), context));
+                userNeeds.add(new UserNeed(
+                        jo.getString(Coll._idKey), jo.getString(NEEDS.titleKey)
+                        , jo.getString(NEEDS.searchKey), jo.getBoolean(NEEDS.activeKey), context)
+                );
             }
             adapter.notifyDataSetChanged();
         } catch (JSONException e) {

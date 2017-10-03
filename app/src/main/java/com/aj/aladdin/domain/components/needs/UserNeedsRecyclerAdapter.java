@@ -32,8 +32,6 @@ public class UserNeedsRecyclerAdapter extends RecyclerView.Adapter<UserNeedsRecy
 
     private List<UserNeed> mUserNeeds;
 
-    private UserNeedsRecyclerAdapter self = this;
-
     public UserNeedsRecyclerAdapter(
             List<UserNeed> userNeeds
     ) {

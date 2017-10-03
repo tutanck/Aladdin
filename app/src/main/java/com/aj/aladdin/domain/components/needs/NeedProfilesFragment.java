@@ -21,13 +21,11 @@ public class NeedProfilesFragment extends Fragment {
     private ArrayList<UserProfile> mProfiles = new ArrayList<>();
 
     private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLinearLayoutManager;
     private UserProfilesRecyclerAdapter mAdapter;
 
 
     public static NeedProfilesFragment newInstance() {
-        NeedProfilesFragment fragment = new NeedProfilesFragment();
-        return fragment;
+        return new NeedProfilesFragment();
     }
 
 
@@ -39,9 +37,9 @@ public class NeedProfilesFragment extends Fragment {
     ) {
         View view = inflater.inflate(R.layout.component_recycler_view, container, false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        mLinearLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mAdapter = new UserProfilesRecyclerAdapter(mProfiles);
         mRecyclerView.setAdapter(mAdapter);
