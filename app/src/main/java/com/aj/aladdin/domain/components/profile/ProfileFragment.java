@@ -180,7 +180,6 @@ public class ProfileFragment extends Fragment {
                     intent.putExtra(UtherKeywordsActivity.USER_ID, "todo");
                 } else intent = new Intent(getContext(), UserKeywordsActivity.class);
                 startActivity(intent);
-
             }
         });
 
