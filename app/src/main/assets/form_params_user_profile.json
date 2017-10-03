@@ -1,7 +1,4 @@
 {
-  "type": {
-    "label": ["Particulier",  "Entreprise"]
-  },
   "ordered_fields_names": [
     "username",
     "resume",

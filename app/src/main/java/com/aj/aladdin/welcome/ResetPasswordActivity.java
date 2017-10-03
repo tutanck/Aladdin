@@ -8,13 +8,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
-import com.aj.aladdin.tools.oths.utils.__;
+import com.aj.aladdin.utils.__;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;

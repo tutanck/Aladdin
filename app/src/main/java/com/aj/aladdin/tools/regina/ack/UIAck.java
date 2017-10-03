@@ -1,7 +1,6 @@
-package com.aj.aladdin.tools.utils;
+package com.aj.aladdin.tools.regina.ack;
 
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
 
 import org.json.JSONObject;
 

@@ -14,9 +14,9 @@ public class FormFieldKindTranslator {
             case 1:
                 return  R.layout.fragment_form_field_oneliner;
             case 20:
-                return  R.layout.fragment_form_field_multiline_2;
+                return  R.layout.fragment_form_field_multiline;
             case 21:
-                return  R.layout.fragment_form_field_oneliner_2;
+                return  R.layout.fragment_form_field_oneliner;
             default:
                 return R.layout.fragment_form_field_multiline;
         }

@@ -14,9 +14,8 @@ import android.widget.EditText;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.main.A;
-import com.aj.aladdin.tools.oths.db.IO;
-import com.aj.aladdin.tools.oths.db.DB;
-import com.aj.aladdin.tools.oths.utils.__;
+import com.aj.aladdin.db.IO;
+import com.aj.aladdin.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
 
 import org.json.JSONArray;
@@ -32,7 +31,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
     public UserKeywordsActivity self = UserKeywordsActivity.this;
 
 
-    public final static String coll = DB.USER_KEYWORDS;
+    public final static String coll = "USER_KEYWORDS";
 
     private final String USERID = "userID";
     private String userID;

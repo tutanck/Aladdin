@@ -10,34 +10,45 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RatingBar;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.db.PROFILES;
+import com.aj.aladdin.db.USER_RATINGS;
 import com.aj.aladdin.main.A;
 import com.aj.aladdin.domain.components.keywords.UserKeywordsActivity;
 import com.aj.aladdin.domain.components.keywords.UtherKeywordsActivity;
 import com.aj.aladdin.domain.components.messages.MessagesActivity;
-import com.aj.aladdin.tools.components.fragments.autonomous.AutoRatingBar;
-import com.aj.aladdin.tools.components.fragments.autonomous.QUBIFormField;
+import com.aj.aladdin.tools.components.fragments.FormField;
+import com.aj.aladdin.tools.components.fragments.IDKeyFormField;
 import com.aj.aladdin.tools.components.fragments.ImageFragment;
-import com.aj.aladdin.tools.components.fragments.autonomous.QUBIRadioGroup;
-import com.aj.aladdin.tools.components.fragments.autonomous.QUBIRatingBar;
 import com.aj.aladdin.tools.components.services.FormFieldKindTranslator;
-import com.aj.aladdin.tools.oths.db.DB;
-import com.aj.aladdin.tools.oths.utils.JSONServices;
-import com.aj.aladdin.tools.oths.utils.__;
+import com.aj.aladdin.tools.regina.ack.VoidBAck;
+import com.aj.aladdin.utils.JSONServices;
+import com.aj.aladdin.utils.__;
+import com.aj.aladdin.tools.regina.ack.UIAck;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class ProfileFragment extends Fragment {
 
     private static final String EDITABLE = "EDITABLE";
 
-    private final String coll = DB.USER_PROFILE;
+    private boolean isEditable = false;
+
+    private String _id = null;
 
     private JSONObject formParams;
+
+    private Map<String, IDKeyFormField> formFields = new HashMap<>();
 
     public static ProfileFragment newInstance(
             boolean editable
@@ -56,59 +67,108 @@ public class ProfileFragment extends Fragment {
             , ViewGroup container
             , Bundle savedInstanceState
     ) {
+
+        _id = ((A) getActivity().getApplication()).getUser_id();
+
         final Bundle args = getArguments();
 
-        final boolean isEditable = args.getBoolean(EDITABLE);
+        isEditable = args.getBoolean(EDITABLE);
 
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        RatingBar userRating = view.findViewById(R.id.user_rating);
 
-        String _id = ((A) getActivity().getApplication()).getUser_id();
+        USER_RATINGS.getUserRating(_id, "todo", new UIAck(getActivity()) {
+            @Override
+            protected void onRes(Object res, JSONObject ctx) {
+                JSONObject ratingDoc = ((JSONArray) res).optJSONObject(0);
+                try {
+                    userRating.setRating(ratingDoc != null ? ratingDoc.getInt(USER_RATINGS.reputationKey) : 0);
+                } catch (JSONException e) {
+                    __.fatal(e); //SNO : if a doc exist the reputation should exist too
+                }
+            }
+        });
 
-        if (savedInstanceState == null) //no duplicated fragments // TODO: 25/09/2017  check if frag only or else like listener on needSwitch
-            try {
-                formParams = JSONServices.loadJsonFromAsset("form_params_user_profile.json", getContext());
-                JSONArray orderedFieldsKeys = formParams.getJSONArray("ordered_fields_names");
+        if (isEditable) {
+            RatingBar ratingControl = view.findViewById(R.id.rating_control);
+            ratingControl.setIsIndicator(false);
+
+            USER_RATINGS.computeUserRating(_id, new UIAck(getActivity()) {
+                @Override
+                protected void onRes(Object res, JSONObject ctx) {
+                    JSONObject ratingDoc = ((JSONArray) res).optJSONObject(0);
+                    try {
+                        userRating.setRating(ratingDoc != null ? ratingDoc.getInt("reputation") : 0);
+                    } catch (JSONException e) {
+                        __.fatal(e); //SNO : if a doc exist the reputation should exist too
+                    }
+                }
+            });
+
+            ratingControl.setOnRatingBarChangeListener(
+                    new RatingBar.OnRatingBarChangeListener() {
+                        public void onRatingChanged(
+                                RatingBar ratingBar
+                                , float rating
+                                , boolean fromUser
+                        ) {
+                            if (fromUser)
+                                USER_RATINGS.setUserRating(rating, _id, "todo", new VoidBAck(getActivity()));
+                        }
+                    }
+            );
+        }
+
+
+        try {
+            formParams = JSONServices.loadJsonFromAsset("form_params_user_profile.json", getContext());
+            JSONArray orderedFieldsKeys = formParams.getJSONArray("ordered_fields_names");
+
+            RadioGroup userTypeRG = view.findViewById(R.id.user_type_radio_group);
+
+            for (int i = 0; i < userTypeRG.getChildCount(); i++) {
+                RadioButton radioButton = (RadioButton) userTypeRG.getChildAt(i);
+                radioButton.setEnabled(isEditable);
+                radioButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int radioButtonID = userTypeRG.getCheckedRadioButtonId();
+                        RadioButton radioButton = userTypeRG.findViewById(radioButtonID);
+                        int index = userTypeRG.indexOfChild(radioButton);
+                        PROFILES.setField(_id, "type", index, new VoidBAck(getActivity()));
+                    }
+                });
+            }
+
+
+            if (savedInstanceState == null) {//no duplicated fragments // TODO: 25/09/2017  check if frag only or else like listener on needSwitch
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
                 fragmentTransaction.add(R.id.profile_image_layout, ImageFragment.newInstance(
                         _id, isEditable), "profile_image");
 
-                String typeKey = "type";
-                JSONArray typeLabels = formParams.getJSONObject(typeKey).getJSONArray("label");
-
-                fragmentTransaction.add(R.id.radio_group_layout, QUBIRadioGroup.newInstance(
-                        coll, _id, typeKey, new String[]
-                                {typeLabels.getString(0), typeLabels.getString(1)}, isEditable
-                ), "type");
-
-                fragmentTransaction.add(R.id.rating_layout, AutoRatingBar.newInstance(
-                        DB.USER_RATING, "fictivID" //// TODO: 01/10/2017
-                ), "rating");
-
-                if (!isEditable)
-                    fragmentTransaction.add(R.id.rating_control_layout, QUBIRatingBar.newInstance(
-                            DB.USER_RATING, _id, "fictivID" //// TODO: 01/10/2017
-                    ), "rating_control");
-
                 for (int i = 0; i < orderedFieldsKeys.length(); i++) {
                     String key = orderedFieldsKeys.getString(i);
                     JSONObject fieldParam = formParams.getJSONObject(key);
 
-                    QUBIFormField qubiFormField = QUBIFormField.newInstance(
-                            coll, _id, key, fieldParam.getString("label")
-                            , FormFieldKindTranslator.tr(fieldParam.getInt("kind"))
-                            , isEditable);
+                    IDKeyFormField formField = IDKeyFormField.newInstance
+                            (i, _id, fieldParam.getString("label"), key
+                                    , FormFieldKindTranslator.tr(fieldParam.getInt("kind")), isEditable);
 
-                    fragmentTransaction.add(R.id.form_layout, qubiFormField, key);
+                    fragmentTransaction.add(R.id.form_layout, formField, key);
+                    formFields.put(key, formField);
                 }
                 fragmentTransaction.commit();
-
-            } catch (JSONException e) {
-                __.fatal(e);
             }
+
+        } catch (JSONException e) {
+            __.fatal(e);
+        }
+
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -117,9 +177,9 @@ public class ProfileFragment extends Fragment {
                 Intent intent;
                 if (isEditable)
                     intent = new Intent(getContext(), UserKeywordsActivity.class);
-                 else {
+                else {
                     intent = new Intent(getContext(), UtherKeywordsActivity.class);
-                    intent.putExtra(UtherKeywordsActivity.USERID, "joan"); //// TODO: 02/10/2017 joan
+                    intent.putExtra(UtherKeywordsActivity.USERID, "todo"); //// TODO: 02/10/2017 joan
                 }
                 startActivity(intent);
 
@@ -138,5 +198,25 @@ public class ProfileFragment extends Fragment {
             });
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        PROFILES.getProfile(_id, new UIAck(getActivity()) {
+            @Override
+            protected void onRes(Object res, JSONObject ctx) {
+                JSONArray jar = (JSONArray) res;
+                try {
+                    JSONObject profile = jar.getJSONObject(0);
+                    for (String key : formFields.keySet())
+                        formFields.get(key).getTvContent().setText(profile.optString(key));
+
+                } catch (JSONException e) {
+                    __.fatal(e);
+                }
+            }
+        });
+
     }
 }

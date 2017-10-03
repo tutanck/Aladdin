@@ -1,7 +1,6 @@
 package com.aj.aladdin.tools.components.services;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.oths.utils.__;
 
 /**
  * Created by joan on 02/10/2017.

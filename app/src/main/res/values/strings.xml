@@ -12,7 +12,7 @@
     <!--Auth-->
     <string name="action_sign_in_short">Inscription</string>
     <string name="email">Email</string>
-    <string name="minimum_password">"Mot de passe trop court! Mminimum 8 caractères."</string>
+    <string name="minimum_password">"Mot de passe trop court! Mminimum 6 caractères."</string>
     <string name="singup_auth_failed">Echec de l\' authentication</string>
     <string name="signin_auth_failed">Echec de l\' authentication.\nVérifiez vos identifiants.</string>
     <string name="hint_email">Email</string>

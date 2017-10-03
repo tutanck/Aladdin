@@ -17,10 +17,12 @@ import com.aj.aladdin.domain.components.needs.UserNeedsFragment;
 import com.aj.aladdin.domain.components.profile.ProfileFragment;
 import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 
+
 import com.aj.aladdin.tools.oths.PageFragment;
 
-import com.aj.aladdin.tools.oths.utils.__;
+import com.aj.aladdin.utils.__;
 import com.google.firebase.auth.FirebaseAuth;
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -104,5 +106,4 @@ public class MainActivity extends AppCompatActivity {
             return TAB_TITLES.length;
         }
     }
-
 }

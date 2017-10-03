@@ -13,11 +13,10 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.oths.db.DB;
-import com.aj.aladdin.tools.oths.db.IO;
-import com.aj.aladdin.tools.oths.utils.__;
+import com.aj.aladdin.db.IO;
+import com.aj.aladdin.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
-import com.aj.aladdin.tools.utils.UIAck;
+import com.aj.aladdin.tools.regina.ack.UIAck;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,7 +28,7 @@ import java.util.List;
 
 public class MessagesActivity extends AppCompatActivity {
 
-    public final static String coll = DB.MESSAGES;
+    public final static String coll = "MESSAGES";
 
     private List<Message> messageList = new ArrayList<>();
 

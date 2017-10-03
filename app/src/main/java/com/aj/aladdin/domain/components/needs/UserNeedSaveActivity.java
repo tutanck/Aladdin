@@ -12,16 +12,15 @@ import android.view.View;
 import android.widget.Switch;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.main.MainActivity;
+import com.aj.aladdin.db.itf.MongoColl;
 import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
-import com.aj.aladdin.tools.components.fragments.simple.FormField;
+import com.aj.aladdin.tools.components.fragments.FormField;
 import com.aj.aladdin.tools.components.services.FormFieldKindTranslator;
-import com.aj.aladdin.tools.oths.db.IO;
-import com.aj.aladdin.tools.oths.db.DB;
-import com.aj.aladdin.tools.oths.utils.JSONServices;
-import com.aj.aladdin.tools.oths.utils.__;
+import com.aj.aladdin.db.IO;
+import com.aj.aladdin.utils.JSONServices;
+import com.aj.aladdin.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
-import com.aj.aladdin.tools.utils.UIAck;
+import com.aj.aladdin.tools.regina.ack.UIAck;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +33,7 @@ import java.util.Map;
 
 public class UserNeedSaveActivity extends AppCompatActivity implements FormField.Listener {
 
-    private final String coll = DB.USER_NEEDS;
+    private final String coll = "NEEDS";
 
     public final static String _ID = "_ID";
 
@@ -77,7 +76,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
                     JSONObject fieldParam = formParams.getJSONObject(key);
 
                     FormField formField = FormField.newInstance(i,
-                            fieldParam.getString("label"), FormFieldKindTranslator.tr(fieldParam.getInt("kind")));
+                            fieldParam.getString("label"),"resume", FormFieldKindTranslator.tr(fieldParam.getInt("kind")));
 
                     FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -168,7 +167,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
 
     void deactivateNeed() {
         try {
-            IO.r.update(coll, __.jo().put("_id", _id)
+            IO.r.update(coll, __.jo().put(MongoColl._idKey, _id)
                     , __.jo().put("$set", __.jo().put("active", false))
                     , __.jo(), __.jo()
                     , new UIAck(self) {
@@ -185,7 +184,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
 
     private void loadState() {
         try {
-            IO.r.find(coll, __.jo().put("_id", _id), __.jo(), __.jo(), new UIAck(self) {
+            IO.r.find(coll, __.jo().put(MongoColl._idKey, _id), __.jo(), __.jo(), new UIAck(self) {
                 @Override
                 protected void onRes(Object res, JSONObject ctx) {
                     JSONArray jar = (JSONArray) res;
@@ -221,7 +220,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
             if (_id == null)
                 IO.r.insert(coll, need.put("deleted", false), __.jo(), __.jo(), ackIn());
             else
-                IO.r.update(coll, __.jo().put("_id", _id), __.jo().put("$set", need), __.jo(), __.jo(), ackIn());
+                IO.r.update(coll, __.jo().put(MongoColl._idKey, _id), __.jo().put("$set", need), __.jo(), __.jo(), ackIn());
 
         } catch (JSONException | Regina.NullRequiredParameterException e) {
             __.fatal(e);

@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.oths.db.IO;
+import com.aj.aladdin.db.IO;
 import com.aj.aladdin.welcome.LoginActivity;
 
 /**

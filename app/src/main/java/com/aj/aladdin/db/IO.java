@@ -1,4 +1,4 @@
-package com.aj.aladdin.tools.oths.db;
+package com.aj.aladdin.db;
 
 import android.util.Log;
 

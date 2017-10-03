@@ -11,11 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.oths.db.IO;
-import com.aj.aladdin.tools.oths.db.DB;
-import com.aj.aladdin.tools.oths.utils.__;
+import com.aj.aladdin.db.IO;
+import com.aj.aladdin.db.itf.MongoColl;
+import com.aj.aladdin.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
-import com.aj.aladdin.tools.utils.UIAck;
+import com.aj.aladdin.tools.regina.ack.UIAck;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,7 +27,7 @@ import java.util.List;
 
 public class UserNeedsFragment extends Fragment {
 
-    public final static String coll = DB.USER_NEEDS;
+    public final static String coll = "NEEDS";
 
     private List<UserNeed> mUserNeeds = new ArrayList<>();
 
@@ -92,7 +92,7 @@ public class UserNeedsFragment extends Fragment {
                                 mUserNeeds.clear();
                                 for (int i = 0; i < jar.length(); i++) {
                                     JSONObject jo = jar.getJSONObject(i);
-                                    mUserNeeds.add(new UserNeed(jo.getString("_id"), jo.getString("title"), jo.getString("search"), jo.getBoolean("active"), getContext()));
+                                    mUserNeeds.add(new UserNeed(jo.getString(MongoColl._idKey), jo.getString("title"), jo.getString("search"), jo.getBoolean("active"), getContext()));
                                 }
                                 mAdapter.notifyDataSetChanged();
                             } catch (JSONException e) {

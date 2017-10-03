@@ -1,9 +1,9 @@
-package com.aj.aladdin.tools.utils;
+package com.aj.aladdin.tools.regina.ack;
 
 import android.app.Activity;
 import android.util.Log;
 
-import com.aj.aladdin.tools.oths.utils.__;
+import com.aj.aladdin.utils.__;
 
 import org.json.JSONObject;
 

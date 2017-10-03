@@ -3,11 +3,11 @@ package com.aj.aladdin.main;
 import android.app.Activity;
 import android.app.Application;
 
-import com.aj.aladdin.tools.oths.db.DB;
-import com.aj.aladdin.tools.oths.db.IO;
-import com.aj.aladdin.tools.oths.utils.__;
+import com.aj.aladdin.db.IO;
+import com.aj.aladdin.db.itf.MongoColl;
+import com.aj.aladdin.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
-import com.aj.aladdin.tools.utils.UIAck;
+import com.aj.aladdin.tools.regina.ack.UIAck;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,7 +25,7 @@ public class A extends Application {
 
     public void resetUser_id(Activity caller, String authID) {
         try {
-            IO.r.find(DB.USER_PROFILE
+            IO.r.find("PROFILES"
                     , __.jo().put("authID", authID)
                     , __.jo().put("authID", 1), __.jo()
                     , new UIAck(caller) {
@@ -37,13 +37,13 @@ public class A extends Application {
                                 __.fatal("MainActivity::onStart : multiple users with the same authID");
 
                             if (userArray.length() == 1) try {
-                                user_id = userArray.getJSONObject(0).getString("_id");
+                                user_id = userArray.getJSONObject(0).getString(MongoColl._idKey);
                                 MainActivity.start(caller);
                             } catch (JSONException e) {
                                 __.fatal(e);
                             }
                             else try {
-                                IO.r.insert(DB.USER_PROFILE
+                                IO.r.insert("PROFILES"
                                         , __.jo().put("authID", authID)
                                         , __.jo(), __.jo()
                                         , new UIAck(caller) {

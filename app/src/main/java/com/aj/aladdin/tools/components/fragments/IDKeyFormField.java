@@ -1,8 +1,6 @@
-package com.aj.aladdin.tools.components.fragments.simple;
+package com.aj.aladdin.tools.components.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,14 +12,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.oths.utils.KeyboardServices;
+import com.aj.aladdin.db.PROFILES;
+import com.aj.aladdin.tools.components.services.ComponentsServices;
+import com.aj.aladdin.tools.components.services.Ic;
+import com.aj.aladdin.tools.regina.ack.UIAck;
+import com.aj.aladdin.utils.KeyboardServices;
+
+import org.json.JSONObject;
 
 
-public class FormField extends Fragment {
+public class IDKeyFormField extends Fragment {
 
     private static final String ID = "ID";
+    private static final String _ID = "ID";
     private static final String LAYOUT_ID = "LAYOUT_ID";
+    private static final String KEY = "KEY";
     private static final String LABEL = "LABEL";
+    private static final String EDITABLE = "EDITABLE";
 
     private boolean isOpen = false;
 
@@ -32,22 +39,32 @@ public class FormField extends Fragment {
     private TextInputLayout textInputLayout;
     private TextView tvDescription;
 
-    private Listener mListener;
+    private String key;
 
     private int id;
+
+    private String _id;
+
+    private boolean editable;
 
 
     //instance parameters
 
-    public static FormField newInstance(
+    public static IDKeyFormField newInstance(
             int id
+            ,String _id
             , String label
+            , String key
             , int layoutID
+            , boolean editable
     ) {
-        FormField fragment = new FormField();
+        IDKeyFormField fragment = new IDKeyFormField();
 
         Bundle args = new Bundle();
         args.putInt(ID, id);
+        args.putBoolean(EDITABLE, editable);
+        args.putString(KEY, key);
+        args.putString(_ID, _id);
         args.putInt(LAYOUT_ID, layoutID);
         args.putString(LABEL, label);
         fragment.setArguments(args);
@@ -68,11 +85,18 @@ public class FormField extends Fragment {
 
         id = args.getInt(ID);
 
+        key = args.getString(KEY);
+
+        _id= args.getString(_ID);
+
+        editable = args.getBoolean(EDITABLE);
+
         View view = inflater.inflate(args.getInt(LAYOUT_ID), container, false);
 
         formFieldLayout = (RelativeLayout) view.findViewById(R.id.form_field_layout);
 
         ivIndication = (ImageView) view.findViewById(R.id.ivIndication);
+        ivIndication.setImageResource(Ic.icon(key));
 
         textInputLayout = (TextInputLayout) view.findViewById(R.id.text_input_layout);
         textInputLayout.setHint(args.getString(LABEL));
@@ -85,14 +109,26 @@ public class FormField extends Fragment {
 
         tvContent = (TextView) view.findViewById(R.id.tvContent);
 
+        if (editable)
+            ComponentsServices.setSelectable(
+                    getActivity(), getLayout(), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (!isOpen()) open();
+                            else
+                                PROFILES.setField(_id, getKey(), getETText(), new UIAck(getActivity()) {
+                                    @Override
+                                    protected void onRes(Object res, JSONObject ctx) {
+                                        close();
+                                    }
+                                });
+                        }
+                    }
+            );
+
         return view;
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mListener.onFormFieldCreated(id, this);
-    }
 
     public void open() {
         if (isOpen) return;
@@ -100,6 +136,7 @@ public class FormField extends Fragment {
         etContent.setVisibility(View.VISIBLE);
         tvContent.setVisibility(View.GONE);
         tvDescription.setVisibility(View.GONE);
+        ivIndication.setImageResource(R.drawable.ic_done_24dp);
         isOpen = true;
     }
 
@@ -110,6 +147,7 @@ public class FormField extends Fragment {
         etContent.setVisibility(View.GONE);
         tvContent.setVisibility(View.VISIBLE);
         tvDescription.setVisibility(View.VISIBLE);
+        ivIndication.setImageResource(Ic.icon(key));
         isOpen = false;
         KeyboardServices.dismiss(getContext(), etContent);
     }
@@ -139,29 +177,15 @@ public class FormField extends Fragment {
         return tvDescription;
     }
 
+    public String getKey() {
+        return key;
+    }
+
     public boolean isOpen() {
         return isOpen;
     }
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof Listener)
-            mListener = (Listener) context;
-        else
-            throw new RuntimeException(context.toString()
-                    + " must implement FormField.Listener");
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-
-    public interface Listener {
-        void onFormFieldCreated(int id, FormField formField);
+    private String getETText(){
+        return getEtContent().getText().toString().trim();
     }
 }
