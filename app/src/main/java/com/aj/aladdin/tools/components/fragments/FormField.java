@@ -33,6 +33,7 @@ public class FormField extends Fragment {
     private EditText etContent;
     private TextInputLayout textInputLayout;
     private TextView tvDescription;
+    private View divider;
 
     private Listener mListener;
 
@@ -93,6 +94,9 @@ public class FormField extends Fragment {
         etContent.setVisibility(View.GONE);
 
         tvContent = (TextView) view.findViewById(R.id.tvContent);
+
+        divider = view.findViewById(R.id.divider);
+        divider.setVisibility(View.INVISIBLE);
 
         return view;
     }

@@ -38,6 +38,7 @@ public class IDKeyFormField extends Fragment {
     private EditText etContent;
     private TextInputLayout textInputLayout;
     private TextView tvDescription;
+    private View divider;
 
     private String key;
 
@@ -93,6 +94,8 @@ public class IDKeyFormField extends Fragment {
 
         View view = inflater.inflate(args.getInt(LAYOUT_ID), container, false);
 
+        divider = view.findViewById(R.id.divider);
+
         formFieldLayout = (RelativeLayout) view.findViewById(R.id.form_field_layout);
 
         ivIndication = (ImageView) view.findViewById(R.id.ivIndication);
@@ -137,6 +140,7 @@ public class IDKeyFormField extends Fragment {
         tvContent.setVisibility(View.GONE);
         tvDescription.setVisibility(View.GONE);
         ivIndication.setImageResource(R.drawable.ic_done_24dp);
+        divider.setVisibility(View.GONE);
         isOpen = true;
     }
 
@@ -148,6 +152,7 @@ public class IDKeyFormField extends Fragment {
         tvContent.setVisibility(View.VISIBLE);
         tvDescription.setVisibility(View.VISIBLE);
         ivIndication.setImageResource(Ic.icon(key));
+        divider.setVisibility(View.VISIBLE);
         isOpen = false;
         KeyboardServices.dismiss(getContext(), etContent);
     }
