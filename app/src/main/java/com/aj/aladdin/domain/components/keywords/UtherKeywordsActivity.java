@@ -32,7 +32,7 @@ public class UtherKeywordsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.component_list_view);
 
-        mListView = (ListView) findViewById(R.id.listview);
+        mListView = (ListView) findViewById(R.id.list_view);
 
         adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, new ArrayList<>());
         mListView.setAdapter(adapter);
