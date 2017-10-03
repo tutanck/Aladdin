@@ -38,7 +38,8 @@ public class UserNeedActivity extends AppCompatActivity {
         mUserNeed = (UserNeed) getIntent().getSerializableExtra(USER_NEED);
 
         searchET = (EditText) findViewById(R.id.need_search_bar_et);
-        searchET.setText(mUserNeed.getSearchText());
+        if (mUserNeed != null)
+            searchET.setText(mUserNeed.getSearchText());
 
         searchBtn = (ImageButton) findViewById(R.id.need_search_bar_btn);
         searchBtn.setEnabled(false);
