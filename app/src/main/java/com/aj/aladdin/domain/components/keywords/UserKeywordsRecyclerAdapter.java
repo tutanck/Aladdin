@@ -10,16 +10,17 @@ import android.widget.TextView;
 import com.aj.aladdin.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by joan on 21/09/17.
  */
 public class UserKeywordsRecyclerAdapter extends RecyclerView.Adapter<UserKeywordsRecyclerAdapter.ViewHolder> {
 
-    private ArrayList<UserKeyword> mUserKeywords;
+    private List<UserKeyword> mUserKeywords;
 
     public UserKeywordsRecyclerAdapter(
-            ArrayList<UserKeyword> userKeywords
+            List<UserKeyword> userKeywords
     ) {
         mUserKeywords = userKeywords;
     }
@@ -56,8 +57,8 @@ public class UserKeywordsRecyclerAdapter extends RecyclerView.Adapter<UserKeywor
         public ViewHolder(View v) {
             super(v);
 
-            mTextView = (TextView) v.findViewById(R.id.keyword_textview);
-            mSwitch = (Switch) v.findViewById(R.id.keyword_switch);
+            mTextView = v.findViewById(R.id.keyword_textview);
+            mSwitch = v.findViewById(R.id.keyword_switch);
         }
 
         public void bindItem(UserKeyword userKeyword) {

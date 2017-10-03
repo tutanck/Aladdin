@@ -23,21 +23,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserKeywordsActivity extends AppCompatActivity {
 
-    public UserKeywordsActivity self = UserKeywordsActivity.this;
-
-
-    public final static String coll = "USER_KEYWORDS";
-
-    private final String USERID = "userID";
-    private String userID;
-
-    private ArrayList<UserKeyword> mUserKeywords = new ArrayList<>();
+    private List<UserKeyword> mUserKeywords = new ArrayList<>();
 
     private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLinearLayoutManager;
     private UserKeywordsRecyclerAdapter mAdapter;
 
     private EditText etKeyword;
@@ -54,10 +46,8 @@ public class UserKeywordsActivity extends AppCompatActivity {
 
         etKeyword = (EditText) findViewById(R.id.add_keyword_input);
 
-
         mRecyclerView = (RecyclerView) findViewById(R.id.keywords_recycler_view);
-        mLinearLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mAdapter = new UserKeywordsRecyclerAdapter(mUserKeywords);
         mRecyclerView.setAdapter(mAdapter);
@@ -67,15 +57,16 @@ public class UserKeywordsActivity extends AppCompatActivity {
         setRecyclerViewItemTouchListener();
     }
 
+
     @Override
     protected void onStart() {
         super.onStart();
         loadKeywords();
-        userID = ((A) getApplication()).getUser_id();
     }
 
+
     private void loadKeywords() {
-        USER_KEYWORDS.loadUserKeywords(userID, new UIAck(this) {
+        USER_KEYWORDS.loadUserKeywords(((A) getApplication()).getUser_id(), new UIAck(this) {
             @Override
             protected void onRes(Object res, JSONObject ctx) {
                 try {
@@ -83,7 +74,11 @@ public class UserKeywordsActivity extends AppCompatActivity {
                     mUserKeywords.clear();
                     for (int i = 0; i < jar.length(); i++) {
                         JSONObject jo = jar.getJSONObject(i);
-                        mUserKeywords.add(new UserKeyword(jo.getString("keyword"), jo.getBoolean("active"), self));
+                        mUserKeywords.add(new UserKeyword(
+                                jo.getString(USER_KEYWORDS.keywordKey)
+                                , jo.getBoolean(USER_KEYWORDS.activeKey)
+                                , UserKeywordsActivity.this)
+                        );
                     }
                     mAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
@@ -94,10 +89,9 @@ public class UserKeywordsActivity extends AppCompatActivity {
     }
 
 
-    void saveKeyword(String input, boolean active, boolean deleted) {
-        String keyword = input.trim();
+    void saveKeyword(String keyword, boolean active, boolean deleted) {
         if (isKeyword(keyword))
-            USER_KEYWORDS.saveUserKeyword(keyword, userID, active, deleted,
+            USER_KEYWORDS.saveUserKeyword(keyword, ((A) getApplication()).getUser_id(), active, deleted,
                     new UIAck(this) {
                         @Override
                         protected void onRes(Object res, JSONObject ctx) {
@@ -115,7 +109,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveKeyword(etKeyword.getText().toString(), true, false);
+                saveKeyword(etKeyword.getText().toString().trim(), true, false);
             }
         });
     }

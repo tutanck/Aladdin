@@ -20,7 +20,7 @@ public class UtherKeywordsActivity extends AppCompatActivity {
 
     public UtherKeywordsActivity self = UtherKeywordsActivity.this;
 
-    public final static String USERID = "userID";
+    public final static String USER_ID = "USER_ID";
 
     private ListView mListView;
     private ArrayAdapter adapter;
@@ -41,7 +41,7 @@ public class UtherKeywordsActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        USER_KEYWORDS.loadUtherKeywords(getIntent().getStringExtra(USERID)
+        USER_KEYWORDS.loadUtherKeywords(getIntent().getStringExtra(USER_ID)
                 , new UIAck(this) {
                     @Override
                     protected void onRes(Object res, JSONObject ctx) {

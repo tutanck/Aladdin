@@ -6,10 +6,10 @@ package com.aj.aladdin.domain.components.keywords;
 
 class UserKeyword {
 
-    private UserKeywordsActivity userKeywordsActivity;
-
     private String keyword;
     private boolean active;
+
+    private UserKeywordsActivity userKeywordsActivity;
 
     UserKeyword(
             String keyword
