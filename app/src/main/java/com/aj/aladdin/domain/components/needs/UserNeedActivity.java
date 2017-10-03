@@ -10,9 +10,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.tools.utils.__;
 
 
 public class UserNeedActivity extends AppCompatActivity {
@@ -21,7 +27,8 @@ public class UserNeedActivity extends AppCompatActivity {
 
     private String _id = null;
 
-    UserNeedActivity self = this;
+    private EditText searchET;
+    private ImageButton searchBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +36,12 @@ public class UserNeedActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_need);
 
         _id = getIntent().getStringExtra(_ID);
+
+        searchET = (EditText) findViewById(R.id.need_search_bar_et);
+
+        searchBtn = (ImageButton) findViewById(R.id.need_search_bar_btn);
+        searchBtn.setEnabled(false);
+
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.user_need_results_viewpager);
@@ -39,15 +52,50 @@ public class UserNeedActivity extends AppCompatActivity {
                 )
         );
 
+
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.user_need_results_sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_open_need_save);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UserNeedSaveActivity.start(self,_id);
+                String searchText = searchET.getText().toString().trim();
+                UserNeedSaveActivity.start(UserNeedActivity.this, _id, searchText);
+            }
+        });
+
+
+        functionalizeSearchBtn();
+        functionalizeSearchET();
+    }
+
+
+    private void functionalizeSearchBtn() {
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                __.showShortToast(UserNeedActivity.this, "searching...");
+            }
+        });
+    }
+
+
+    private void functionalizeSearchET() {
+        searchET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                searchBtn.setEnabled(searchET.getText().length() > 0);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
             }
         });
     }
@@ -57,22 +105,23 @@ public class UserNeedActivity extends AppCompatActivity {
         context.startActivity(new Intent(context, UserNeedActivity.class));
     }
 
+
     public static void start(Context context, String _id) {
         Intent intent = new Intent(context, UserNeedActivity.class);
-        intent.putExtra(_ID,_id);
+        intent.putExtra(_ID, _id);
         context.startActivity(intent);
     }
 
 
     private static class PagerAdapter extends FragmentPagerAdapter {
 
-        private Context context;
+        private Context mContext;
 
         private String TAB_TITLES[] = new String[]{"PROFILS TROUVES", "POKES RECUES"};
 
         public PagerAdapter(FragmentManager fm, Context context) {
             super(fm);
-            this.context = context;
+            this.mContext = context;
         }
 
         @Override

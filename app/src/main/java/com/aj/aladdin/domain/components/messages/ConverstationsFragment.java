@@ -40,22 +40,12 @@ public class ConverstationsFragment extends Fragment {
     ) {
         View view = inflater.inflate(R.layout.component_recycler_view, container, false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        mAdapter = new UserProfilesRecyclerAdapter(getContext(),mProfiles);
+        mAdapter = new UserProfilesRecyclerAdapter(getContext(), mProfiles);
         mRecyclerView.setAdapter(mAdapter);
-
-
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab_add_need);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MessagesActivity.start(getContext());
-            }
-        });
-
 
         return view;
     }

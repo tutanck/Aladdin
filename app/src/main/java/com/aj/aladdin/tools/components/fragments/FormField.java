@@ -79,21 +79,21 @@ public class FormField extends Fragment {
 
         View view = inflater.inflate(args.getInt(LAYOUT_ID), container, false);
 
-        formFieldLayout = (RelativeLayout) view.findViewById(R.id.form_field_layout);
+        formFieldLayout = view.findViewById(R.id.form_field_layout);
 
-        ivIndication = (ImageView) view.findViewById(R.id.ivIndication);
+        ivIndication = view.findViewById(R.id.ivIndication);
         ivIndication.setImageResource(Ic.icon(key));
 
-        textInputLayout = (TextInputLayout) view.findViewById(R.id.text_input_layout);
+        textInputLayout = view.findViewById(R.id.text_input_layout);
         textInputLayout.setHint(args.getString(LABEL));
 
-        tvDescription = (TextView) view.findViewById(R.id.tvDescription);
+        tvDescription = view.findViewById(R.id.tvDescription);
         tvDescription.setText(args.getString(LABEL));
 
-        etContent = (EditText) view.findViewById(R.id.etContent);
+        etContent = view.findViewById(R.id.etContent);
         etContent.setVisibility(View.GONE);
 
-        tvContent = (TextView) view.findViewById(R.id.tvContent);
+        tvContent = view.findViewById(R.id.tvContent);
 
         divider = view.findViewById(R.id.divider);
         divider.setVisibility(View.INVISIBLE);

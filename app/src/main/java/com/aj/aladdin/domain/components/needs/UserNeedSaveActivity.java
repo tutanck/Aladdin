@@ -33,13 +33,10 @@ import java.util.Map;
 
 public class UserNeedSaveActivity extends AppCompatActivity implements FormField.Listener {
 
-    private final String coll = "NEEDS";
-
     public final static String _ID = "_ID";
+    public final static String SEARCH_TEXT = "SEARCH_TEXT";
 
     private String _id = null;
-
-    private UserNeedSaveActivity self = this;
 
     private boolean isFormOpen = false;
 
@@ -76,7 +73,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
                     JSONObject fieldParam = formParams.getJSONObject(key);
 
                     FormField formField = FormField.newInstance(i,
-                            fieldParam.getString("label"), "resume", FormFieldKindTranslator.tr(fieldParam.getInt("kind")));
+                            fieldParam.getString("label"), key, FormFieldKindTranslator.tr(fieldParam.getInt("kind")));
 
                     FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -113,11 +110,11 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
                     open();
                 else if (validState(view))
                     NEEDS.saveNeed(_id, ((A) getApplication()).getUser_id()
-                            , needSwitch.isChecked(), formFields, new UIAck(self) {
+                            , needSwitch.isChecked(), formFields, new UIAck(UserNeedSaveActivity.this) {
                                 @Override
                                 protected void onRes(Object res, JSONObject ctx) {
                                     close();
-                                    __.showShortToast(self, "Recherche enregistrée");
+                                    __.showShortToast(UserNeedSaveActivity.this, "Recherche enregistrée");
                                 }
                             });
             }
@@ -155,9 +152,10 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
     }
 
 
-    public static void start(Context context, String _id) {
+    public static void start(Context context, String _id, String searchText) {
         Intent intent = new Intent(context, UserNeedSaveActivity.class);
         intent.putExtra(_ID, _id);
+        intent.putExtra(SEARCH_TEXT, searchText);
         context.startActivity(intent);
     }
 
@@ -169,7 +167,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
         if (_id != null) {
             fab.setVisibility(View.GONE);
             progressBarFragment.show();
-            NEEDS.loadNeed(_id, new UIAck(self) {
+            NEEDS.loadNeed(_id, new UIAck(UserNeedSaveActivity.this) {
                 @Override
                 protected void onRes(Object res, JSONObject ctx) {
                     JSONArray jar = (JSONArray) res;
@@ -206,6 +204,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
         for (String key : formFields.keySet())
             if (!key.equals("search"))
                 formFields.get(key).open();
+        fab.setImageResource(R.drawable.ic_done_24dp);
         isFormOpen = true;
     }
 

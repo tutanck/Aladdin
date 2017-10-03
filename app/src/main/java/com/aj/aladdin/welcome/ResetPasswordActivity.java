@@ -11,6 +11,7 @@ import android.widget.EditText;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
+import com.aj.aladdin.tools.utils.KeyboardServices;
 import com.aj.aladdin.tools.utils.__;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -51,6 +52,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
                 if (!validateForm(email)) return;
 
+                KeyboardServices.dismiss(ResetPasswordActivity.this,inputEmail);
                 progressBarFragment.show();
                 auth.sendPasswordResetEmail(email)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {

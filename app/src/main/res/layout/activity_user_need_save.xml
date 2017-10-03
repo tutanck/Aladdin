@@ -26,7 +26,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/small"
                 android:ellipsize="end"
-                android:text="Enregistrez la recherche"
+                android:text="Enregistrez votre recherche"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="#212121"
                 android:textSize="16dp" />
@@ -87,7 +87,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:elevation="8dp"
         android:backgroundTint="@color/Gold"
-        android:src="@drawable/ic_save_24dp" />
+        android:src="@drawable/ic_mode_edit_24dp" />
 
 
     <fragment

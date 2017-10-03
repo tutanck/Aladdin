@@ -13,6 +13,7 @@ import android.widget.EditText;
 import com.aj.aladdin.R;
 import com.aj.aladdin.main.A;
 import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
+import com.aj.aladdin.tools.utils.KeyboardServices;
 import com.aj.aladdin.tools.utils.__;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -64,8 +65,8 @@ public class SignupActivity extends AppCompatActivity {
 
                 if (!validateForm(email, password)) return;
 
+                KeyboardServices.dismiss(SignupActivity.this,inputPassword);
                 progressBarFragment.show();
-
                 auth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override

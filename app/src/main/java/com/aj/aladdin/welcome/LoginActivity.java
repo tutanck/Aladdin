@@ -14,6 +14,7 @@ import android.widget.EditText;
 import com.aj.aladdin.R;
 import com.aj.aladdin.main.A;
 import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
+import com.aj.aladdin.tools.utils.KeyboardServices;
 import com.aj.aladdin.tools.utils.__;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -74,8 +75,8 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (!validateForm(email, password)) return;
 
+                KeyboardServices.dismiss(LoginActivity.this,inputPassword);
                 progressBarFragment.show();
-
                 auth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
