@@ -177,7 +177,7 @@ public class ProfileFragment extends Fragment {
                 Intent intent;
                 if (!isEditable) {
                     intent = new Intent(getContext(), UtherKeywordsActivity.class);
-                    intent.putExtra(UtherKeywordsActivity.USERID, "todo");
+                    intent.putExtra(UtherKeywordsActivity.USER_ID, "todo");
                 } else intent = new Intent(getContext(), UserKeywordsActivity.class);
                 startActivity(intent);
 

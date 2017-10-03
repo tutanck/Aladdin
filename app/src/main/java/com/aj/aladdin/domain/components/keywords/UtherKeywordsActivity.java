@@ -18,8 +18,6 @@ import java.util.ArrayList;
 
 public class UtherKeywordsActivity extends AppCompatActivity {
 
-    public UtherKeywordsActivity self = UtherKeywordsActivity.this;
-
     public final static String USER_ID = "USER_ID";
 
     private ListView mListView;
