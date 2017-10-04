@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Switch;
 
 import com.aj.aladdin.R;
@@ -37,7 +38,10 @@ import java.util.Map;
 
 public class UserNeedSaveActivity extends AppCompatActivity implements FormField.Listener {
 
+    ProgressBarFragment progressBarFragment;
+
     private final static String _ID = "_ID";
+    private final static String SEARCH_TEXT = "SEARCH_TEXT";
 
     private String _id = null;
 
@@ -45,13 +49,9 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
 
     private Map<String, FormField> formFields = new HashMap<>();
 
-    private JSONObject formParams;
-
     private Switch needSwitch;
 
     private FloatingActionButton fab;
-
-    ProgressBarFragment progressBarFragment;
 
 
     @Override
@@ -66,7 +66,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
 
         if (savedInstanceState == null) //no duplicated fragments // TODO: 25/09/2017  check if frag only or else like listener on needSwitch
             try {
-                formParams = JSONServices.loadJsonFromAsset("form_params_user_need.json", this);
+                JSONObject formParams = JSONServices.loadJsonFromAsset("form_params_user_need.json", this);
                 JSONArray orderedFieldsKeys = formParams.getJSONArray("ordered_fields_names");
 
                 for (int i = 0; i < orderedFieldsKeys.length(); i++) {
@@ -90,51 +90,29 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
             }
 
         needSwitch = (Switch) findViewById(R.id.need_switch);
-        needSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //// TODO: 04/10/2017 on/off ad
-            }
-        });
-
 
         fab = (FloatingActionButton) findViewById(R.id.fab_save_need);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isFormOpen)
-                    open();
+                if (!isFormOpen) open();
                 else if (validState())
                     NEEDS.saveNeed(_id, ((A) getApplication()).getUser_id()
                             , needSwitch.isChecked(), formFields, new UIAck(UserNeedSaveActivity.this) {
                                 @Override
                                 protected void onRes(Object res, JSONObject ctx) {
-                                    if (_id == null) try {
+                                    if (_id == null) try { //robust code
                                         _id = ((JSONObject) res).getString(Coll._idKey);
                                     } catch (JSONException e) {
                                         __.fatal(e);
                                     }
                                     close();
-                                    __.showShortToast(UserNeedSaveActivity.this, "Recherche enregistrée");
-                                    finish();
+                                    __.showShortToast(UserNeedSaveActivity.this, "Mise à jour réussie !");
+                                    //finish(); // TODO: 04/10/2017
                                 }
                             });
             }
         });
-    }
-
-
-    @Override
-    public void onFormFieldCreated(int id, FormField formField) {
-        formField.setText("");
-    }
-
-
-    public static void start(Context context, String _id, String searchText) {
-        Intent intent = new Intent(context, UserNeedSaveActivity.class);
-        intent.putExtra(_ID, _id);
-        context.startActivity(intent);
-        if (_id == null) ((Activity) context).finish();
     }
 
 
@@ -144,6 +122,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
 
         if (_id == null) {
             needSwitch.setChecked(true);
+            formFields.get(NEEDS.searchKey).setText(getIntent().getStringExtra(SEARCH_TEXT));
             open();
         } else {
             fab.setVisibility(View.GONE);
@@ -151,12 +130,11 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
             NEEDS.loadNeed(_id, new UIAck(UserNeedSaveActivity.this) {
                 @Override
                 protected void onRes(Object res, JSONObject ctx) {
-                    JSONArray jar = (JSONArray) res;
                     try {
-                        JSONObject need = jar.getJSONObject(0);
+                        JSONObject need = ((JSONArray) res).getJSONObject(0);
                         for (String key : formFields.keySet())
                             formFields.get(key).getTvContent().setText(need.getString(key));
-                        needSwitch.setChecked(need.getBoolean("active"));
+                        needSwitch.setChecked(need.getBoolean(NEEDS.activeKey));
                     } catch (JSONException e) {
                         __.fatal(e);
                     }
@@ -165,6 +143,14 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
                 }
             });
         }
+    }
+
+
+    public static void start(Activity activity, String str, boolean update) {
+        Intent intent = new Intent(activity, UserNeedSaveActivity.class);
+        intent.putExtra(update ? _ID : SEARCH_TEXT, str);
+        activity.startActivity(intent);
+        if (!update) activity.finish();
     }
 
 
@@ -185,8 +171,8 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
 
 
     private boolean validState() {
-        EditText titleET = formFields.get("title").getEtContent();
-        EditText descriptionET = formFields.get("description").getEtContent();
+        EditText titleET = formFields.get(NEEDS.titleKey).getEtContent();
+        EditText descriptionET = formFields.get(NEEDS.descriptionKey).getEtContent();
         if (TextUtils.isEmpty(titleET.getText())) {
             titleET.setError("Le titre doit être renseigné !");
             return false;
@@ -201,9 +187,6 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
     }
 
 
-    /**
-     * Secure mode style for app exit
-     */
     private Boolean exitMode = false;
 
     @Override
@@ -211,7 +194,8 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
         if (!isFormOpen || exitMode)
             super.onBackPressed();
         else if (isFormOpen) {
-            __.showShortToast(this, "Cliquez de nouveau : les modifications ne seront pas sauvegardées.");
+            __.showShortToast(this, "Les modifications seront perdues !");
+
             exitMode = true;
 
             new Handler().postDelayed(new Runnable() {
@@ -221,5 +205,11 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
                 }
             }, 3 * 1000);
         }
+    }
+
+
+    @Override
+    public void onFormFieldCreated(int id, FormField formField) {
+        formField.setText("");
     }
 }

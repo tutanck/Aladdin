@@ -22,6 +22,7 @@ public class NEEDS implements Coll {
     public final static String ownerIDKey = "ownerID";
     public final static String activeKey = "active";
     public final static String titleKey = "title";
+    public final static String descriptionKey = "description";
     public final static String searchKey = "search";
 
 

@@ -59,7 +59,7 @@ public class UserNeedNewSearchActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(searchText))
                     __.showShortSnack(view, "Impossible de publier une recherche vide!");
                 else
-                    UserNeedSaveActivity.start(UserNeedNewSearchActivity.this, null, searchText);
+                    UserNeedSaveActivity.start(UserNeedNewSearchActivity.this, searchText,false);
             }
         });
 

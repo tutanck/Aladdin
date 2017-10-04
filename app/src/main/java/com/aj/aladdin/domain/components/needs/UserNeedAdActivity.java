@@ -55,8 +55,7 @@ public class UserNeedAdActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UserNeedSaveActivity.start(UserNeedAdActivity.this
-                        , mUserNeed.get_id(), mUserNeed.getSearchText());
+                UserNeedSaveActivity.start(UserNeedAdActivity.this, mUserNeed.get_id(), true);
             }
         });
     }
