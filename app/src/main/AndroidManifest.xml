@@ -27,9 +27,13 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".domain.components.needs.UserNeedActivity"
+            android:name=".domain.components.needs.UserNeedNewSearchActivity"
             android:screenOrientation="portrait"
-            android:label="Besoin"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".domain.components.needs.UserNeedAdActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity

@@ -11,7 +11,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.domain.components.needs.UserNeedActivity;
 
 import java.util.ArrayList;
 

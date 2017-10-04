@@ -10,47 +10,38 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.tools.utils.__;
 
 
-public class UserNeedActivity extends AppCompatActivity {
+/**
+ * Created by joan on 04/10/2017.
+ */
+public class UserNeedAdActivity extends AppCompatActivity {
 
     private final static String USER_NEED = "USER_NEED";
 
-    private UserNeed mUserNeed = null;
+    private UserNeed mUserNeed;
 
-    private EditText searchET;
-    private ImageButton searchBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_need);
+        setContentView(R.layout.activity_user_need_ad);
 
         mUserNeed = (UserNeed) getIntent().getSerializableExtra(USER_NEED);
 
-        searchET = (EditText) findViewById(R.id.need_search_bar_et);
-        if (mUserNeed != null)
-            searchET.setText(mUserNeed.getSearchText());
-
-        searchBtn = (ImageButton) findViewById(R.id.need_search_bar_btn);
-        searchBtn.setEnabled(false);
-
+        TextView needTitleTV = (TextView) findViewById(R.id.needTitleTV);
+        needTitleTV.setText(mUserNeed.getTitle());
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.user_need_results_viewpager);
         viewPager.setAdapter(
                 new PagerAdapter(
                         getSupportFragmentManager()
-                        , UserNeedActivity.this
+                        , UserNeedAdActivity.this
                 )
         );
 
@@ -63,65 +54,29 @@ public class UserNeedActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String searchText = searchET.getText().toString().trim();
-
-                if (TextUtils.isEmpty(searchText))
-                    __.showShortSnack(view, "Impossible de sauvegarder une recherche vide!");
-                else //send old need's _id but new searchText
-                    UserNeedSaveActivity.start(UserNeedActivity.this
-                            , mUserNeed == null ? null : mUserNeed.get_id(), searchText);
-            }
-        });
-
-        functionalizeSearchBtn();
-        functionalizeSearchET();
-    }
-
-
-    private void functionalizeSearchBtn() {
-        searchBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                __.showShortToast(UserNeedActivity.this, "searching...");
-            }
-        });
-    }
-
-
-    private void functionalizeSearchET() {
-        searchET.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                searchBtn.setEnabled(searchET.getText().length() > 0);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
+                UserNeedSaveActivity.start(UserNeedAdActivity.this
+                        , mUserNeed.get_id(), mUserNeed.getSearchText());
             }
         });
     }
 
 
     public static void start(Context context, UserNeed userNeed) {
-        Intent intent = new Intent(context, UserNeedActivity.class);
+        Intent intent = new Intent(context, UserNeedAdActivity.class);
         intent.putExtra(USER_NEED, userNeed);
         context.startActivity(intent);
     }
 
 
     public static void start(Context context) {
-        context.startActivity(new Intent(context, UserNeedActivity.class));
+        context.startActivity(new Intent(context, UserNeedAdActivity.class));
     }
 
     private static class PagerAdapter extends FragmentPagerAdapter {
 
         private Context mContext;
 
-        private String TAB_TITLES[] = new String[]{"PROFILS TROUVES", "POKES RECUES"};
+        private String TAB_TITLES[] = new String[]{"DISPONIBLES NOW", "POKES RECUES"};
 
         public PagerAdapter(FragmentManager fm, Context context) {
             super(fm);

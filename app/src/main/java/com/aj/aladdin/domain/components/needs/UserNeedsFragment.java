@@ -6,13 +6,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.db.colls.NEEDS;
@@ -62,7 +58,7 @@ public class UserNeedsFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UserNeedActivity.start(getContext());
+                UserNeedNewSearchActivity.start(getContext());
             }
         });
 
@@ -105,7 +101,7 @@ public class UserNeedsFragment extends Fragment {
 
             @Override
             public void onClick(RecyclerView.ViewHolder viewHolder, int position) {
-                UserNeedActivity.start(getContext()
+                UserNeedAdActivity.start(getContext()
                         , ((UserNeedsRecyclerAdapter.ViewHolder) viewHolder).getUserNeed());
             }
 
