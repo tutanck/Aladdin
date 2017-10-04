@@ -90,7 +90,7 @@
         app:rippleColor="@android:color/transparent"
         android:backgroundTint="@android:color/transparent"
         android:elevation="8dp"
-        android:src="@drawable/ic_mode_edit_24dp"
+        android:src="@drawable/ic_done_24dp"
         app:borderWidth="0dp"
         app:pressedTranslationZ="6dp" />
 
