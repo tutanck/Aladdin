@@ -107,7 +107,7 @@ public class FormField extends Fragment {
     }
 
     public void open() {
-        if (isOpen) return;
+        if (isOpen) return; //!important : if the field is already open, reopen it could override the field content
         etContent.setText(tvContent.getText());
         etContent.setVisibility(View.VISIBLE);
         tvContent.setVisibility(View.GONE);
