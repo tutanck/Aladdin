@@ -1,4 +1,4 @@
-package com.aj.aladdin.domain.components.needs;
+package com.aj.aladdin.domain.components.needs.main;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import com.aj.aladdin.R;
 import com.aj.aladdin.db.colls.NEEDS;
 import com.aj.aladdin.db.colls.itf.Coll;
+import com.aj.aladdin.domain.components.needs.UserNeedAdActivity;
+import com.aj.aladdin.domain.components.needs.UserNeedNewSearchActivity;
 import com.aj.aladdin.main.A;
 import com.aj.aladdin.tools.components.others._Recycler;
 import com.aj.aladdin.tools.utils.__;

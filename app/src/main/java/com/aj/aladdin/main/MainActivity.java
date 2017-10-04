@@ -13,7 +13,7 @@ import android.os.Bundle;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.domain.components.messages.ConverstationsFragment;
-import com.aj.aladdin.domain.components.needs.UserNeedsFragment;
+import com.aj.aladdin.domain.components.needs.main.UserNeedsFragment;
 import com.aj.aladdin.domain.components.profile.ProfileFragment;
 import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 

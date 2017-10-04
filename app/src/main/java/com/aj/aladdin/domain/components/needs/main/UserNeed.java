@@ -1,4 +1,4 @@
-package com.aj.aladdin.domain.components.needs;
+package com.aj.aladdin.domain.components.needs.main;
 
 import java.io.Serializable;
 
@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by joan on 21/09/2017.
  */
 
-class UserNeed implements Serializable {
+public class UserNeed implements Serializable {
 
     private String _id;
     private String title;
@@ -26,15 +26,15 @@ class UserNeed implements Serializable {
     }
 
 
-    String get_id() {
+    public String get_id() {
         return _id;
     }
 
-    String getTitle() {
+    public String getTitle() {
         return title;
     }
 
-    boolean isActive() {
+    public boolean isActive() {
         return active;
     }
 

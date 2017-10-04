@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Switch;
 
 import com.aj.aladdin.R;
@@ -37,15 +38,12 @@ import java.util.Map;
 public class UserNeedSaveActivity extends AppCompatActivity implements FormField.Listener {
 
     private final static String _ID = "_ID";
-    private final static String SEARCH_TEXT = "SEARCH_TEXT";
 
     private String _id = null;
 
     private boolean isFormOpen = false;
 
     private Map<String, FormField> formFields = new HashMap<>();
-
-    ArrayList<FormField> adFormFields = new ArrayList<>();
 
     private JSONObject formParams;
 
@@ -84,9 +82,6 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
                             .add(R.id.need_form_layout, formField, key)
                             .commit();
 
-                    if (i > 1)
-                        adFormFields.add(formField);
-
                     formFields.put(key, formField);
                 }
 
@@ -95,14 +90,13 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
             }
 
         needSwitch = (Switch) findViewById(R.id.need_switch);
-        needSwitch.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        stretchForm(true);
-                    }
-                }
-        );
+        needSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //// TODO: 04/10/2017 on/off ad
+            }
+        });
+
 
         fab = (FloatingActionButton) findViewById(R.id.fab_save_need);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -110,7 +104,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
             public void onClick(View view) {
                 if (!isFormOpen)
                     open();
-                else if (validState(view))
+                else if (validState())
                     NEEDS.saveNeed(_id, ((A) getApplication()).getUser_id()
                             , needSwitch.isChecked(), formFields, new UIAck(UserNeedSaveActivity.this) {
                                 @Override
@@ -133,44 +127,14 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
     @Override
     public void onFormFieldCreated(int id, FormField formField) {
         formField.setText("");
-
-        if (id == 0)
-            formField.setText(getIntent().getStringExtra(SEARCH_TEXT));
-
-        if (id > 1)
-            getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                    .hide(formField)
-                    .commit();
-    }
-
-
-    private void stretchForm(boolean fromUser) {
-        if (needSwitch.isChecked()) {
-            if (fromUser) open();
-            for (FormField ff : adFormFields)
-                getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                        .show(ff)
-                        .commit();
-        } else {
-            if (fromUser) close();
-            for (FormField ff : adFormFields)
-                getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                        .hide(ff)
-                        .commit();
-            NEEDS.deactivateNeed(_id, new VoidBAck(this));
-        }
     }
 
 
     public static void start(Context context, String _id, String searchText) {
         Intent intent = new Intent(context, UserNeedSaveActivity.class);
         intent.putExtra(_ID, _id);
-        intent.putExtra(SEARCH_TEXT, searchText);
         context.startActivity(intent);
-        //((Activity)context).finish();
+        if (_id == null) ((Activity) context).finish();
     }
 
 
@@ -178,7 +142,10 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
     protected void onStart() {
         super.onStart();
 
-        if (_id != null) {
+        if (_id == null) {
+            needSwitch.setChecked(true);
+            open();
+        } else {
             fab.setVisibility(View.GONE);
             progressBarFragment.show();
             NEEDS.loadNeed(_id, new UIAck(UserNeedSaveActivity.this) {
@@ -190,7 +157,6 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
                         for (String key : formFields.keySet())
                             formFields.get(key).getTvContent().setText(need.getString(key));
                         needSwitch.setChecked(need.getBoolean("active"));
-                        stretchForm(false);
                     } catch (JSONException e) {
                         __.fatal(e);
                     }
@@ -199,18 +165,6 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
                 }
             });
         }
-    }
-
-
-    private boolean validState(View view) {
-        if (TextUtils.isEmpty(formFields.get("title").getEtContent().getText())) {
-            __.showShortSnack(view, "Le titre doit être renseigné pour enregistrer le besoin");
-            return false;
-        } else if (needSwitch.isChecked() && TextUtils.isEmpty(formFields.get("description").getEtContent().getText())) {
-            __.showShortSnack(view, "La description doit être renseignée pour être contacté");
-            return false;
-        }
-        return true;
     }
 
 
@@ -227,6 +181,23 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
             formFields.get(key).close();
         fab.setImageResource(R.drawable.ic_mode_edit_24dp);
         isFormOpen = false;
+    }
+
+
+    private boolean validState() {
+        EditText titleET = formFields.get("title").getEtContent();
+        EditText descriptionET = formFields.get("description").getEtContent();
+        if (TextUtils.isEmpty(titleET.getText())) {
+            titleET.setError("Le titre doit être renseigné !");
+            return false;
+        }
+        titleET.setError(null);
+        if (TextUtils.isEmpty(descriptionET.getText())) {
+            descriptionET.setError("La description doit être renseignée !");
+            return false;
+        }
+        descriptionET.setError(null);
+        return true;
     }
 
 

@@ -1,4 +1,4 @@
-package com.aj.aladdin.domain.components.needs;
+package com.aj.aladdin.domain.components.needs.main;
 
 import android.app.Activity;
 import android.content.Context;
