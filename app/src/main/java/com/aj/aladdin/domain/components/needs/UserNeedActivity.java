@@ -68,7 +68,8 @@ public class UserNeedActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(searchText))
                     __.showShortSnack(view, "Impossible de sauvegarder une recherche vide!");
                 else //send old need's _id but new searchText
-                    UserNeedSaveActivity.start(UserNeedActivity.this, mUserNeed.get_id(), searchText);
+                    UserNeedSaveActivity.start(UserNeedActivity.this
+                            , mUserNeed == null ? null : mUserNeed.get_id(), searchText);
             }
         });
 

@@ -1,5 +1,6 @@
 package com.aj.aladdin.domain.components.needs;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -114,21 +115,14 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
                             , needSwitch.isChecked(), formFields, new UIAck(UserNeedSaveActivity.this) {
                                 @Override
                                 protected void onRes(Object res, JSONObject ctx) {
-
-                                    JSONArray jar = (JSONArray) res;
-
-                                    if (jar.length() != 1)
-                                        __.fatal("Inconsistent database");
-
-                                    try {
-                                        JSONObject need = jar.getJSONObject(0);
-                                        _id = need.getString(Coll._idKey);
+                                    if (_id == null) try {
+                                        _id = ((JSONObject) res).getString(Coll._idKey);
                                     } catch (JSONException e) {
                                         __.fatal(e);
                                     }
-
                                     close();
                                     __.showShortToast(UserNeedSaveActivity.this, "Recherche enregistrée");
+                                    finish();
                                 }
                             });
             }
@@ -176,6 +170,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
         intent.putExtra(_ID, _id);
         intent.putExtra(SEARCH_TEXT, searchText);
         context.startActivity(intent);
+        //((Activity)context).finish();
     }
 
 

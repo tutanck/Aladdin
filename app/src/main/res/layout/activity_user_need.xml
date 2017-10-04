@@ -35,7 +35,7 @@
                     android:inputType="text"
                     android:text=""
                     android:textColor="@color/WhiteSmoke"
-                    android:hint="Que cherchez vous ? (Ex: dev Java )"/>
+                    android:hint="Que recherchez vous ? (Ex: developpeur web )"/>
             </android.support.design.widget.TextInputLayout>
 
             <ImageButton
