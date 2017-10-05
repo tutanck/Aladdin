@@ -12,7 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.aj.aladdin.R;
-import com.aj.aladdin.domain.components.messages.ConverstationsFragment;
+import com.aj.aladdin.domain.components.messages.ConversationsFragment;
 import com.aj.aladdin.domain.components.needs.main.UserNeedsFragment;
 import com.aj.aladdin.domain.components.profile.ProfileFragment;
 import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 case 2:
                     return UserNeedsFragment.newInstance();
                 case 3:
-                    return ConverstationsFragment.newInstance();
+                    return ConversationsFragment.newInstance();
                 default:
                     throw new RuntimeException("Unknown top level tab menu");
             }

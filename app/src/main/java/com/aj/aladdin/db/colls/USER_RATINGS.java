@@ -45,7 +45,7 @@ public class USER_RATINGS implements Coll {
 
     public static void computeUserRating(String userID, _Ack ack) {
         try {
-            IO.socket.emit("getUserRating", __.jo().put("userID", userID), ack);
+            IO.socket.emit("getUserRating", __.jo().put("userID", userID), null, ack);
         } catch (JSONException e) {
             __.fatal(e);
         }

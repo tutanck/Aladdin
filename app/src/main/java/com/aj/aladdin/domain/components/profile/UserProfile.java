@@ -13,7 +13,7 @@ public class UserProfile {
     private int reputation;
     private boolean online;
 
-    UserProfile(
+    public UserProfile(
             String _id
             , String username
             , int reputation

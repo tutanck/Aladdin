@@ -1,5 +1,7 @@
 package com.aj.aladdin.db.colls;
 
+import android.util.Log;
+
 import com.aj.aladdin.db.IO;
 import com.aj.aladdin.db.colls.itf.Coll;
 import com.aj.aladdin.tools.regina.Regina;
@@ -55,5 +57,13 @@ public class MESSAGES implements Coll {
     }
 
 
+
+    public static void computeUserContacts(String userID, _Ack ack) {
+        try {
+            IO.socket.emit("getUserContacts", __.jo().put("userID", userID), null, ack);
+        } catch (JSONException e) {
+            __.fatal(e);
+        }
+    }
 
 }
