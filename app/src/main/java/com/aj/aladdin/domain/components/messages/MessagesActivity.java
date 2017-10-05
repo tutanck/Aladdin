@@ -28,13 +28,13 @@ import java.util.List;
 
 public class MessagesActivity extends AppCompatActivity {
 
-    private final static String coll = "MESSAGES";
+    private final static String CONTACT_ID = "CONTACT_ID";
 
     private List<Message> messageList = new ArrayList<>();
 
-    private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLinearLayoutManager;
     private MessageListAdapter mAdapter;
+
+    private String contactID = null;
 
 
     @Override
@@ -42,12 +42,13 @@ public class MessagesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.reyclerview_message_list);
-        mLinearLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.reyclerview_message_list);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mAdapter = new MessageListAdapter(this, messageList);
         mRecyclerView.setAdapter(mAdapter);
+
+        contactID = getIntent().getStringExtra(CONTACT_ID);
 
         EditText chatboxET = (EditText) findViewById(R.id.chatbox_et);
         Button chatboxSendBtn = (Button) findViewById(R.id.chatbox_send_btn);
@@ -66,8 +67,10 @@ public class MessagesActivity extends AppCompatActivity {
 
     }
 
-    public static void start(Context context) {
-        context.startActivity(new Intent(context, MessagesActivity.class));
+    public static void start(Context context, String contactID) {
+        Intent intent = new Intent(context, MessagesActivity.class);
+        intent.putExtra(CONTACT_ID, contactID);
+        context.startActivity(intent);
     }
 
 
@@ -79,7 +82,7 @@ public class MessagesActivity extends AppCompatActivity {
 
 
     private void sendMessage(String text) {
-        MESSAGES.sendMessage(((A) getApplication()).getUser_id(), "todo", text, new UIAck(this) {
+        MESSAGES.sendMessage(((A) getApplication()).getUser_id(), contactID, text, new UIAck(this) {
             @Override
             protected void onRes(Object res, JSONObject ctx) {
                 loadMessages();
@@ -89,23 +92,25 @@ public class MessagesActivity extends AppCompatActivity {
 
 
     private void loadMessages() {
-        MESSAGES.loadMessages(((A) getApplication()).getUser_id(), "todo", new UIAck(this) {
-            @Override
-            protected void onRes(Object res, JSONObject ctx) {
-                try {
-                    JSONArray jar = (JSONArray) res;
-                    messageList.clear();
-                    for (int i = 0; i < jar.length(); i++) {
-                        JSONObject jo = jar.getJSONObject(i);
-                        messageList.add(new Message(jo.getString(MESSAGES.messageKey), jo.getString(MESSAGES.senderIDKey), jo.getString(Coll.dateKey)));
+        MESSAGES.loadMessages(((A) getApplication()).getUser_id()
+                , contactID
+                , new UIAck(this) {
+                    @Override
+                    protected void onRes(Object res, JSONObject ctx) {
+                        try {
+                            JSONArray jar = (JSONArray) res;
+                            messageList.clear();
+                            for (int i = 0; i < jar.length(); i++) {
+                                JSONObject jo = jar.getJSONObject(i);
+                                messageList.add(new Message(jo.getString(MESSAGES.messageKey), jo.getString(MESSAGES.senderIDKey), jo.getString(Coll.dateKey)));
+                            }
+                            Log.i("messageList", messageList.toString());
+                            mAdapter.notifyDataSetChanged();
+                        } catch (JSONException e) {
+                            __.fatal(e); //SNO : if a doc exist the Message field should exist too
+                        }
                     }
-                    Log.i("messageList", messageList.toString());
-                    mAdapter.notifyDataSetChanged();
-                } catch (JSONException e) {
-                    __.fatal(e); //SNO : if a doc exist the Message field should exist too
-                }
-            }
-        });
+                });
     }
 
 }

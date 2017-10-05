@@ -80,10 +80,10 @@ public class UserNeedsRecyclerAdapter extends RecyclerView.Adapter<UserNeedsRecy
 
             mTitleTextView.setText(userNeed.getTitle());
             mSearchTextView.setText(userNeed.getSearchText());
-            int color = userNeed.isActive() ? R.color.Lime : R.color.Red;
             fabNeedStatus.setBackgroundTintList(
                     ColorStateList.valueOf
-                            (ContextCompat.getColor(context, color))
+                            (ContextCompat.getColor
+                                    (context, userNeed.isActive() ? R.color.Lime : R.color.Red))
             );
             //// TODO: 24/09/2017 nb pokes
         }
