@@ -2,11 +2,13 @@ package com.aj.aladdin.domain.components.profile;
 
 import android.content.Context;
 
+import java.io.Serializable;
+
 /**
  * Created by joan on 21/09/2017.
  */
 
-public class UserProfile {
+public class UserProfile implements Serializable{
 
     private String _id;
     private String username;

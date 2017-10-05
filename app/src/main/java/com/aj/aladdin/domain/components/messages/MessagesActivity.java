@@ -15,6 +15,7 @@ import android.widget.EditText;
 import com.aj.aladdin.R;
 import com.aj.aladdin.db.colls.MESSAGES;
 import com.aj.aladdin.db.colls.itf.Coll;
+import com.aj.aladdin.domain.components.profile.UserProfile;
 import com.aj.aladdin.main.A;
 import com.aj.aladdin.tools.utils.__;
 import com.aj.aladdin.tools.regina.ack.UIAck;
@@ -28,13 +29,13 @@ import java.util.List;
 
 public class MessagesActivity extends AppCompatActivity {
 
-    private final static String CONTACT_ID = "CONTACT_ID";
+    private final static String CONTACT = "CONTACT";
 
     private List<Message> messageList = new ArrayList<>();
 
     private MessageListAdapter mAdapter;
 
-    private String contactID = null;
+    private UserProfile contact = null;
 
 
     @Override
@@ -48,7 +49,7 @@ public class MessagesActivity extends AppCompatActivity {
         mAdapter = new MessageListAdapter(this, messageList);
         mRecyclerView.setAdapter(mAdapter);
 
-        contactID = getIntent().getStringExtra(CONTACT_ID);
+        contact = (UserProfile) getIntent().getSerializableExtra(CONTACT);
 
         EditText chatboxET = (EditText) findViewById(R.id.chatbox_et);
         Button chatboxSendBtn = (Button) findViewById(R.id.chatbox_send_btn);
@@ -67,9 +68,9 @@ public class MessagesActivity extends AppCompatActivity {
 
     }
 
-    public static void start(Context context, String contactID) {
+    public static void start(Context context, UserProfile contact) {
         Intent intent = new Intent(context, MessagesActivity.class);
-        intent.putExtra(CONTACT_ID, contactID);
+        intent.putExtra(CONTACT, contact);
         context.startActivity(intent);
     }
 
@@ -82,18 +83,19 @@ public class MessagesActivity extends AppCompatActivity {
 
 
     private void sendMessage(String text) {
-        MESSAGES.sendMessage(((A) getApplication()).getUser_id(), contactID, text, new UIAck(this) {
-            @Override
-            protected void onRes(Object res, JSONObject ctx) {
-                loadMessages();
-            }
-        });
+        MESSAGES.sendMessage(((A) getApplication()).getUser_id()
+                , contact.get_id(), text, new UIAck(this) {
+                    @Override
+                    protected void onRes(Object res, JSONObject ctx) {
+                        loadMessages();
+                    }
+                });
     }
 
 
     private void loadMessages() {
         MESSAGES.loadMessages(((A) getApplication()).getUser_id()
-                , contactID
+                , contact.get_id()
                 , new UIAck(this) {
                     @Override
                     protected void onRes(Object res, JSONObject ctx) {

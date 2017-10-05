@@ -189,7 +189,7 @@ public class ProfileFragment extends Fragment {
             fabContact.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    MessagesActivity.start(getContext(),"todo");
+                    MessagesActivity.start(getContext(),null);//// TODO: 05/10/2017  null
                 }
             });
         else fabContact.setVisibility(View.GONE);

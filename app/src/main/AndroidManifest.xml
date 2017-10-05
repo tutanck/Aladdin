@@ -44,8 +44,7 @@
         <activity
             android:name=".domain.components.messages.MessagesActivity"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_messages"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_messages"/>
 
         <activity
             android:name=".welcome.SignupActivity"
