@@ -35,7 +35,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     // Determines the appropriate ViewType according to the sender of the message.
     @Override
     public int getItemViewType(int position) {
-        if (mMessageList.get(position).getSenderID().equals(((A)mContext.getApplication()).getUser_id()))
+        if (mMessageList.get(position).getSenderID().equals(((A) mContext.getApplication()).getUser_id()))
             return VIEW_TYPE_MESSAGE_SENT;
         else
             return VIEW_TYPE_MESSAGE_RECEIVED;
@@ -70,8 +70,8 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
         public SentMessageHolder(View itemView) {
             super(itemView);
-            messageText = (TextView) itemView.findViewById(R.id.text_message_body);
-            timeText = (TextView) itemView.findViewById(R.id.text_message_time);
+            messageText = itemView.findViewById(R.id.text_message_body);
+            timeText = itemView.findViewById(R.id.text_message_time);
         }
 
         void bind(Message message) {
@@ -82,21 +82,19 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
 
     public class ReceivedMessageHolder extends RecyclerView.ViewHolder {
-        TextView messageText, timeText, nameText;
+        TextView messageText, timeText;
         ImageView profileImage;
 
         public ReceivedMessageHolder(View itemView) {
             super(itemView);
-            messageText = (TextView) itemView.findViewById(R.id.text_message_body);
-            timeText = (TextView) itemView.findViewById(R.id.text_message_time);
-            nameText = (TextView) itemView.findViewById(R.id.text_message_name);
-            profileImage = (ImageView) itemView.findViewById(R.id.image_message_profile);
+            messageText = itemView.findViewById(R.id.text_message_body);
+            timeText = itemView.findViewById(R.id.text_message_time);
+            profileImage = itemView.findViewById(R.id.image_message_profile);
         }
 
         void bind(Message message) {
             messageText.setText(message.getMessage());
             timeText.setText(message.getCreatedAt());
-            nameText.setText(message.getSenderID());
 
             // Insert the profile image from the URL into the ImageView.
             //_DateUtils.displayRoundImageFromUrl(mContext, message.getSender().getProfileUrl(), profileImage); // TODO: 29/09/2017
