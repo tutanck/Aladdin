@@ -51,6 +51,12 @@ public class MessagesActivity extends AppCompatActivity {
 
         contact = (UserProfile) getIntent().getSerializableExtra(CONTACT);
 
+        getSupportActionBar().setTitle(contact.getUsername());
+
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_person_24dp);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
         EditText chatboxET = (EditText) findViewById(R.id.chatbox_et);
         Button chatboxSendBtn = (Button) findViewById(R.id.chatbox_send_btn);
 

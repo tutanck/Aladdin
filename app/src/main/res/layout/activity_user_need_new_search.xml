@@ -45,7 +45,7 @@
                 android:layout_gravity="right|bottom"
                 android:layout_marginBottom="8dp"
                 android:layout_marginRight="4dp"
-                android:background="@drawable/rounded_rectangle_colored"
+                android:background="@drawable/rounded_rectangle_1"
                 android:backgroundTint="@color/Gold"
                 android:elevation="4dp"
                 android:enabled="false"
