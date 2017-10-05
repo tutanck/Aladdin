@@ -37,8 +37,8 @@
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab_need_status"
-                android:layout_width="8dp"
-                android:layout_height="8dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/medium"
                 android:clickable="false"
