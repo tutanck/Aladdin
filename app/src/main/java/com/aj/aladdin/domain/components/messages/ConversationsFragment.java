@@ -4,17 +4,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.db.colls.MESSAGES;
-import com.aj.aladdin.db.colls.NEEDS;
 import com.aj.aladdin.db.colls.PROFILES;
 import com.aj.aladdin.db.colls.itf.Coll;
-import com.aj.aladdin.domain.components.needs.main.UserNeed;
 import com.aj.aladdin.domain.components.profile.UserProfile;
 import com.aj.aladdin.domain.components.profile.UserProfilesRecyclerAdapter;
 import com.aj.aladdin.main.A;
@@ -66,7 +63,7 @@ public class ConversationsFragment extends Fragment {
 
 
     private void loadContacts() {
-        MESSAGES.computeUserContacts(((A) getActivity().getApplication()).getUser_id()
+        MESSAGES.computeUserContacts(A.u_id(getActivity())
                 , new UIAck(getActivity()) {
                     @Override
                     protected void onRes(Object res, JSONObject ctx) {

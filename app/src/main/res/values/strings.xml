@@ -28,4 +28,5 @@
     <string name="lbl_signin">Connexion</string>
     <string name="lbl_signup">Inscription</string>
     <string name="forgot_password_msg">Entrez votre email d\'inscription pour recevoir les instructions de réinitialisation de votre mot de passe</string>
+    <string name="title_activity_uther_profile">UtherProfileActivity</string>
 </resources>

@@ -35,7 +35,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     // Determines the appropriate ViewType according to the sender of the message.
     @Override
     public int getItemViewType(int position) {
-        if (mMessageList.get(position).getSenderID().equals(((A) mContext.getApplication()).getUser_id()))
+        if (mMessageList.get(position).getSenderID().equals(A.u_id(mContext)))
             return VIEW_TYPE_MESSAGE_SENT;
         else
             return VIEW_TYPE_MESSAGE_RECEIVED;

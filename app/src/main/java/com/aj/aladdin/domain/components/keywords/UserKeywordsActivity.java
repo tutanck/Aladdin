@@ -1,5 +1,7 @@
 package com.aj.aladdin.domain.components.keywords;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -49,7 +51,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.keywords_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        mAdapter = new UserKeywordsRecyclerAdapter(UserKeywordsActivity.this,mUserKeywords);
+        mAdapter = new UserKeywordsRecyclerAdapter(UserKeywordsActivity.this, mUserKeywords);
         mRecyclerView.setAdapter(mAdapter);
 
         functionalizeETKeyword();
@@ -57,6 +59,10 @@ public class UserKeywordsActivity extends AppCompatActivity {
         setRecyclerViewItemTouchListener();
     }
 
+
+    public static void start(Context context) {
+        context.startActivity(new Intent(context, UserKeywordsActivity.class));
+    }
 
     @Override
     protected void onStart() {
@@ -66,7 +72,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
 
 
     private void loadKeywords() {
-        USER_KEYWORDS.loadUserKeywords(((A) getApplication()).getUser_id(), new UIAck(this) {
+        USER_KEYWORDS.loadUserKeywords(A.u_id(this), new UIAck(this) {
             @Override
             protected void onRes(Object res, JSONObject ctx) {
                 try {
@@ -90,7 +96,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
 
     void saveKeyword(String keyword, boolean active, boolean deleted) {
         if (isKeyword(keyword))
-            USER_KEYWORDS.saveUserKeyword(keyword, ((A) getApplication()).getUser_id(), active, deleted,
+            USER_KEYWORDS.saveUserKeyword(keyword, A.u_id(this), active, deleted,
                     new UIAck(this) {
                         @Override
                         protected void onRes(Object res, JSONObject ctx) {

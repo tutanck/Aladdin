@@ -26,7 +26,7 @@ public class SplashActivity extends Activity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (((A)getApplication()).getUser_id() != null) //// TODO: 03/10/2017 check what todo if auth current user is not null
+                if (A.u_id(SplashActivity.this) != null) //// TODO: 03/10/2017 check what todo if auth current user is not null
                     MainActivity.start(SplashActivity.this);
                 else
                     LoginActivity.start(SplashActivity.this);

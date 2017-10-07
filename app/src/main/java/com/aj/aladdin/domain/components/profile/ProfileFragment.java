@@ -40,9 +40,11 @@ public class ProfileFragment extends Fragment {
 
     private static final String EDITABLE = "EDITABLE";
 
+    private final static String USER_ID = "USER_ID";
+
     private boolean isEditable = false;
 
-    private String _id = null;
+    private String user_id = null;
 
     private JSONObject formParams;
 
@@ -51,10 +53,12 @@ public class ProfileFragment extends Fragment {
     private RadioGroup userTypeRG;
 
     public static ProfileFragment newInstance(
+            String user_id,
             boolean editable
     ) {
         Bundle args = new Bundle();
         args.putBoolean(EDITABLE, editable);
+        args.putString(USER_ID, user_id);
         ProfileFragment fragment = new ProfileFragment();
         fragment.setArguments(args);
         return fragment;
@@ -68,10 +72,9 @@ public class ProfileFragment extends Fragment {
             , Bundle savedInstanceState
     ) {
 
-        _id = ((A) getActivity().getApplication()).getUser_id();
-
         final Bundle args = getArguments();
 
+        user_id = args.getString(USER_ID);
         isEditable = args.getBoolean(EDITABLE);
 
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
@@ -79,7 +82,7 @@ public class ProfileFragment extends Fragment {
 
         RatingBar userRating = view.findViewById(R.id.user_rating);
 
-        USER_RATINGS.computeUserRating(_id, new UIAck(getActivity()) {
+        USER_RATINGS.computeUserRating(user_id, new UIAck(getActivity()) {
             @Override
             protected void onRes(Object res, JSONObject ctx) {
                 JSONObject ratingDoc = ((JSONArray) res).optJSONObject(0);
@@ -96,7 +99,7 @@ public class ProfileFragment extends Fragment {
 
         if (!isEditable) {
             ratingControl.setIsIndicator(false);
-            USER_RATINGS.getUserRating(_id, "todo", new UIAck(getActivity()) {
+            USER_RATINGS.getUserRating(A.u_id(getActivity()), user_id, new UIAck(getActivity()) {
                 @Override
                 protected void onRes(Object res, JSONObject ctx) {
                     JSONObject ratingDoc = ((JSONArray) res).optJSONObject(0);
@@ -116,7 +119,10 @@ public class ProfileFragment extends Fragment {
                                 , boolean fromUser
                         ) {
                             if (fromUser)
-                                USER_RATINGS.setUtherRating(rating, _id, "todo", new VoidBAck(getActivity()));
+                                USER_RATINGS.setUtherRating(rating
+                                        , A.u_id(getActivity())
+                                        , user_id, new VoidBAck(getActivity())
+                                );
                         }
                     }
             );
@@ -138,7 +144,7 @@ public class ProfileFragment extends Fragment {
                         int radioButtonID = userTypeRG.getCheckedRadioButtonId();
                         RadioButton radioButton = userTypeRG.findViewById(radioButtonID);
                         int index = userTypeRG.indexOfChild(radioButton);
-                        PROFILES.setField(_id, PROFILES.typeKey, index, new VoidBAck(getActivity()));
+                        PROFILES.setField(user_id, PROFILES.typeKey, index, new VoidBAck(getActivity()));
                     }
                 });
             }
@@ -149,14 +155,14 @@ public class ProfileFragment extends Fragment {
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
 
                 fragmentTransaction.add(R.id.profile_image_layout, ImageFragment.newInstance(
-                        _id, isEditable), "profile_image");
+                        user_id, isEditable), "profile_image");
 
                 for (int i = 0; i < orderedFieldsKeys.length(); i++) {
                     String key = orderedFieldsKeys.getString(i);
                     JSONObject fieldParam = formParams.getJSONObject(key);
 
                     IDKeyFormField formField = IDKeyFormField.newInstance
-                            (i, _id, fieldParam.getString("label"), key
+                            (i, user_id, fieldParam.getString("label"), key
                                     , FormFieldKindTranslator.tr(fieldParam.getInt("kind")), isEditable);
 
                     fragmentTransaction.add(R.id.form_layout, formField, key);
@@ -175,11 +181,10 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent;
-                if (!isEditable) {
-                    intent = new Intent(getContext(), UtherKeywordsActivity.class);
-                    intent.putExtra(UtherKeywordsActivity.USER_ID, "todo"); //// TODO: 04/10/2017  deplaacer ds un start
-                } else intent = new Intent(getContext(), UserKeywordsActivity.class);
-                startActivity(intent);
+                if (!isEditable)
+                    UtherKeywordsActivity.start(getContext(), user_id);
+                else
+                    UserKeywordsActivity.start(getContext());
             }
         });
 
@@ -189,7 +194,8 @@ public class ProfileFragment extends Fragment {
             fabContact.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    MessagesActivity.start(getContext(),null);//// TODO: 05/10/2017  null
+                    MessagesActivity.start(getContext(), user_id
+                            ,formFields.get(PROFILES.usernameKey).getTvContent().getText().toString());
                 }
             });
         else fabContact.setVisibility(View.GONE);
@@ -202,7 +208,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        PROFILES.getProfile(_id, new UIAck(getActivity()) {
+        PROFILES.getProfile(user_id, new UIAck(getActivity()) {
             @Override
             protected void onRes(Object res, JSONObject ctx) {
                 JSONArray jar = (JSONArray) res;

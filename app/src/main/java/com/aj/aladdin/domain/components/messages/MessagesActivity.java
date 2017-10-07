@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,7 +16,7 @@ import android.widget.EditText;
 import com.aj.aladdin.R;
 import com.aj.aladdin.db.colls.MESSAGES;
 import com.aj.aladdin.db.colls.itf.Coll;
-import com.aj.aladdin.domain.components.profile.UserProfile;
+import com.aj.aladdin.domain.components.profile.UtherProfileActivity;
 import com.aj.aladdin.main.A;
 import com.aj.aladdin.tools.utils.__;
 import com.aj.aladdin.tools.regina.ack.UIAck;
@@ -29,13 +30,14 @@ import java.util.List;
 
 public class MessagesActivity extends AppCompatActivity {
 
-    private final static String CONTACT = "CONTACT";
+    private final static String CONTACT_ID = "CONTACT_ID";
+    private final static String CONTACT_NAME = "CONTACT_NAME";
 
     private List<Message> messageList = new ArrayList<>();
-
     private MessageListAdapter mAdapter;
 
-    private UserProfile contact = null;
+    private String contact_id = null;
+    private String contact_name = null;
 
 
     @Override
@@ -49,9 +51,10 @@ public class MessagesActivity extends AppCompatActivity {
         mAdapter = new MessageListAdapter(this, messageList);
         mRecyclerView.setAdapter(mAdapter);
 
-        contact = (UserProfile) getIntent().getSerializableExtra(CONTACT);
-
-        getSupportActionBar().setTitle(contact.getUsername());
+        contact_id = getIntent().getStringExtra(CONTACT_ID);
+        contact_name = getIntent().getStringExtra(CONTACT_NAME);
+        
+        getSupportActionBar().setTitle(contact_name);
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_person_24dp);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -74,9 +77,10 @@ public class MessagesActivity extends AppCompatActivity {
 
     }
 
-    public static void start(Context context, UserProfile contact) {
+    public static void start(Context context, String _id, String username) {
         Intent intent = new Intent(context, MessagesActivity.class);
-        intent.putExtra(CONTACT, contact);
+        intent.putExtra(CONTACT_ID, _id);
+        intent.putExtra(CONTACT_NAME, username);
         context.startActivity(intent);
     }
 
@@ -89,36 +93,43 @@ public class MessagesActivity extends AppCompatActivity {
 
 
     private void sendMessage(String text) {
-        MESSAGES.sendMessage(((A) getApplication()).getUser_id()
-                , contact.get_id(), text, new UIAck(this) {
-                    @Override
-                    protected void onRes(Object res, JSONObject ctx) {
-                        loadMessages();
-                    }
-                });
+        MESSAGES.sendMessage(A.u_id(this), contact_id, text, new UIAck(this) {
+            @Override
+            protected void onRes(Object res, JSONObject ctx) {
+                loadMessages();
+            }
+        });
     }
 
 
     private void loadMessages() {
-        MESSAGES.loadMessages(((A) getApplication()).getUser_id()
-                , contact.get_id()
-                , new UIAck(this) {
-                    @Override
-                    protected void onRes(Object res, JSONObject ctx) {
-                        try {
-                            JSONArray jar = (JSONArray) res;
-                            messageList.clear();
-                            for (int i = 0; i < jar.length(); i++) {
-                                JSONObject jo = jar.getJSONObject(i);
-                                messageList.add(new Message(jo.getString(MESSAGES.messageKey), jo.getString(MESSAGES.senderIDKey), jo.getString(Coll.dateKey)));
-                            }
-                            Log.i("messageList", messageList.toString());
-                            mAdapter.notifyDataSetChanged();
-                        } catch (JSONException e) {
-                            __.fatal(e); //SNO : if a doc exist the Message field should exist too
-                        }
+        MESSAGES.loadMessages(A.u_id(this), contact_id, new UIAck(this) {
+            @Override
+            protected void onRes(Object res, JSONObject ctx) {
+                try {
+                    JSONArray jar = (JSONArray) res;
+                    messageList.clear();
+                    for (int i = 0; i < jar.length(); i++) {
+                        JSONObject jo = jar.getJSONObject(i);
+                        messageList.add(new Message(jo.getString(MESSAGES.messageKey), jo.getString(MESSAGES.senderIDKey), jo.getString(Coll.dateKey)));
                     }
-                });
+                    Log.i("messageList", messageList.toString());
+                    mAdapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    __.fatal(e); //SNO : if a doc exist the Message field should exist too
+                }
+            }
+        });
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                UtherProfileActivity.start(this, contact_id);
+        }
+        return (super.onOptionsItemSelected(menuItem));
     }
 
 }

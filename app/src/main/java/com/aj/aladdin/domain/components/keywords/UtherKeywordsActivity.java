@@ -1,5 +1,7 @@
 package com.aj.aladdin.domain.components.keywords;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
@@ -7,6 +9,8 @@ import android.widget.ListView;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.db.colls.USER_KEYWORDS;
+import com.aj.aladdin.domain.components.profile.UserProfile;
+import com.aj.aladdin.domain.components.profile.UtherProfileActivity;
 import com.aj.aladdin.tools.regina.ack.UIAck;
 import com.aj.aladdin.tools.utils.__;
 
@@ -18,7 +22,7 @@ import java.util.ArrayList;
 
 public class UtherKeywordsActivity extends AppCompatActivity {
 
-    public final static String USER_ID = "USER_ID"; //// TODO: 04/10/2017  make private
+    private final static String USER_ID = "USER_ID";
 
     private ListView mListView;
     private ArrayAdapter adapter;
@@ -54,6 +58,13 @@ public class UtherKeywordsActivity extends AppCompatActivity {
 
                     }
                 });
+    }
+
+
+    public static void start(Context context, String user_id) {
+        Intent intent = new Intent(context, UtherKeywordsActivity.class);
+        intent.putExtra(USER_ID, user_id);
+        context.startActivity(intent);
     }
 
 }

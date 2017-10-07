@@ -24,14 +24,16 @@ import com.aj.aladdin.tools.utils.__;
 import com.google.firebase.auth.FirebaseAuth;
 
 
-
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
+    private static String user_id;
+
+
     public static ProgressBarFragment progressBarFragment; //// TODO: 02/10/2017  memory leaks
 
-     static void start(Activity context) {
+    static void start(Activity context) {
         context.startActivity(new Intent(context, MainActivity.class));
         context.finish();
     }
@@ -40,8 +42,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if(((A)getApplication()).getUser_id() == null)
+        if (A.u_id(this) == null)
             __.fatal("A::user_id is null");
+        else user_id = A.u_id(this);
+
     }
 
     @Override
@@ -86,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 case 0:
                     return PageFragment.newInstance(position + 1);
                 case 1:
-                    return ProfileFragment.newInstance(true);
+                    return ProfileFragment.newInstance(user_id, true);
                 case 2:
                     return UserNeedsFragment.newInstance();
                 case 3:

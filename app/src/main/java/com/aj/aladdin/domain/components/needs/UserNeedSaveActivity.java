@@ -3,7 +3,6 @@ package com.aj.aladdin.domain.components.needs;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -102,7 +101,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
             @Override
             public void onClick(View view) {
                 if (validState())
-                    NEEDS.saveNeed(_id, ((A) getApplication()).getUser_id()
+                    NEEDS.saveNeed(_id, A.u_id(UserNeedSaveActivity.this)
                             , needSwitch.isChecked(), formFields, new UIAck(UserNeedSaveActivity.this) {
                                 @Override
                                 protected void onRes(Object res, JSONObject ctx) {
