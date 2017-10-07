@@ -16,13 +16,12 @@ import org.json.JSONException;
 public class PROFILES implements Coll {
 
     public final static String coll = "PROFILES";
-    public final static String collTag = "#PROFILES/";
+    public final static String collTag = "#" + coll + "/";
 
     public final static String authIDKey = "authID";
     public final static String typeKey = "type";
     public final static String usernameKey = "username";
-    public final static String availKey = "avail";
-
+    public final static String availabilityKey = "availability";
 
 
     public static void setField(String _id, String key, Object val, _Ack ack) {
@@ -37,10 +36,10 @@ public class PROFILES implements Coll {
     }
 
 
-    public static void setStatus(String _id, int status, _Ack ack) {
+    public static void setAvailability(String _id, int status, _Ack ack) {
         try {
             IO.r.update(coll, __.jo().put(_idKey, _id)
-                    , __.jo().put("$set", __.jo().put(availKey, status))
+                    , __.jo().put("$set", __.jo().put(availabilityKey, status))
                     , __.jo()
                     , __.jo().put(
                             "tags", __.jar().put(
@@ -51,7 +50,19 @@ public class PROFILES implements Coll {
         } catch (Regina.NullRequiredParameterException | JSONException e) {
             __.fatal(e);
         }
+    }
 
+
+    public static void getAvailability(String _id, _Ack ack) {
+        try {
+            IO.r.find(coll
+                    , __.jo().put(_idKey, _id)
+                    , __.jo().put(availabilityKey, 1)
+                    , __.jo(), ack
+            );
+        } catch (Regina.NullRequiredParameterException | JSONException e) {
+            __.fatal(e);
+        }
     }
 
 

@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -37,6 +38,8 @@ import com.google.firebase.auth.FirebaseUser;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import io.socket.emitter.Emitter;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -67,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             IO.r.find(PROFILES.coll
                     , __.jo().put(PROFILES.authIDKey, authID)
-                    , __.jo().put(PROFILES.authIDKey, 1).put(PROFILES.availKey, 1)
+                    , __.jo().put(PROFILES.authIDKey, 1).put(PROFILES.availabilityKey, 1)
                     , __.jo(), new UIAck(context) {
                         @Override
                         protected void onRes(Object res, JSONObject ctx) {
@@ -80,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                                 JSONObject userJSON = userArray.getJSONObject(0);
                                 A.resetUser_id(context, userJSON.getString(Coll._idKey));
                                 Intent intent = new Intent(context, MainActivity.class);
-                                intent.putExtra(AVAILABILITY, userJSON.getInt(PROFILES.availKey));
+                                intent.putExtra(AVAILABILITY, userJSON.getInt(PROFILES.availabilityKey));
                                 context.startActivity(intent);
                                 context.finish();
                             } catch (JSONException e) {
@@ -89,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                             else try {
                                 IO.r.insert(PROFILES.coll
                                         , __.jo().put(PROFILES.authIDKey, authID)
-                                                .put(PROFILES.availKey, Avail.AVAILABLE)
+                                                .put(PROFILES.availabilityKey, Avail.AVAILABLE)
                                         , __.jo(), __.jo(), new UIAck(context) {
                                             @Override
                                             protected void onRes(Object res, JSONObject ctx) {
@@ -115,6 +118,30 @@ public class MainActivity extends AppCompatActivity {
         else
             user_id = A.user_id(this);
         mAuth.addAuthStateListener(authListener);
+        IO.socket.on(PROFILES.collTag + user_id, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                try {
+                    if (((JSONObject) args[1]).getInt("op") == 2) // update
+                        PROFILES.getAvailability(user_id, new UIAck(MainActivity.this) {
+                            @Override
+                            protected void onRes(Object res, JSONObject ctx) {
+                                JSONArray jar = ((JSONArray) res);
+                                if (jar.length() != 1)
+                                    __.fatal("MainActivity::onStart : multiple users with the same authID");
+                                else try {
+                                    availability = jar.getJSONObject(0).getInt(PROFILES.availabilityKey);
+                                    refreshAvailabilityColor();
+                                } catch (JSONException e) {
+                                    __.fatal(e);
+                                }
+                            }
+                        });
+                } catch (JSONException e) {
+                    __.fatal(e);
+                }
+            }
+        });
     }
 
     @Override
@@ -122,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         if (authListener != null)
             mAuth.removeAuthStateListener(authListener);
+        IO.socket.off(PROFILES.collTag + user_id);
     }
 
     @Override
@@ -139,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         availability = getIntent().getIntExtra(AVAILABILITY, Avail.AVAILABLE);
-        getSupportActionBar().setHomeAsUpIndicator(Avail.color(availability));
+        refreshAvailabilityColor();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -166,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case android.R.id.home:
-                PROFILES.setStatus(user_id, Avail.nextStatus(availability), new VoidBAck(this));
+                PROFILES.setAvailability(user_id, Avail.nextStatus(availability), new VoidBAck(this));
                 break;
 
             case R.id.action_settings:
@@ -221,6 +249,10 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_profile, menu);
         return true;
+    }
+
+    private void refreshAvailabilityColor() {
+        getSupportActionBar().setHomeAsUpIndicator(Avail.color(availability));
     }
 
 }
