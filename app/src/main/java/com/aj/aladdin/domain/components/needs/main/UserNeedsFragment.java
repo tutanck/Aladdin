@@ -71,7 +71,7 @@ public class UserNeedsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        NEEDS.loadNeeds(A.u_id(getActivity()), new UIAck(getActivity()) {
+        NEEDS.loadNeeds(A.user_id(getActivity()), new UIAck(getActivity()) {
             @Override
             protected void onRes(Object res, JSONObject ctx) {
                 reloadList(res, mUserNeeds, mAdapter, getContext());
@@ -110,7 +110,7 @@ public class UserNeedsFragment extends Fragment {
             @Override
             public void onLongClick(RecyclerView.ViewHolder viewHolder, int position) {
                 ((UserNeedsRecyclerAdapter.ViewHolder) viewHolder).deleteNeed(getActivity(),
-                        A.u_id(getActivity()), mUserNeeds, mAdapter);
+                        A.user_id(getActivity()), mUserNeeds, mAdapter);
             }
         }));
     }

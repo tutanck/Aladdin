@@ -72,7 +72,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
 
 
     private void loadKeywords() {
-        USER_KEYWORDS.loadUserKeywords(A.u_id(this), new UIAck(this) {
+        USER_KEYWORDS.loadUserKeywords(A.user_id(this), new UIAck(this) {
             @Override
             protected void onRes(Object res, JSONObject ctx) {
                 try {
@@ -96,7 +96,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
 
     void saveKeyword(String keyword, boolean active, boolean deleted) {
         if (isKeyword(keyword))
-            USER_KEYWORDS.saveUserKeyword(keyword, A.u_id(this), active, deleted,
+            USER_KEYWORDS.saveUserKeyword(keyword, A.user_id(this), active, deleted,
                     new UIAck(this) {
                         @Override
                         protected void onRes(Object res, JSONObject ctx) {

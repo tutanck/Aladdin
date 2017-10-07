@@ -101,7 +101,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
             @Override
             public void onClick(View view) {
                 if (validState())
-                    NEEDS.saveNeed(_id, A.u_id(UserNeedSaveActivity.this)
+                    NEEDS.saveNeed(_id, A.user_id(UserNeedSaveActivity.this)
                             , needSwitch.isChecked(), formFields, new UIAck(UserNeedSaveActivity.this) {
                                 @Override
                                 protected void onRes(Object res, JSONObject ctx) {

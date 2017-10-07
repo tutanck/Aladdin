@@ -51,7 +51,7 @@
             android:name=".welcome.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateVisible|adjustResize"></activity>
+            android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name=".main.SplashActivity"
             android:screenOrientation="portrait"
@@ -65,7 +65,7 @@
         <activity
             android:name=".domain.components.profile.UtherProfileActivity"
             android:label="@string/title_activity_uther_profile"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

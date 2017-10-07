@@ -63,36 +63,37 @@ public class ConversationsFragment extends Fragment {
 
 
     private void loadContacts() {
-        MESSAGES.computeUserContacts(A.u_id(getActivity())
+        MESSAGES.computeUserContacts(A.user_id(getActivity())
                 , new UIAck(getActivity()) {
                     @Override
                     protected void onRes(Object res, JSONObject ctx) {
-                        try {
-                            PROFILES.getProfiles(((JSONArray) res).getJSONObject(0).getJSONArray("idList")
-                                    , new UIAck(getActivity()) {
-                                        @Override
-                                        protected void onRes(Object res, JSONObject ctx) {
-                                            try {
-                                                JSONArray jar = (JSONArray) res;
-                                                mProfiles.clear();
-                                                for (int i = 0; i < jar.length(); i++) {
-                                                    JSONObject jo = jar.getJSONObject(i);
-                                                    mProfiles.add(new UserProfile(
-                                                            jo.getString(Coll._idKey), jo.getString(PROFILES.usernameKey)
-                                                            , 0, true) //// TODO: 05/10/2017 : 0, true
-                                                    );
-                                                }
-                                                mAdapter.notifyDataSetChanged();
-                                            } catch (JSONException e) {
-                                                __.fatal(e); //SNO : if a doc exist the Need field should exist too
-                                            }
+                        JSONArray jar = ((JSONArray) res);
+                        if (jar.length() > 1)
+                            __.fatal("loadContacts::MESSAGES.computeUserContacts::onRes : inconsistent result size. expected jar.length()==1");
 
+                        if (jar.length() == 1) try {
+                            PROFILES.getProfiles(jar.getJSONObject(0).getJSONArray("idList"), new UIAck(getActivity()) {
+                                @Override
+                                protected void onRes(Object res, JSONObject ctx) {
+                                    try {
+                                        JSONArray jar = (JSONArray) res;
+                                        mProfiles.clear();
+                                        for (int i = 0; i < jar.length(); i++) {
+                                            JSONObject jo = jar.getJSONObject(i);
+                                            mProfiles.add(new UserProfile(
+                                                    jo.getString(Coll._idKey), jo.getString(PROFILES.usernameKey)
+                                                    , 0, true) //// TODO: 05/10/2017 : 0, true
+                                            );
                                         }
-                                    });
+                                        mAdapter.notifyDataSetChanged();
+                                    } catch (JSONException e) {
+                                        __.fatal(e); //SNO : if a doc exist the Need field should exist too
+                                    }
+                                }
+                            });
                         } catch (JSONException e) {
                             __.fatal(e);
                         }
-
                     }
                 });
     }

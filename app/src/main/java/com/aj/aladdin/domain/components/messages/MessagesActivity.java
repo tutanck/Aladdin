@@ -53,7 +53,7 @@ public class MessagesActivity extends AppCompatActivity {
 
         contact_id = getIntent().getStringExtra(CONTACT_ID);
         contact_name = getIntent().getStringExtra(CONTACT_NAME);
-        
+
         getSupportActionBar().setTitle(contact_name);
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_person_24dp);
@@ -93,7 +93,7 @@ public class MessagesActivity extends AppCompatActivity {
 
 
     private void sendMessage(String text) {
-        MESSAGES.sendMessage(A.u_id(this), contact_id, text, new UIAck(this) {
+        MESSAGES.sendMessage(A.user_id(this), contact_id, text, new UIAck(this) {
             @Override
             protected void onRes(Object res, JSONObject ctx) {
                 loadMessages();
@@ -103,7 +103,7 @@ public class MessagesActivity extends AppCompatActivity {
 
 
     private void loadMessages() {
-        MESSAGES.loadMessages(A.u_id(this), contact_id, new UIAck(this) {
+        MESSAGES.loadMessages(A.user_id(this), contact_id, new UIAck(this) {
             @Override
             protected void onRes(Object res, JSONObject ctx) {
                 try {

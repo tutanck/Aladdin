@@ -13,6 +13,7 @@ import android.widget.EditText;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.main.A;
+import com.aj.aladdin.main.MainActivity;
 import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 import com.aj.aladdin.tools.utils.KeyboardServices;
 import com.aj.aladdin.tools.utils.__;
@@ -75,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (!validateForm(email, password)) return;
 
-                KeyboardServices.dismiss(LoginActivity.this,inputPassword);
+                KeyboardServices.dismiss(LoginActivity.this, inputPassword);
                 progressBarFragment.show();
                 auth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
@@ -85,8 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                                     progressBarFragment.hide();
                                     __.showShortToast(LoginActivity.this, getString(R.string.signin_auth_failed));
                                     Log.d("FirebaseAuth", "" + task.getException());//// TODO: 01/10/2017 check what exc and swow the right msg error
-                                } else
-                                    ((A)getApplication()).resetUser_id(LoginActivity.this,auth.getCurrentUser().getUid());
+                                } else MainActivity.start(LoginActivity.this);
                             }
                         });
             }

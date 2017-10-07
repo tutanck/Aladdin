@@ -8,6 +8,7 @@ import com.aj.aladdin.db.colls.itf.Coll;
 import com.aj.aladdin.tools.utils.__;
 import com.aj.aladdin.tools.regina.Regina;
 import com.aj.aladdin.tools.regina.ack.UIAck;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,50 +16,13 @@ import org.json.JSONObject;
 
 public class A extends Application {
 
-    public static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
+    private String user_id = null;
 
-    String user_id = null;
-
-    public static String u_id(Activity activity) {
-        return ((A)activity.getApplication()).user_id;
+    static void resetUser_id(Activity activity, String user_id) {
+        ((A) activity.getApplication()).user_id = user_id;
     }
 
-    public void resetUser_id(Activity caller, String authID) {
-        try {
-            IO.r.find("PROFILES"
-                    , __.jo().put("authID", authID)
-                    , __.jo().put("authID", 1), __.jo()
-                    , new UIAck(caller) {
-                        @Override
-                        protected void onRes(Object res, JSONObject ctx) {
-                            JSONArray userArray = ((JSONArray) res);
-
-                            if (userArray.length() > 1)
-                                __.fatal("MainActivity::onStart : multiple users with the same authID");
-
-                            if (userArray.length() == 1) try {
-                                user_id = userArray.getJSONObject(0).getString(Coll._idKey);
-                                MainActivity.start(caller);
-                            } catch (JSONException e) {
-                                __.fatal(e);
-                            }
-                            else try {
-                                IO.r.insert("PROFILES"
-                                        , __.jo().put("authID", authID)
-                                        , __.jo(), __.jo()
-                                        , new UIAck(caller) {
-                                            @Override
-                                            protected void onRes(Object res, JSONObject ctx) {
-                                                resetUser_id(caller, authID);
-                                            }
-                                        });
-                            } catch (Regina.NullRequiredParameterException | JSONException e) {
-                                __.fatal(e);
-                            }
-                        }
-                    });
-        } catch (Regina.NullRequiredParameterException | JSONException e) {
-            __.fatal(e);
-        }
+    public static String user_id(Activity activity) {
+        return ((A) activity.getApplication()).user_id;
     }
 }

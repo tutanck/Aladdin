@@ -99,7 +99,7 @@ public class ProfileFragment extends Fragment {
 
         if (!isEditable) {
             ratingControl.setIsIndicator(false);
-            USER_RATINGS.getUserRating(A.u_id(getActivity()), user_id, new UIAck(getActivity()) {
+            USER_RATINGS.getUserRating(A.user_id(getActivity()), user_id, new UIAck(getActivity()) {
                 @Override
                 protected void onRes(Object res, JSONObject ctx) {
                     JSONObject ratingDoc = ((JSONArray) res).optJSONObject(0);
@@ -120,7 +120,7 @@ public class ProfileFragment extends Fragment {
                         ) {
                             if (fromUser)
                                 USER_RATINGS.setUtherRating(rating
-                                        , A.u_id(getActivity())
+                                        , A.user_id(getActivity())
                                         , user_id, new VoidBAck(getActivity())
                                 );
                         }
