@@ -16,17 +16,19 @@ import android.view.MenuItem;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.db.IO;
+import com.aj.aladdin.db.colls.PROFILES;
 import com.aj.aladdin.db.colls.itf.Coll;
 import com.aj.aladdin.domain.components.messages.ConversationsFragment;
 import com.aj.aladdin.domain.components.needs.main.UserNeedsFragment;
 import com.aj.aladdin.domain.components.profile.ProfileFragment;
 import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 
-
 import com.aj.aladdin.tools.oths.PageFragment;
 
 import com.aj.aladdin.tools.regina.Regina;
 import com.aj.aladdin.tools.regina.ack.UIAck;
+import com.aj.aladdin.tools.regina.ack.VoidBAck;
+import com.aj.aladdin.tools.utils.Avail;
 import com.aj.aladdin.tools.utils.__;
 import com.aj.aladdin.welcome.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,6 +41,10 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String AVAILABILITY = "AVAILABILITY";
+
+    private int availability = Avail.OFFLINE;
+
     private FirebaseAuth.AuthStateListener authListener;
 
     private FirebaseAuth mAuth;
@@ -47,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public static ProgressBarFragment progressBarFragment; //// TODO: 02/10/2017  memory leaks
+
 
     public static void start(Activity context) {
 
@@ -58,8 +65,10 @@ public class MainActivity extends AppCompatActivity {
         String authID = currentUser.getUid();
 
         try {
-            IO.r.find("PROFILES", __.jo().put("authID", authID)
-                    , __.jo().put("authID", 1), __.jo(), new UIAck(context) {
+            IO.r.find(PROFILES.coll
+                    , __.jo().put(PROFILES.authIDKey, authID)
+                    , __.jo().put(PROFILES.authIDKey, 1).put(PROFILES.availKey, 1)
+                    , __.jo(), new UIAck(context) {
                         @Override
                         protected void onRes(Object res, JSONObject ctx) {
                             JSONArray userArray = ((JSONArray) res);
@@ -68,13 +77,19 @@ public class MainActivity extends AppCompatActivity {
                                 __.fatal("MainActivity::onStart : multiple users with the same authID");
 
                             if (userArray.length() == 1) try {
-                                A.resetUser_id(context, userArray.getJSONObject(0).getString(Coll._idKey));
-                                startActivity(context);
+                                JSONObject userJSON = userArray.getJSONObject(0);
+                                A.resetUser_id(context, userJSON.getString(Coll._idKey));
+                                Intent intent = new Intent(context, MainActivity.class);
+                                intent.putExtra(AVAILABILITY, userJSON.getInt(PROFILES.availKey));
+                                context.startActivity(intent);
+                                context.finish();
                             } catch (JSONException e) {
                                 __.fatal(e);
                             }
                             else try {
-                                IO.r.insert("PROFILES", __.jo().put("authID", authID)
+                                IO.r.insert(PROFILES.coll
+                                        , __.jo().put(PROFILES.authIDKey, authID)
+                                                .put(PROFILES.availKey, Avail.AVAILABLE)
                                         , __.jo(), __.jo(), new UIAck(context) {
                                             @Override
                                             protected void onRes(Object res, JSONObject ctx) {
@@ -89,12 +104,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (Regina.NullRequiredParameterException | JSONException e) {
             __.fatal(e);
         }
-    }
-
-
-    private static void startActivity(Activity context) {
-        context.startActivity(new Intent(context, MainActivity.class));
-        context.finish();
     }
 
 
@@ -129,6 +138,11 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        availability = getIntent().getIntExtra(AVAILABILITY, Avail.AVAILABLE);
+        getSupportActionBar().setHomeAsUpIndicator(Avail.color(availability));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
         setContentView(R.layout.activity_main);
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
@@ -145,6 +159,21 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
         progressBarFragment = (ProgressBarFragment) getSupportFragmentManager().findFragmentById(R.id.waiter_modal_fragment);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                PROFILES.setStatus(user_id, Avail.nextStatus(availability), new VoidBAck(this));
+                break;
+
+            case R.id.action_settings:
+                mAuth.signOut();
+                return true;
+        }
+        return super.onOptionsItemSelected(menuItem);
     }
 
 
@@ -192,22 +221,6 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_profile, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            mAuth.signOut();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
 }
