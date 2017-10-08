@@ -12,7 +12,6 @@ class Message {
         this.message = message;
         this.senderID = senderID;
         this.createdAt = createdAt;
-        Log.i("Message","Message");
     }
 
 

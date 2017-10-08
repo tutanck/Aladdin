@@ -1,7 +1,5 @@
 package com.aj.aladdin.domain.components.profile;
 
-import android.content.Context;
-
 import java.io.Serializable;
 
 /**
@@ -13,18 +11,18 @@ public class UserProfile implements Serializable{
     private String _id;
     private String username;
     private int reputation;
-    private boolean online;
+    private int availability;
 
     public UserProfile(
             String _id
             , String username
             , int reputation
-            , boolean online
+            , int availability
     ) {
         this._id = _id;
         this.username = username;
         this.reputation = reputation;
-        this.online = online;
+        this.availability = availability;
     }
 
 
@@ -40,7 +38,7 @@ public class UserProfile implements Serializable{
         return reputation;
     }
 
-    public boolean isOnline() {
-        return online;
+    public int getAvailability() {
+        return availability;
     }
 }

@@ -34,7 +34,7 @@ public class MessagesActivity extends AppCompatActivity {
     private final static String CONTACT_NAME = "CONTACT_NAME";
 
     private List<Message> messageList = new ArrayList<>();
-    private MessageListAdapter mAdapter;
+    private MessageRecyclerAdapter mAdapter;
 
     private String contact_id = null;
     private String contact_name = null;
@@ -48,7 +48,7 @@ public class MessagesActivity extends AppCompatActivity {
         RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.reyclerview_message_list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        mAdapter = new MessageListAdapter(this, messageList);
+        mAdapter = new MessageRecyclerAdapter(this, messageList);
         mRecyclerView.setAdapter(mAdapter);
 
         contact_id = getIntent().getStringExtra(CONTACT_ID);

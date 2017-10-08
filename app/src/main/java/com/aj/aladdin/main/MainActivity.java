@@ -11,7 +11,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -19,12 +18,11 @@ import com.aj.aladdin.R;
 import com.aj.aladdin.db.IO;
 import com.aj.aladdin.db.colls.PROFILES;
 import com.aj.aladdin.db.colls.itf.Coll;
+import com.aj.aladdin.domain.components.ads.AdsFragment;
 import com.aj.aladdin.domain.components.messages.ConversationsFragment;
 import com.aj.aladdin.domain.components.needs.main.UserNeedsFragment;
 import com.aj.aladdin.domain.components.profile.ProfileFragment;
 import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
-
-import com.aj.aladdin.tools.oths.PageFragment;
 
 import com.aj.aladdin.tools.regina.Regina;
 import com.aj.aladdin.tools.regina.ack.UIAck;
@@ -209,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
 
         private Context context;
 
-        private String TAB_TITLES[] = new String[]{"OFFRES", "PROFIL", "BESOINS", "MESSAGES"};
+        private String TAB_TITLES[] = new String[]{"ANNONCES", "PROFIL", "BESOINS", "MESSAGES"};
 
         public PagerAdapter(FragmentManager fm, Context context) {
             super(fm);
@@ -220,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return PageFragment.newInstance(position + 1);
+                    return AdsFragment.newInstance();
                 case 1:
                     return ProfileFragment.newInstance(user_id, true);
                 case 2:
@@ -252,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refreshAvailabilityColor() {
-        getSupportActionBar().setHomeAsUpIndicator(Avail.color(availability));
+        getSupportActionBar().setHomeAsUpIndicator(Avail.getDrawable(availability));
     }
 
 }

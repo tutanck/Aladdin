@@ -81,8 +81,8 @@ public class ConversationsFragment extends Fragment {
                                         for (int i = 0; i < jar.length(); i++) {
                                             JSONObject jo = jar.getJSONObject(i);
                                             mProfiles.add(new UserProfile(
-                                                    jo.getString(Coll._idKey), jo.getString(PROFILES.usernameKey)
-                                                    , 0, true) //// TODO: 05/10/2017 : 0, true
+                                                    jo.getString(Coll._idKey), jo.optString(PROFILES.usernameKey)//// TODO: 08/10/2017  passer en jo.getString(PROFILES.usernameKey) apres avoir trouvé un moy de forcer l'user à remplir au moins son username ou en ignorant les profils sans username
+                                                    , 0, jo.getInt(PROFILES.availabilityKey)) //// TODO: 05/10/2017 : 0, true
                                             );
                                         }
                                         mAdapter.notifyDataSetChanged();

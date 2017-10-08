@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.domain.components.messages.MessagesActivity;
+import com.aj.aladdin.tools.utils.Avail;
 
 import java.util.ArrayList;
 
@@ -85,10 +86,8 @@ public class UserProfilesRecyclerAdapter extends RecyclerView.Adapter<UserProfil
             this.mContext = context;
 
             usernameTV.setText(userProfile.getUsername());
-            userStatusFAB.setBackgroundTintList(
-                    ColorStateList.valueOf
-                            (ContextCompat.getColor
-                                    (context, userProfile.isOnline() ? R.color.Lime : R.color.Red)));
+            userStatusFAB.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor
+                                    (context, Avail.getColor(mProfile.getAvailability()))));
         }
 
 

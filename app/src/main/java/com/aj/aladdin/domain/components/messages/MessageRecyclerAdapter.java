@@ -14,7 +14,7 @@ import com.aj.aladdin.main.A;
 
 import java.util.List;
 
-public class MessageListAdapter extends RecyclerView.Adapter {
+public class MessageRecyclerAdapter extends RecyclerView.Adapter {
 
     private static final int VIEW_TYPE_MESSAGE_SENT = 1;
     private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
@@ -22,7 +22,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     private Activity mContext;
     private List<Message> mMessageList;
 
-    public MessageListAdapter(Context context, List<Message> messageList) {
+    public MessageRecyclerAdapter(Context context, List<Message> messageList) {
         mContext = (Activity) context;
         mMessageList = messageList;
     }
@@ -50,7 +50,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             return new ReceivedMessageHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_message_received, parent, false));
 
-        throw new RuntimeException("MessageListAdapter : Unknown Message Type Exception");
+        throw new RuntimeException("MessageRecyclerAdapter : Unknown Message Type Exception");
     }
 
     @Override
