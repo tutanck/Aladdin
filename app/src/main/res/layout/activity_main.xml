@@ -28,12 +28,6 @@
             android:layout_weight="1"
             android:background="@android:color/white" />
 
-        <fragment
-            android:id="@+id/waiter_modal_fragment"
-            class="com.aj.aladdin.tools.components.fragments.ProgressBarFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
     </LinearLayout>
 
 </FrameLayout>

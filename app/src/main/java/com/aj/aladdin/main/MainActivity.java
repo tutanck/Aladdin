@@ -53,9 +53,6 @@ public class MainActivity extends AppCompatActivity {
     private static String user_id;
 
 
-    public static ProgressBarFragment progressBarFragment; //// TODO: 02/10/2017  memory leaks
-
-
     public static void start(Activity context) {
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -183,8 +180,6 @@ public class MainActivity extends AppCompatActivity {
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
-
-        progressBarFragment = (ProgressBarFragment) getSupportFragmentManager().findFragmentById(R.id.waiter_modal_fragment);
     }
 
 
