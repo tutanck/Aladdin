@@ -96,11 +96,14 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
 
 
         fab = (FloatingActionButton) findViewById(R.id.fab_save_need);
+        fab.setEnabled(false);
         fab.setVisibility(View.GONE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (validState())
+                if (validState()) {
+                    progressBarFragment.show();
+                    fab.setEnabled(false); //update in progress
                     NEEDS.saveNeed(_id, A.user_id(UserNeedSaveActivity.this)
                             , needSwitch.isChecked(), formFields, new UIAck(UserNeedSaveActivity.this) {
                                 @Override
@@ -111,10 +114,19 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
                                         __.fatal(e);
                                     }
                                     close();
+                                    progressBarFragment.hide();
                                     __.showShortToast(UserNeedSaveActivity.this, "Mise à jour réussie !");
-                                    //finish(); // TODO: 04/10/2017
+                                    //finish(); // TODO: 04/10/2017 uncomment on prod mode
+                                }
+
+                                @Override
+                                protected void onErr(JSONObject err, JSONObject ctx) {
+                                    super.onErr(err, ctx);
+                                    fab.setEnabled(true);
+                                    progressBarFragment.hide();
                                 }
                             });
+                }
             }
         });
 
@@ -128,7 +140,6 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
         if (_id == null) {
             needSwitch.setChecked(true);
             formFields.get(NEEDS.searchKey).setText(getIntent().getStringExtra(SEARCH_TEXT));
-            open();
         } else {
             progressBarFragment.show();
             NEEDS.loadNeed(_id, new UIAck(UserNeedSaveActivity.this) {
@@ -161,6 +172,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
         for (String key : formFields.keySet())
             if (!key.equals(NEEDS.searchKey))
                 formFields.get(key).open();
+        fab.setEnabled(true);
         fab.setVisibility(View.VISIBLE);
         isFormOpen = true;
     }
@@ -168,6 +180,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
     private void close() {
         for (String key : formFields.keySet())
             formFields.get(key).close();
+        fab.setEnabled(false);
         fab.setVisibility(View.GONE);
         isFormOpen = false;
     }
@@ -176,15 +189,22 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
     private boolean validState() {
         EditText titleET = formFields.get(NEEDS.titleKey).getEtContent();
         EditText descriptionET = formFields.get(NEEDS.descriptionKey).getEtContent();
+
         if (TextUtils.isEmpty(titleET.getText())) {
-            titleET.setError("Le titre doit être renseigné !");
+            String errStr = "Le titre doit être renseigné !";
+            titleET.setError(errStr);
+            __.showShortToast(this,errStr);
             return false;
         }
         titleET.setError(null);
+
         if (TextUtils.isEmpty(descriptionET.getText())) {
-            descriptionET.setError("La description doit être renseignée !");
+            String errStr ="La description doit être renseignée !";
+            descriptionET.setError(errStr);
+            __.showShortToast(this,errStr);
             return false;
         }
+        
         descriptionET.setError(null);
         return true;
     }
@@ -193,13 +213,16 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
     @Override
     public void onBackPressed() {
         if (fab.getVisibility() == View.VISIBLE)
-            Snackbar.make(fab, "Les modifications seront perdues !", Snackbar.LENGTH_SHORT)
-                .setAction("OK", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        UserNeedSaveActivity.super.onBackPressed();
-                    }
-                }).show();
+            if (!fab.isEnabled())
+                __.showShortSnack(fab, "Des modifications sont en cours !");
+            else
+                Snackbar.make(fab, "Les modifications seront perdues !", Snackbar.LENGTH_SHORT)
+                        .setAction("OK", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                UserNeedSaveActivity.super.onBackPressed();
+                            }
+                        }).show();
         else super.onBackPressed();
     }
 

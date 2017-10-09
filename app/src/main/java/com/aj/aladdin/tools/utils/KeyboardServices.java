@@ -10,8 +10,9 @@ import android.widget.EditText;
 
 public class KeyboardServices {
 
-    public static void dismiss(Context context, EditText editText){
-        ((InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE))
-                .hideSoftInputFromWindow(editText.getWindowToken(), 0);
+    public static void dismiss(Context context, EditText editText) {
+        if (context != null)//!important
+            ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE))
+                    .hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 }
