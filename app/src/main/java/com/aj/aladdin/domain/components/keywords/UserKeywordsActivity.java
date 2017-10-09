@@ -118,8 +118,14 @@ public class UserKeywordsActivity extends AppCompatActivity {
                             etKeyword.setText("");
                             loadKeywords();
                         }
+
+                        @Override
+                        protected void onErr(JSONObject err, JSONObject ctx) {
+                            super.onErr(err, ctx);
+                            progressBarFragment.hide();
+                        }
                     });
-        }else
+        } else
             __.showLongSnack(btnAdd, "Un mot-clé est composé d'un seul mot (caractères alphanumériques sans accents).");
 
     }
