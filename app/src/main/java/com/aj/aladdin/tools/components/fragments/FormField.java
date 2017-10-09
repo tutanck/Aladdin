@@ -90,6 +90,7 @@ public class FormField extends Fragment {
         tvDescription.setText(args.getString(LABEL));
 
         etContent = view.findViewById(R.id.etContent);
+        etContent.setText("");
         etContent.setVisibility(View.GONE);
 
         tvContent = view.findViewById(R.id.tvContent);

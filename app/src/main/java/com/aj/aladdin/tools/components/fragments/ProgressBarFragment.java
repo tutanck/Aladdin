@@ -1,5 +1,6 @@
 package com.aj.aladdin.tools.components.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -44,6 +45,10 @@ public class ProgressBarFragment extends Fragment {
 
     public void hide() {
         progressBarLayout.setVisibility(View.GONE);
+    }
+
+    public void setBackgroundColor(int color) {
+        progressBarLayout.setBackgroundColor(color);
     }
 
 }

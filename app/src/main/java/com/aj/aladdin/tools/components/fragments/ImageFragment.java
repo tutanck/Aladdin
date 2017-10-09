@@ -15,6 +15,7 @@ import android.widget.ImageView;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.tools.utils.__;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -31,6 +32,7 @@ public class ImageFragment extends Fragment {
 
     public static final int PICK_IMAGE_REQUEST = 1;
 
+    private static final String DEFAULT_DRAWABLE_ID = "DEFAULT_DRAWABLE_ID";
     private static final String IMG_REF_STR = "IMG_REF_STR";
     private static final String EDITABLE = "EDITABLE";
 
@@ -38,16 +40,21 @@ public class ImageFragment extends Fragment {
 
     private ImageView imageView;
 
+    private Uri downloadUrl = null;
+
     private ProgressBarFragment progressBarFragment;
 
 
     public static ImageFragment newInstance(
             String imgRefStr
+            , int defaultDrawableID
             , boolean editable
     ) {
         Bundle args = new Bundle();
         args.putString(IMG_REF_STR, imgRefStr);
+        args.putInt(DEFAULT_DRAWABLE_ID, defaultDrawableID);
         args.putBoolean(EDITABLE, editable);
+
         ImageFragment fragment = new ImageFragment();
         fragment.setArguments(args);
         return fragment;
@@ -65,7 +72,7 @@ public class ImageFragment extends Fragment {
 
         FrameLayout layout = (FrameLayout) inflater.inflate(R.layout.fragment_image_view, container, false);
         imageView = layout.findViewById(R.id.imageView);
-        imageView.setImageResource(R.drawable.ic_person_profile_large);
+        imageView.setImageResource(getArguments().getInt(DEFAULT_DRAWABLE_ID));
 
         progressBarFragment = (ProgressBarFragment) getChildFragmentManager().findFragmentById(R.id.waiter_modal_fragment);
 
@@ -87,7 +94,25 @@ public class ImageFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
+        if (downloadUrl == null) {  //// TODO: 09/10/2017 Optimize: shouldnt always reload img see how to store img loxally
+            progressBarFragment.show();
+            //loadImg
+            imageRef.getDownloadUrl().addOnSuccessListener(getActivity()/*!important*/, new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {// Got the download URL for 'users/me/profile.png'
+                    Glide.with(getContext()).load(uri).into(imageView);
+                    downloadUrl = uri;
+                    progressBarFragment.hide();
+                }
+            }).addOnFailureListener(getActivity()/*!important*/, new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    progressBarFragment.hide();
+                    imageView.setImageResource(getArguments().getInt(DEFAULT_DRAWABLE_ID));
+                    __.showShortToast(getContext(), "Echec du chargement de l'image de profil.");
+                }
+            });
+        } else Glide.with(getContext()).load(downloadUrl).into(imageView);
     }
 
     @Override
@@ -131,7 +156,7 @@ public class ImageFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 progressBarFragment.hide();
-                imageView.setImageResource(R.drawable.ic_person_profile_large);
+                imageView.setImageResource(getArguments().getInt(DEFAULT_DRAWABLE_ID));
                 __.showShortToast(getContext(), "Echec de la mise à jour de l'image de profil.");
             }
         }).addOnSuccessListener(getActivity()/*!important*/, new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -139,8 +164,8 @@ public class ImageFragment extends Fragment {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 progressBarFragment.hide();
                 __.showShortToast(getContext(), "Mise à jour réussie.");
+                downloadUrl = taskSnapshot.getDownloadUrl();
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
             }
         });
     }

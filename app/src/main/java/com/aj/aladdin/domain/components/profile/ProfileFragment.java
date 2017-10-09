@@ -1,6 +1,7 @@
 package com.aj.aladdin.domain.components.profile;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 
@@ -22,6 +23,7 @@ import com.aj.aladdin.domain.components.keywords.UtherKeywordsActivity;
 import com.aj.aladdin.domain.components.messages.MessagesActivity;
 import com.aj.aladdin.tools.components.fragments.IDKeyFormField;
 import com.aj.aladdin.tools.components.fragments.ImageFragment;
+import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 import com.aj.aladdin.tools.components.services.FormFieldKindTranslator;
 import com.aj.aladdin.tools.regina.ack.VoidBAck;
 import com.aj.aladdin.tools.utils.JSONServices;
@@ -47,6 +49,8 @@ public class ProfileFragment extends Fragment {
     private String user_id = null;
 
     private JSONObject formParams;
+
+    private ProgressBarFragment progressBarFragment;
 
     private Map<String, IDKeyFormField> formFields = new HashMap<>();
 
@@ -79,6 +83,8 @@ public class ProfileFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
+        progressBarFragment = (ProgressBarFragment) getChildFragmentManager().findFragmentById(R.id.waiter_modal_fragment);
+        progressBarFragment.setBackgroundColor(Color.TRANSPARENT);
 
         RatingBar userRating = view.findViewById(R.id.user_rating);
 
@@ -155,7 +161,7 @@ public class ProfileFragment extends Fragment {
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
 
                 fragmentTransaction.add(R.id.profile_image_layout, ImageFragment.newInstance(
-                        "users/" + user_id + "/images/pp.jpg", isEditable), "profile_image"
+                        "users/" + user_id + "/images/pp.jpg", R.drawable.ic_person_profile_large, isEditable), "profile_image"
                 );
 
                 for (int i = 0; i < orderedFieldsKeys.length(); i++) {
@@ -209,6 +215,9 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        progressBarFragment.show();
+
         PROFILES.getProfile(user_id, new UIAck(getActivity()) {
             @Override
             protected void onRes(Object res, JSONObject ctx) {
@@ -224,10 +233,22 @@ public class ProfileFragment extends Fragment {
                     for (String key : formFields.keySet())
                         formFields.get(key).getTvContent().setText(profile.optString(key));
 
+                    progressBarFragment.hide();
+
                 } catch (JSONException e) {
                     __.fatal(e);
                 }
             }
+
+            @Override
+            protected void onErr(
+                    JSONObject err,
+                    JSONObject ctx
+            ) {
+                super.onErr(err, ctx);
+                progressBarFragment.hide();
+            }
+
         });
 
     }
