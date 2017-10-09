@@ -16,13 +16,11 @@ import android.widget.ImageView;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.tools.utils.__;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -43,8 +41,6 @@ public class ImageFragment extends Fragment {
     private StorageReference imageRef;
 
     private ImageView imageView;
-
-    private Uri downloadUrl = null;
 
     private ProgressBarFragment progressBarFragment;
 
@@ -100,22 +96,9 @@ public class ImageFragment extends Fragment {
     public void onStart() {
         super.onStart();
         progressBarFragment.show();
-        //// TODO: 09/10/2017 Optimize: shouldnt always reload img see how to store img loxally
-        if (downloadUrl != null) onURLReady();
-        else
-            imageRef.getDownloadUrl().addOnFailureListener(getActivity()/*!important*/, new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    progressBarFragment.hide();
-                }
-            }).addOnSuccessListener(getActivity()/*!important*/, new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {// Got the download URL for 'users/me/profile.png'
-                    downloadUrl = uri;
-                    onURLReady();
-                }
-            });
+        downloadImg();  // TODO: 09/10/2017 Optimize: shouldnt always reload img see how to store img locally
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -151,52 +134,30 @@ public class ImageFragment extends Fragment {
         }).addOnSuccessListener(getActivity()/*!important*/, new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                downloadUrl = taskSnapshot.getDownloadUrl();
-                onURLReady();
+                imageView.setImageBitmap(bitmap);
             }
         });
     }
 
 
-    private void onURLReady() {
-
+    private void downloadImg() {
         imageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
-                // Use the bytes to display the image
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 imageView.setImageBitmap(bitmap);
                 progressBarFragment.hide();
-
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
                 progressBarFragment.hide();
+               /* todo see what to do (could be abusive and disturbing for the user)
+               int errCode = ((StorageException) exception).getErrorCode();
+                if (errCode != StorageException.ERROR_OBJECT_NOT_FOUND)
+                    __.showShortToast(getContext(), "Erreur de chargement de l'image.");*/
             }
         });
-
-
-      //  Glide.with(getContext()).load(downloadUrl).listener(requestListener).into(imageView); // TODO: 09/10/2017 manage errors
-        //todo put in glide listener
     }
-
-
-
-
-     /* RequestListener<Uri, GlideDrawable> requestListener = new RequestListener<Uri, GlideDrawable>() {
-        @Override
-        public boolean onException(Exception e, Uri model, Target<GlideDrawable> target, boolean isFirstResource) {
-            progressBarFragment.hide();
-            return false; // important to return false so the error placeholder can be placed
-        }
-
-        @Override
-        public boolean onResourceReady(GlideDrawable resource, Uri model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-            progressBarFragment.hide();
-            return false;
-        }
-    };*/
 
 }
