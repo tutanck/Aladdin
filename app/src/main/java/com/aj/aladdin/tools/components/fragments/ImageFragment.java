@@ -134,7 +134,7 @@ public class ImageFragment extends Fragment {
         }).addOnSuccessListener(getActivity()/*!important*/, new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                imageView.setImageBitmap(bitmap);
+                downloadImg();
             }
         });
     }
