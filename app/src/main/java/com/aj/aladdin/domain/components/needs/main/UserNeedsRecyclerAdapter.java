@@ -89,7 +89,7 @@ public class UserNeedsRecyclerAdapter extends RecyclerView.Adapter<UserNeedsRecy
         }
 
 
-        void deleteNeed(Activity contextActivity, String userID, List<UserNeed> userNeeds, UserNeedsRecyclerAdapter adapter) {
+        void deleteNeed(Activity contextActivity, UserNeedsFragment delegate, String userID, List<UserNeed> userNeeds, UserNeedsRecyclerAdapter adapter) {
             NEEDS.deleteNeed(mUserNeed.get_id(),
                     new UIAck(contextActivity) {
                         @Override
@@ -97,7 +97,7 @@ public class UserNeedsRecyclerAdapter extends RecyclerView.Adapter<UserNeedsRecy
                             NEEDS.loadNeeds(userID, new UIAck(contextActivity) {
                                         @Override
                                         protected void onRes(Object res, JSONObject ctx) {
-                                            UserNeedsFragment.reloadList(res, userNeeds, adapter, contextActivity);
+                                            delegate.reloadList(res, userNeeds, adapter, contextActivity);
                                         }
                                     }
                             );

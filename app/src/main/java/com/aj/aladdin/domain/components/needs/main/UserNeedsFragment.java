@@ -1,6 +1,7 @@
 package com.aj.aladdin.domain.components.needs.main;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.db.colls.NEEDS;
@@ -16,6 +18,7 @@ import com.aj.aladdin.db.colls.itf.Coll;
 import com.aj.aladdin.domain.components.needs.UserNeedAdActivity;
 import com.aj.aladdin.domain.components.needs.UserNeedNewSearchActivity;
 import com.aj.aladdin.main.A;
+import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 import com.aj.aladdin.tools.components.others._Recycler;
 import com.aj.aladdin.tools.utils.__;
 import com.aj.aladdin.tools.regina.ack.UIAck;
@@ -35,6 +38,11 @@ public class UserNeedsFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private UserNeedsRecyclerAdapter mAdapter;
 
+    private ProgressBarFragment progressBarFragment;
+    private LinearLayout indicationsLayout;
+
+    private UserNeedsFragment self = this;
+
     public static UserNeedsFragment newInstance() {
         return new UserNeedsFragment();
     }
@@ -51,10 +59,13 @@ public class UserNeedsFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.needs_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        mAdapter = new UserNeedsRecyclerAdapter(getContext(),mUserNeeds);
+        mAdapter = new UserNeedsRecyclerAdapter(getContext(), mUserNeeds);
         mRecyclerView.setAdapter(mAdapter);
 
         setRecyclerViewItemTouchListener();
+
+        indicationsLayout = view.findViewById(R.id.fragment_user_needs_indications);
+        progressBarFragment = (ProgressBarFragment) getChildFragmentManager().findFragmentById(R.id.waiter_modal_fragment);
 
         FloatingActionButton fab = view.findViewById(R.id.fab_add_need);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +82,7 @@ public class UserNeedsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        progressBarFragment.show();
         NEEDS.loadNeeds(A.user_id(getActivity()), new UIAck(getActivity()) {
             @Override
             protected void onRes(Object res, JSONObject ctx) {
@@ -79,10 +91,11 @@ public class UserNeedsFragment extends Fragment {
         });
     }
 
-    static void reloadList(Object res, List<UserNeed> userNeeds, UserNeedsRecyclerAdapter adapter, Context context) {
+    void reloadList(Object res, List<UserNeed> userNeeds, UserNeedsRecyclerAdapter adapter, Context context) {
         try {
             JSONArray jar = (JSONArray) res;
             userNeeds.clear();
+
             for (int i = 0; i < jar.length(); i++) {
                 JSONObject jo = jar.getJSONObject(i);
                 userNeeds.add(new UserNeed(
@@ -90,7 +103,10 @@ public class UserNeedsFragment extends Fragment {
                         , jo.getString(NEEDS.searchKey), jo.getBoolean(NEEDS.activeKey))
                 );
             }
+
+            indicationsLayout.setVisibility(mUserNeeds.size() == 0 ? View.VISIBLE : View.GONE);
             adapter.notifyDataSetChanged();
+            progressBarFragment.hide();
         } catch (JSONException e) {
             __.fatal(e); //SNO : if a doc exist the Need field should exist too
         }
@@ -109,7 +125,8 @@ public class UserNeedsFragment extends Fragment {
 
             @Override
             public void onLongClick(RecyclerView.ViewHolder viewHolder, int position) {
-                ((UserNeedsRecyclerAdapter.ViewHolder) viewHolder).deleteNeed(getActivity(),
+                progressBarFragment.show();
+                ((UserNeedsRecyclerAdapter.ViewHolder) viewHolder).deleteNeed(getActivity(), self,
                         A.user_id(getActivity()), mUserNeeds, mAdapter);
             }
         }));
