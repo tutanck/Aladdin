@@ -155,7 +155,8 @@ public class ProfileFragment extends Fragment {
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
 
                 fragmentTransaction.add(R.id.profile_image_layout, ImageFragment.newInstance(
-                        user_id, isEditable), "profile_image");
+                        "users/" + user_id + "/images/pp.jpg", isEditable), "profile_image"
+                );
 
                 for (int i = 0; i < orderedFieldsKeys.length(); i++) {
                     String key = orderedFieldsKeys.getString(i);
@@ -195,7 +196,7 @@ public class ProfileFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     MessagesActivity.start(getContext(), user_id
-                            ,formFields.get(PROFILES.usernameKey).getTvContent().getText().toString());
+                            , formFields.get(PROFILES.usernameKey).getTvContent().getText().toString());
                 }
             });
         else fabContact.setVisibility(View.GONE);

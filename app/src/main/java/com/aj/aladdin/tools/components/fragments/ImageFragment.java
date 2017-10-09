@@ -31,10 +31,10 @@ public class ImageFragment extends Fragment {
 
     public static final int PICK_IMAGE_REQUEST = 1;
 
-    private static final String AUTH_ID = "AUTH_ID"; //Firebase id
+    private static final String IMG_REF_STR = "IMG_REF_STR";
     private static final String EDITABLE = "EDITABLE";
 
-    StorageReference profilePictureRef;
+    private StorageReference imageRef;
 
     private ImageView imageView;
 
@@ -42,11 +42,11 @@ public class ImageFragment extends Fragment {
 
 
     public static ImageFragment newInstance(
-            String key
+            String imgRefStr
             , boolean editable
     ) {
         Bundle args = new Bundle();
-        args.putString(AUTH_ID, key);
+        args.putString(IMG_REF_STR, imgRefStr);
         args.putBoolean(EDITABLE, editable);
         ImageFragment fragment = new ImageFragment();
         fragment.setArguments(args);
@@ -60,13 +60,8 @@ public class ImageFragment extends Fragment {
             , ViewGroup container
             , Bundle savedInstanceState
     ) {
-        final Bundle args = getArguments();
-
-        String imgPath = "users/" + args.get(AUTH_ID) + "/images/pp.jpg";
-
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-
-        profilePictureRef = storageRef.child(imgPath);
+        imageRef = storageRef.child(getArguments().getString(IMG_REF_STR));
 
         FrameLayout layout = (FrameLayout) inflater.inflate(R.layout.fragment_image_view, container, false);
         imageView = layout.findViewById(R.id.imageView);
@@ -74,7 +69,7 @@ public class ImageFragment extends Fragment {
 
         progressBarFragment = (ProgressBarFragment) getChildFragmentManager().findFragmentById(R.id.waiter_modal_fragment);
 
-        if (args.getBoolean(EDITABLE))
+        if (getArguments().getBoolean(EDITABLE))
             imageView.setOnClickListener(
                     new View.OnClickListener() {
                         @Override
@@ -123,16 +118,23 @@ public class ImageFragment extends Fragment {
 
         progressBarFragment.show();
 
-        UploadTask uploadTask = profilePictureRef.putBytes(data);
+        UploadTask uploadTask = imageRef.putBytes(data);
 
-        uploadTask.addOnFailureListener(new OnFailureListener() {
+        /* https://firebase.google.com/docs/storage/android/upload-files
+        Handle Activity Lifecycle Changes :
+        Uploads continue in the background even after activity lifecycle changes (such as presenting a dialog or rotating the screen).
+         Any listeners you had attached will also remain attached.
+          This could cause unexpected results if they get called after the activity is stopped.
+           You can solve this problem by subscribing your listeners with an activity scope to automatically unregister them when the activity stops. */
+
+        uploadTask.addOnFailureListener(getActivity()/*!important*/, new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 progressBarFragment.hide();
                 imageView.setImageResource(R.drawable.ic_person_profile_large);
                 __.showShortToast(getContext(), "Echec de la mise à jour de l'image de profil.");
             }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        }).addOnSuccessListener(getActivity()/*!important*/, new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 progressBarFragment.hide();
