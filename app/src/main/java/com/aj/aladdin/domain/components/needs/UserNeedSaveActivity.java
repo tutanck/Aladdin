@@ -90,6 +90,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
         needSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                fab.setEnabled(true);
                 fab.setVisibility(View.VISIBLE);
             }
         });
@@ -193,15 +194,15 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
         if (TextUtils.isEmpty(titleET.getText())) {
             String errStr = "Le titre doit être renseigné !";
             titleET.setError(errStr);
-            __.showShortToast(this,errStr);
+            __.showShortToast(this, errStr);
             return false;
         }
         titleET.setError(null);
 
         if (TextUtils.isEmpty(descriptionET.getText())) {
-            String errStr ="La description doit être renseignée !";
+            String errStr = "La description doit être renseignée !";
             descriptionET.setError(errStr);
-            __.showShortToast(this,errStr);
+            __.showShortToast(this, errStr);
             return false;
         }
 
