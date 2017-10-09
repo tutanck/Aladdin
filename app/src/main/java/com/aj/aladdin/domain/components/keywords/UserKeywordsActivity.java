@@ -2,6 +2,7 @@ package com.aj.aladdin.domain.components.keywords;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,10 +14,12 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.db.colls.USER_KEYWORDS;
 import com.aj.aladdin.main.A;
+import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 import com.aj.aladdin.tools.regina.ack.UIAck;
 import com.aj.aladdin.tools.utils.__;
 
@@ -37,6 +40,9 @@ public class UserKeywordsActivity extends AppCompatActivity {
     private EditText etKeyword;
     private ImageButton btnAdd;
 
+    private LinearLayout indicationsLayout;
+    private ProgressBarFragment progressBarFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +59,10 @@ public class UserKeywordsActivity extends AppCompatActivity {
 
         mAdapter = new UserKeywordsRecyclerAdapter(UserKeywordsActivity.this, mUserKeywords);
         mRecyclerView.setAdapter(mAdapter);
+
+        indicationsLayout = (LinearLayout) findViewById(R.id.activity_user_keywords_indications);
+        progressBarFragment = (ProgressBarFragment) getSupportFragmentManager().findFragmentById(R.id.waiter_modal_fragment);
+        progressBarFragment.setBackgroundColor(Color.TRANSPARENT);
 
         functionalizeETKeyword();
         functionalizeBtnAdd();
@@ -72,20 +82,24 @@ public class UserKeywordsActivity extends AppCompatActivity {
 
 
     private void loadKeywords() {
+        progressBarFragment.show();
         USER_KEYWORDS.loadUserKeywords(A.user_id(this), new UIAck(this) {
             @Override
             protected void onRes(Object res, JSONObject ctx) {
                 try {
                     JSONArray jar = (JSONArray) res;
                     mUserKeywords.clear();
-                    for (int i = 0; i < jar.length(); i++) {
+                    int i = 0;
+                    for (; i < jar.length(); i++) {
                         JSONObject jo = jar.getJSONObject(i);
                         mUserKeywords.add(new UserKeyword(
                                 jo.getString(USER_KEYWORDS.keywordKey)
-                                , jo.getBoolean(USER_KEYWORDS.activeKey))
-                        );
+                                , jo.getBoolean(USER_KEYWORDS.activeKey)));
                     }
+
+                    indicationsLayout.setVisibility(i == 0 ? View.VISIBLE : View.GONE);
                     mAdapter.notifyDataSetChanged();
+                    progressBarFragment.hide();
                 } catch (JSONException e) {
                     __.fatal(e); //SNO : if a doc exist the keyword field should exist too
                 }
@@ -95,7 +109,8 @@ public class UserKeywordsActivity extends AppCompatActivity {
 
 
     void saveKeyword(String keyword, boolean active, boolean deleted) {
-        if (isKeyword(keyword))
+        if (isKeyword(keyword)) {
+            progressBarFragment.show();
             USER_KEYWORDS.saveUserKeyword(keyword, A.user_id(this), active, deleted,
                     new UIAck(this) {
                         @Override
@@ -104,7 +119,7 @@ public class UserKeywordsActivity extends AppCompatActivity {
                             loadKeywords();
                         }
                     });
-        else
+        }else
             __.showLongSnack(btnAdd, "Un mot-clé est composé d'un seul mot (caractères alphanumériques sans accents).");
 
     }
