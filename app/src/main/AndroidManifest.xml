@@ -31,7 +31,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".domain.components.needs.UserNeedSaveActivity"
-            android:label="Sauvegarde"
+            android:label="Annonce"
             android:screenOrientation="portrait" />
         <activity
             android:name=".domain.components.messages.MessagesActivity"

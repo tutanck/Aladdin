@@ -204,7 +204,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
             __.showShortToast(this,errStr);
             return false;
         }
-        
+
         descriptionET.setError(null);
         return true;
     }
@@ -213,7 +213,7 @@ public class UserNeedSaveActivity extends AppCompatActivity implements FormField
     @Override
     public void onBackPressed() {
         if (fab.getVisibility() == View.VISIBLE)
-            if (!fab.isEnabled())
+            if (!fab.isEnabled()) //updates in progress
                 __.showShortSnack(fab, "Des modifications sont en cours !");
             else
                 Snackbar.make(fab, "Les modifications seront perdues !", Snackbar.LENGTH_SHORT)
