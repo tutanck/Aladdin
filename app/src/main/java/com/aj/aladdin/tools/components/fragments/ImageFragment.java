@@ -2,6 +2,7 @@ package com.aj.aladdin.tools.components.fragments;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -16,6 +17,9 @@ import android.widget.ImageView;
 import com.aj.aladdin.R;
 import com.aj.aladdin.tools.utils.__;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -155,8 +159,44 @@ public class ImageFragment extends Fragment {
 
 
     private void onURLReady() {
-        Glide.with(getContext()).load(downloadUrl).into(imageView); // TODO: 09/10/2017 manage errors
-        progressBarFragment.hide(); //todo put in glide  listener
+
+        imageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                // Use the bytes to display the image
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                imageView.setImageBitmap(bitmap);
+                progressBarFragment.hide();
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                progressBarFragment.hide();
+            }
+        });
+
+
+      //  Glide.with(getContext()).load(downloadUrl).listener(requestListener).into(imageView); // TODO: 09/10/2017 manage errors
+        //todo put in glide listener
     }
+
+
+
+
+     /* RequestListener<Uri, GlideDrawable> requestListener = new RequestListener<Uri, GlideDrawable>() {
+        @Override
+        public boolean onException(Exception e, Uri model, Target<GlideDrawable> target, boolean isFirstResource) {
+            progressBarFragment.hide();
+            return false; // important to return false so the error placeholder can be placed
+        }
+
+        @Override
+        public boolean onResourceReady(GlideDrawable resource, Uri model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+            progressBarFragment.hide();
+            return false;
+        }
+    };*/
 
 }
