@@ -71,10 +71,11 @@ public class ImageFragment extends Fragment {
         imageRef = storageRef.child(getArguments().getString(IMG_REF_STR));
 
         FrameLayout layout = (FrameLayout) inflater.inflate(R.layout.fragment_image_view, container, false);
-        imageView = layout.findViewById(R.id.imageView);
-        imageView.setImageResource(getArguments().getInt(DEFAULT_DRAWABLE_ID));
 
         progressBarFragment = (ProgressBarFragment) getChildFragmentManager().findFragmentById(R.id.waiter_modal_fragment);
+
+        imageView = layout.findViewById(R.id.imageView);
+        imageView.setImageResource(getArguments().getInt(DEFAULT_DRAWABLE_ID));
 
         if (getArguments().getBoolean(EDITABLE))
             imageView.setOnClickListener(
@@ -94,25 +95,22 @@ public class ImageFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (downloadUrl == null) {  //// TODO: 09/10/2017 Optimize: shouldnt always reload img see how to store img loxally
-            progressBarFragment.show();
-            //loadImg
-            imageRef.getDownloadUrl().addOnSuccessListener(getActivity()/*!important*/, new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {// Got the download URL for 'users/me/profile.png'
-                    Glide.with(getContext()).load(uri).into(imageView);
-                    downloadUrl = uri;
-                    progressBarFragment.hide();
-                }
-            }).addOnFailureListener(getActivity()/*!important*/, new OnFailureListener() {
+        progressBarFragment.show();
+        //// TODO: 09/10/2017 Optimize: shouldnt always reload img see how to store img loxally
+        if (downloadUrl != null) onURLReady();
+        else
+            imageRef.getDownloadUrl().addOnFailureListener(getActivity()/*!important*/, new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     progressBarFragment.hide();
-                    imageView.setImageResource(getArguments().getInt(DEFAULT_DRAWABLE_ID));
-                    __.showShortToast(getContext(), "Echec du chargement de l'image de profil.");
+                }
+            }).addOnSuccessListener(getActivity()/*!important*/, new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {// Got the download URL for 'users/me/profile.png'
+                    downloadUrl = uri;
+                    onURLReady();
                 }
             });
-        } else Glide.with(getContext()).load(downloadUrl).into(imageView);
     }
 
     @Override
@@ -123,8 +121,7 @@ public class ImageFragment extends Fragment {
             try {
                 Uri uri = data.getData();
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-                imageView.setImageBitmap(bitmap);
-                upload();
+                upload(bitmap);
             } catch (IOException e) {
                 __.showShortToast(getActivity(), "Erreur de récupération de l'image!");
                 e.printStackTrace();
@@ -132,42 +129,34 @@ public class ImageFragment extends Fragment {
     }
 
 
-    private void upload() {
-        // Get the data from an ImageView as bytes
-        imageView.setDrawingCacheEnabled(true);
-        imageView.buildDrawingCache();
-        Bitmap bitmap = imageView.getDrawingCache();
+    private void upload(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
 
-        progressBarFragment.show();
-
         UploadTask uploadTask = imageRef.putBytes(data);
 
-        /* https://firebase.google.com/docs/storage/android/upload-files
-        Handle Activity Lifecycle Changes :
-        Uploads continue in the background even after activity lifecycle changes (such as presenting a dialog or rotating the screen).
-         Any listeners you had attached will also remain attached.
-          This could cause unexpected results if they get called after the activity is stopped.
-           You can solve this problem by subscribing your listeners with an activity scope to automatically unregister them when the activity stops. */
+        progressBarFragment.show();
 
         uploadTask.addOnFailureListener(getActivity()/*!important*/, new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 progressBarFragment.hide();
-                imageView.setImageResource(getArguments().getInt(DEFAULT_DRAWABLE_ID));
-                __.showShortToast(getContext(), "Echec de la mise à jour de l'image de profil.");
+                __.showShortToast(getContext(), "Echec de la mise à jour de l'image.");
             }
         }).addOnSuccessListener(getActivity()/*!important*/, new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                progressBarFragment.hide();
-                __.showShortToast(getContext(), "Mise à jour réussie.");
                 downloadUrl = taskSnapshot.getDownloadUrl();
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                onURLReady();
             }
         });
+    }
+
+
+    private void onURLReady() {
+        Glide.with(getContext()).load(downloadUrl).into(imageView); // TODO: 09/10/2017 manage errors
+        progressBarFragment.hide(); //todo put in glide  listener
     }
 
 }
