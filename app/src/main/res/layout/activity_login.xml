@@ -91,11 +91,13 @@
                 android:textSize="15dp" />
         </LinearLayout>
 
+
         <fragment
             android:id="@+id/waiter_modal_fragment"
             class="com.aj.aladdin.tools.components.fragments.ProgressBarFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_progressbar" />
 
     </FrameLayout>
 

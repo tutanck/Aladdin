@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -87,18 +88,20 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right|end"
         android:layout_margin="@dimen/fab_margin"
-        app:rippleColor="@android:color/transparent"
         android:backgroundTint="@android:color/transparent"
         android:elevation="8dp"
         android:src="@drawable/ic_done_24dp"
         app:borderWidth="0dp"
-        app:pressedTranslationZ="6dp" />
+        app:pressedTranslationZ="6dp"
+        app:rippleColor="@android:color/transparent" />
+
 
     <fragment
         android:id="@+id/waiter_modal_fragment"
         class="com.aj.aladdin.tools.components.fragments.ProgressBarFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_progressbar" />
 
 </FrameLayout>
 
