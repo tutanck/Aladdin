@@ -1,24 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/small"
+    android:paddingLeft="@dimen/medium"
+    android:paddingRight="@dimen/medium"
+    android:paddingTop="@dimen/small">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/component_recycler_indications"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/small"
-        android:paddingLeft="@dimen/medium"
-        android:paddingRight="@dimen/medium"
-        android:paddingTop="@dimen/small">
+        android:orientation="vertical"
+        android:visibility="gone">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical" />
+        <TextView
+            android:id="@+id/indicationTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/small"
+            android:ellipsize="end"
+            android:text="Rien à afficher"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/DarkGray"
+            android:textSize="24dp" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
-</FrameLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
+
+    <fragment
+        android:id="@+id/waiter_modal_fragment"
+        class="com.aj.aladdin.tools.components.fragments.ProgressBarFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_progressbar" />
+
+</RelativeLayout>

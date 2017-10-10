@@ -32,7 +32,6 @@ public class UtherKeywordsActivity extends AppCompatActivity {
     private ArrayAdapter adapter;
 
     private LinearLayout indicationsLayout;
-
     private ProgressBarFragment progressBarFragment;
 
     @Override
