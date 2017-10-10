@@ -15,6 +15,7 @@ import com.aj.aladdin.main.A;
 import com.aj.aladdin.main.MainActivity;
 import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 import com.aj.aladdin.tools.utils.KeyboardServices;
+import com.aj.aladdin.tools.utils.PatternsHolder;
 import com.aj.aladdin.tools.utils.__;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,7 +24,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class SignupActivity extends AppCompatActivity {
 
-    private EditText inputEmail, inputPassword;
+    private EditText inputEmail, inputPassword, inputUsername;
     private Button btnSignIn, btnSignUp, btnResetPassword;
     private ProgressBarFragment progressBarFragment;
     private FirebaseAuth auth;
@@ -39,6 +40,8 @@ public class SignupActivity extends AppCompatActivity {
         btnSignUp = (Button) findViewById(R.id.sign_up_button);
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
+        inputUsername = (EditText) findViewById(R.id.username);
+
         progressBarFragment = (ProgressBarFragment) getSupportFragmentManager().findFragmentById(R.id.waiter_modal_fragment);
 
         btnResetPassword = (Button) findViewById(R.id.btn_reset_password);
@@ -63,8 +66,9 @@ public class SignupActivity extends AppCompatActivity {
 
                 String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
+                String username = inputUsername.getText().toString().trim();
 
-                if (!validateForm(email, password)) return;
+                if (!validateForm(email, password, username)) return;
 
                 KeyboardServices.dismiss(SignupActivity.this, inputPassword);
                 progressBarFragment.show();
@@ -76,7 +80,7 @@ public class SignupActivity extends AppCompatActivity {
                                     progressBarFragment.hide();
                                     __.showShortToast(SignupActivity.this, getString(R.string.singup_auth_failed));
                                     Log.d("FirebaseAuth", "" + task.getException());//// TODO: 01/10/2017 check what exc and swow the right msg error
-                                } else MainActivity.start(SignupActivity.this);
+                                } else MainActivity.start(SignupActivity.this, username);
                             }
                         });
             }
@@ -84,7 +88,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
 
-    private boolean validateForm(String email, String password) {
+    private boolean validateForm(String email, String password, String username) {
         if (TextUtils.isEmpty(email)) {
             inputEmail.setError("Email obligatoire!");
             return false;
@@ -103,6 +107,18 @@ public class SignupActivity extends AppCompatActivity {
         } else
             inputPassword.setError(null);
 
+        if (TextUtils.isEmpty(username)) {
+            inputUsername.setError("Nom d'utilisateur obligatoire!");
+            return false;
+        } else if (username.length() < 3) {
+            inputUsername.setError(getString(R.string.minimum_username));
+            return false;
+        } else if (!PatternsHolder.isValidUsername(username)) {
+            inputUsername.setError(getString(R.string.invalid_username));
+            return false;
+        } else
+            inputUsername.setError(null);
+
         return true;
     }
 
@@ -112,4 +128,6 @@ public class SignupActivity extends AppCompatActivity {
         super.onResume();
         progressBarFragment.hide();
     }
+
+
 }

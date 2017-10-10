@@ -34,7 +34,7 @@ public class SplashActivity extends Activity {
             @Override
             public void run() {
                 if (auth.getCurrentUser() != null)
-                    MainActivity.start(SplashActivity.this);
+                    MainActivity.start(SplashActivity.this,null);
                 else
                     LoginActivity.start(SplashActivity.this);
             }

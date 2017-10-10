@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private static String user_id;
 
 
-    public static void start(Activity context) {
+    public static void start(Activity context, String username) {
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -62,7 +62,22 @@ public class MainActivity extends AppCompatActivity {
 
         String authID = currentUser.getUid();
 
-        try {
+        if (username != null) try {
+            IO.r.insert(PROFILES.coll
+                    , __.jo().put(PROFILES.authIDKey, authID)
+                            .put(PROFILES.usernameKey, username)
+                            .put(PROFILES.availabilityKey, Avail.AVAILABLE)
+                    , __.jo(), __.jo(), new UIAck(context) {
+                        @Override
+                        protected void onRes(Object res, JSONObject ctx) {
+                            start(context, null);
+                        }
+                    });
+        } catch (Regina.NullRequiredParameterException | JSONException e) {
+            __.fatal(e);
+        }
+
+        else try {
             IO.r.find(PROFILES.coll
                     , __.jo().put(PROFILES.authIDKey, authID)
                     , __.jo().put(PROFILES.authIDKey, 1).put(PROFILES.availabilityKey, 1)
@@ -72,7 +87,10 @@ public class MainActivity extends AppCompatActivity {
                             JSONArray userArray = ((JSONArray) res);
 
                             if (userArray.length() > 1)
-                                __.fatal("MainActivity::onStart : multiple users with the same authID");
+                                __.fatal("MainActivity::onStart : multiple users with the same authID : "+authID);
+
+                            if (userArray.length() == 0)
+                                __.fatal("MainActivity::onStart : no user with the authID : "+authID);
 
                             if (userArray.length() == 1) try {
                                 JSONObject userJSON = userArray.getJSONObject(0);
@@ -84,24 +102,12 @@ public class MainActivity extends AppCompatActivity {
                             } catch (JSONException e) {
                                 __.fatal(e);
                             }
-                            else try {
-                                IO.r.insert(PROFILES.coll
-                                        , __.jo().put(PROFILES.authIDKey, authID)
-                                                .put(PROFILES.availabilityKey, Avail.AVAILABLE)
-                                        , __.jo(), __.jo(), new UIAck(context) {
-                                            @Override
-                                            protected void onRes(Object res, JSONObject ctx) {
-                                                start(context);
-                                            }
-                                        });
-                            } catch (Regina.NullRequiredParameterException | JSONException e) {
-                                __.fatal(e);
-                            }
                         }
                     });
         } catch (Regina.NullRequiredParameterException | JSONException e) {
             __.fatal(e);
         }
+
     }
 
 

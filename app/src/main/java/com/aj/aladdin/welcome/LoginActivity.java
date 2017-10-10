@@ -86,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                                     progressBarFragment.hide();
                                     __.showShortToast(LoginActivity.this, getString(R.string.signin_auth_failed));
                                     Log.d("FirebaseAuth", "" + task.getException());//// TODO: 01/10/2017 check what exc and swow the right msg error
-                                } else MainActivity.start(LoginActivity.this);
+                                } else MainActivity.start(LoginActivity.this,null);
                             }
                         });
             }
