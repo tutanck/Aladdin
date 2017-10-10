@@ -2,15 +2,19 @@ package com.aj.aladdin.domain.components.keywords;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.db.colls.USER_KEYWORDS;
 import com.aj.aladdin.domain.components.profile.UserProfile;
 import com.aj.aladdin.domain.components.profile.UtherProfileActivity;
+import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 import com.aj.aladdin.tools.regina.ack.UIAck;
 import com.aj.aladdin.tools.utils.__;
 
@@ -27,6 +31,10 @@ public class UtherKeywordsActivity extends AppCompatActivity {
     private ListView mListView;
     private ArrayAdapter adapter;
 
+    private LinearLayout indicationsLayout;
+
+    private ProgressBarFragment progressBarFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +44,11 @@ public class UtherKeywordsActivity extends AppCompatActivity {
 
         adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, new ArrayList<>());
         mListView.setAdapter(adapter);
+
+        progressBarFragment = (ProgressBarFragment) getSupportFragmentManager().findFragmentById(R.id.waiter_modal_fragment);
+        progressBarFragment.setBackgroundColor(Color.TRANSPARENT);
+
+        indicationsLayout = (LinearLayout) findViewById(R.id.component_list_indications);
     }
 
 
@@ -43,6 +56,7 @@ public class UtherKeywordsActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        progressBarFragment.show();
         USER_KEYWORDS.loadUtherKeywords(getIntent().getStringExtra(USER_ID)
                 , new UIAck(this) {
                     @Override
@@ -50,12 +64,16 @@ public class UtherKeywordsActivity extends AppCompatActivity {
                         try {
                             JSONArray jar = (JSONArray) res;
                             adapter.clear();
-                            for (int i = 0; i < jar.length(); i++)
+                            int i = 0;
+                            for (; i < jar.length(); i++)
                                 adapter.add(jar.getJSONObject(i).getString(USER_KEYWORDS.keywordKey));
+
+                            indicationsLayout.setVisibility(i == 0 ? View.VISIBLE : View.GONE);
+                            progressBarFragment.hide();
+
                         } catch (JSONException e) {
                             __.fatal(e); //SNO : if a doc exist the keyword field should exist too
                         }
-
                     }
                 });
     }
