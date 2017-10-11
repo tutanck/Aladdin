@@ -14,10 +14,14 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.db.IO;
 import com.aj.aladdin.db.colls.MESSAGES;
+import com.aj.aladdin.db.colls.PROFILES;
 import com.aj.aladdin.db.colls.itf.Coll;
 import com.aj.aladdin.domain.components.profile.UtherProfileActivity;
 import com.aj.aladdin.main.A;
+import com.aj.aladdin.main.MainActivity;
+import com.aj.aladdin.tools.regina.ack.VoidBAck;
 import com.aj.aladdin.tools.utils.__;
 import com.aj.aladdin.tools.regina.ack.UIAck;
 
@@ -27,6 +31,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.socket.emitter.Emitter;
 
 public class MessagesActivity extends AppCompatActivity {
 
@@ -89,16 +95,25 @@ public class MessagesActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         loadMessages();
+
+        IO.socket.on(MESSAGES.collTag + contact_id, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                loadMessages();
+            }
+        });
+
+        IO.socket.on(MESSAGES.collTag + A.user_id(this), new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                loadMessages();
+            }
+        });
     }
 
 
     private void sendMessage(String text) {
-        MESSAGES.sendMessage(A.user_id(this), contact_id, text, new UIAck(this) {
-            @Override
-            protected void onRes(Object res, JSONObject ctx) {
-                loadMessages();
-            }
-        });
+        MESSAGES.sendMessage(A.user_id(this), contact_id, text, new VoidBAck(this));
     }
 
 

@@ -18,7 +18,8 @@ import java.util.Date;
  */
 
 public class MESSAGES implements Coll {
-    private static String coll = "MESSAGES";
+    private final static String coll = "MESSAGES";
+    public final static String collTag = "#" + coll + "/";
 
     public final static String senderIDKey = "senderID";
     public final static String toIDKey = "toID";
@@ -51,7 +52,12 @@ public class MESSAGES implements Coll {
                             .put(senderIDKey, senderID)
                             .put(toIDKey, toID)
                             .put(messageKey, text)
-                    , null, ack);
+                    , __.jo().put(
+                            "tags", __.jar()
+                                    .put(__.jo().put("val", collTag + senderID))
+                                    .put(__.jo().put("val", collTag + toID))
+                    )
+                    , ack);
         } catch (JSONException e) {
             __.fatal(e);
         }
