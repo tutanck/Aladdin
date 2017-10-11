@@ -34,4 +34,6 @@
     <string name="usename">Nom d\'utilisateur</string>
     <string name="avail_to_available_warning">Vous serez vu comme disponible.\nVous recevrez des notifications.</string>
     <string name="avail_to_busy_warning">Vous serez vu comme occupé.\nVous ne recevrez plus de notifications.</string>
+    <string name="delete_need_warning">Ce besoin sera supprimé!</string>
+    <string name="delete_keyword_warning">Ce mot-clé sera supprimé!</string>
 </resources>

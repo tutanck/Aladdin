@@ -1,9 +1,11 @@
 package com.aj.aladdin.domain.components.keywords;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +20,7 @@ import android.widget.LinearLayout;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.db.colls.USER_KEYWORDS;
+import com.aj.aladdin.domain.components.needs.main.UserNeedsRecyclerAdapter;
 import com.aj.aladdin.main.A;
 import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 import com.aj.aladdin.tools.regina.ack.UIAck;
@@ -173,7 +176,29 @@ public class UserKeywordsActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                ((UserKeywordsRecyclerAdapter.ViewHolder) viewHolder).deleteKeyword();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(UserKeywordsActivity.this);
+                builder.setTitle("Supprimer le mot clé ?");
+                builder.setMessage(getString(R.string.delete_keyword_warning));
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        progressBarFragment.show();
+                        ((UserKeywordsRecyclerAdapter.ViewHolder) viewHolder).deleteKeyword();
+                    }
+                });
+
+                builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });
+
+                builder.show();
+
+
             }
         };
 

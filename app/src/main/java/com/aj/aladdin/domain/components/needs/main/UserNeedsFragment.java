@@ -1,10 +1,12 @@
 package com.aj.aladdin.domain.components.needs.main;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,12 +16,16 @@ import android.widget.LinearLayout;
 
 import com.aj.aladdin.R;
 import com.aj.aladdin.db.colls.NEEDS;
+import com.aj.aladdin.db.colls.PROFILES;
 import com.aj.aladdin.db.colls.itf.Coll;
 import com.aj.aladdin.domain.components.needs.UserNeedAdActivity;
 import com.aj.aladdin.domain.components.needs.UserNeedNewSearchActivity;
 import com.aj.aladdin.main.A;
+import com.aj.aladdin.main.MainActivity;
 import com.aj.aladdin.tools.components.fragments.ProgressBarFragment;
 import com.aj.aladdin.tools.components.others._Recycler;
+import com.aj.aladdin.tools.regina.ack.VoidBAck;
+import com.aj.aladdin.tools.utils.Avail;
 import com.aj.aladdin.tools.utils.__;
 import com.aj.aladdin.tools.regina.ack.UIAck;
 
@@ -125,9 +131,28 @@ public class UserNeedsFragment extends Fragment {
 
             @Override
             public void onLongClick(RecyclerView.ViewHolder viewHolder, int position) {
-                progressBarFragment.show();
-                ((UserNeedsRecyclerAdapter.ViewHolder) viewHolder).deleteNeed(getActivity(), self,
-                        A.user_id(getActivity()), mUserNeeds, mAdapter);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Supprimer le besoin ?");
+                builder.setMessage(getString(R.string.delete_need_warning));
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        progressBarFragment.show();
+                        ((UserNeedsRecyclerAdapter.ViewHolder) viewHolder).deleteNeed(getActivity(), self,
+                                A.user_id(getActivity()), mUserNeeds, mAdapter);
+                    }
+                });
+
+                builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+
+                builder.show();
             }
         }));
     }
