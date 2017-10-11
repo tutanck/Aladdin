@@ -53,9 +53,7 @@ public class MESSAGES implements Coll {
                             .put(toIDKey, toID)
                             .put(messageKey, text)
                     , __.jo().put(
-                            "tags", __.jar()
-                                    .put(__.jo().put("val", collTag + senderID))
-                                    .put(__.jo().put("val", collTag + toID))
+                            "tags", __.jar().put(__.jo().put("val", collTag + senderID+"/"+toID))
                     )
                     , ack);
         } catch (JSONException e) {

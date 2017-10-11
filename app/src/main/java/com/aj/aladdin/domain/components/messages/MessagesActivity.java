@@ -99,19 +99,26 @@ public class MessagesActivity extends AppCompatActivity {
         super.onStart();
         loadMessages();
 
-        IO.socket.on(MESSAGES.collTag + contact_id, new Emitter.Listener() {
+        IO.socket.on(MESSAGES.collTag + contact_id + "/" + A.user_id(this), new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 loadMessages();
             }
         });
 
-        IO.socket.on(MESSAGES.collTag + A.user_id(this), new Emitter.Listener() {
+        IO.socket.on(MESSAGES.collTag + A.user_id(this) + "/" + contact_id, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 loadMessages();
             }
         });
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        IO.socket.off(MESSAGES.collTag + contact_id + "/" + A.user_id(this));
+        IO.socket.off(MESSAGES.collTag + A.user_id(this) + "/" + contact_id);
     }
 
 
@@ -133,7 +140,7 @@ public class MessagesActivity extends AppCompatActivity {
                     }
                     Log.i("messageList", messageList.toString());
                     mAdapter.notifyDataSetChanged();
-                    mRecyclerView.scrollToPosition(mRecyclerView.getAdapter().getItemCount()-1);
+                    mRecyclerView.scrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);
                 } catch (JSONException e) {
                     __.fatal(e); //SNO : if a doc exist the Message field should exist too
                 }
