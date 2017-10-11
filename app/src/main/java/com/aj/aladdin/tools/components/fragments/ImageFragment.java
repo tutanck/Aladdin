@@ -15,6 +15,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.aj.aladdin.R;
+import com.aj.aladdin.tools.utils.DatabaseHelper;
+import com.aj.aladdin.tools.utils._Bitmap;
 import com.aj.aladdin.tools.utils.__;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -43,6 +45,8 @@ public class ImageFragment extends Fragment {
     private ImageView imageView;
 
     private ProgressBarFragment progressBarFragment;
+
+    private DatabaseHelper databaseHelper;
 
 
     public static ImageFragment newInstance(
@@ -73,6 +77,7 @@ public class ImageFragment extends Fragment {
         FrameLayout layout = (FrameLayout) inflater.inflate(R.layout.fragment_image_view, container, false);
 
         progressBarFragment = (ProgressBarFragment) getChildFragmentManager().findFragmentById(R.id.waiter_modal_fragment);
+        databaseHelper = new DatabaseHelper(getContext());
 
         imageView = layout.findViewById(R.id.imageView);
         imageView.setImageResource(getArguments().getInt(DEFAULT_DRAWABLE_ID));
@@ -117,11 +122,9 @@ public class ImageFragment extends Fragment {
 
 
     private void upload(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
 
-        UploadTask uploadTask = imageRef.putBytes(data);
+
+        UploadTask uploadTask = imageRef.putBytes(_Bitmap.getBytes(bitmap));
 
         progressBarFragment.show();
 
@@ -144,7 +147,7 @@ public class ImageFragment extends Fragment {
         imageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                Bitmap bitmap = _Bitmap.getImage(bytes);
                 imageView.setImageBitmap(bitmap);
                 progressBarFragment.hide();
             }
