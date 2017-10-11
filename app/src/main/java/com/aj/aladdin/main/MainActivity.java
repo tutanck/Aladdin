@@ -2,6 +2,7 @@ package com.aj.aladdin.main;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -9,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -87,10 +89,10 @@ public class MainActivity extends AppCompatActivity {
                             JSONArray userArray = ((JSONArray) res);
 
                             if (userArray.length() > 1)
-                                __.fatal("MainActivity::onStart : multiple users with the same authID : "+authID);
+                                __.fatal("MainActivity::onStart : multiple users with the same authID : " + authID);
 
                             if (userArray.length() == 0)
-                                __.fatal("MainActivity::onStart : no user with the authID : "+authID);
+                                __.fatal("MainActivity::onStart : no user with the authID : " + authID);
 
                             if (userArray.length() == 1) try {
                                 JSONObject userJSON = userArray.getJSONObject(0);
@@ -116,9 +118,13 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         if (A.user_id(this) == null)
             __.fatal("MainActivity -> A::user_id is null"); //SNO
-        else
-            user_id = A.user_id(this);
+
+        user_id = A.user_id(this);
+
+        PROFILES.setAvailability(user_id, Avail.AVAILABLE, new VoidBAck(MainActivity.this));
+
         mAuth.addAuthStateListener(authListener);
+
         IO.socket.on(PROFILES.collTag + user_id, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -193,11 +199,40 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case android.R.id.home:
-                PROFILES.setAvailability(user_id, Avail.nextStatus(availability), new VoidBAck(this));
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setTitle("Changement de disponibilité");
+
+                if (availability == Avail.AVAILABLE)
+                    builder.setMessage(getString(R.string.avail_to_busy_warning));
+                else
+                    builder.setMessage(getString(R.string.avail_to_available_warning));
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        PROFILES.setAvailability(user_id, Avail.nextStatus(availability), new VoidBAck(MainActivity.this));
+                    }
+                });
+
+                builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+
+                builder.show();
                 break;
 
             case R.id.action_settings:
-                mAuth.signOut();
+                PROFILES.setAvailability(user_id, Avail.OFFLINE, new UIAck(this) {
+                    @Override
+                    protected void onRes(Object res, JSONObject ctx) {
+                        mAuth.signOut();
+                    }
+                });
                 return true;
         }
         return super.onOptionsItemSelected(menuItem);

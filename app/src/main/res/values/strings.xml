@@ -32,4 +32,6 @@
     <string name="forgot_password_msg">Entrez votre email d\'inscription pour recevoir les instructions de réinitialisation de votre mot de passe</string>
     <string name="title_activity_uther_profile">UtherProfileActivity</string>
     <string name="usename">Nom d\'utilisateur</string>
+    <string name="avail_to_available_warning">Vous serez vu comme disponible.\nVous recevrez des notifications.</string>
+    <string name="avail_to_busy_warning">Vous serez vu comme occupé.\nVous ne recevrez plus de notifications.</string>
 </resources>

@@ -160,7 +160,7 @@ public class ProfileFragment extends Fragment {
 
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
 
-                fragmentTransaction.add(R.id.profile_image_layout, ImageFragment.newInstance(
+                fragmentTransaction.add(R.id.profile_image_layout, ImageFragment.newInstance( //todo bug : no view found for "profile_image"
                         "users/" + user_id + "/images/pp.jpg", R.drawable.ic_person_profile_large, isEditable), "profile_image"
                 );
 

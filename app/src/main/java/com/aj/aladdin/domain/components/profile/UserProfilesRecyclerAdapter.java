@@ -63,7 +63,7 @@ public class UserProfilesRecyclerAdapter extends RecyclerView.Adapter<UserProfil
         private TextView messageTV;
         private TextView messageDateTV;
 
-        private UserProfile mProfile;
+        private UserProfile mUserProfile;
 
         private Context mContext;
 
@@ -82,18 +82,22 @@ public class UserProfilesRecyclerAdapter extends RecyclerView.Adapter<UserProfil
         }
 
         public void bindItem(UserProfile userProfile, Context context) {
-            this.mProfile = userProfile;
+            this.mUserProfile = userProfile;
             this.mContext = context;
 
-            usernameTV.setText(userProfile.getUsername());
+            usernameTV.setText(mUserProfile.getUsername());
             userStatusFAB.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor
-                                    (context, Avail.getColor(mProfile.getAvailability()))));
+                    (context, Avail.getColor(mUserProfile.getAvailability()))));
+
+            userReputationRBar.setRating(mUserProfile.getReputation());
+            messageTV.setText(mUserProfile.getLastMessage());
+            messageDateTV.setText(mUserProfile.getLastMessageDate());
         }
 
 
         @Override
         public void onClick(View view) {
-            MessagesActivity.start(mContext,mProfile.get_id(),mProfile.getUsername());
+            MessagesActivity.start(mContext, mUserProfile.get_id(), mUserProfile.getUsername());
         }
     }
 }
