@@ -40,6 +40,8 @@ public class MessagesActivity extends AppCompatActivity {
     private final static String CONTACT_NAME = "CONTACT_NAME";
 
     private List<Message> messageList = new ArrayList<>();
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager linearLayoutManager;
     private MessageRecyclerAdapter mAdapter;
 
     private String contact_id = null;
@@ -51,8 +53,10 @@ public class MessagesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
 
-        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.reyclerview_message_list);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView = (RecyclerView) findViewById(R.id.reyclerview_message_list);
+        linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(true); //scroll to the bottom
+        mRecyclerView.setLayoutManager(linearLayoutManager);
 
         mAdapter = new MessageRecyclerAdapter(this, messageList);
         mRecyclerView.setAdapter(mAdapter);
@@ -130,6 +134,7 @@ public class MessagesActivity extends AppCompatActivity {
                     }
                     Log.i("messageList", messageList.toString());
                     mAdapter.notifyDataSetChanged();
+                    mRecyclerView.scrollToPosition(mRecyclerView.getAdapter().getItemCount()-1);
                 } catch (JSONException e) {
                     __.fatal(e); //SNO : if a doc exist the Message field should exist too
                 }
