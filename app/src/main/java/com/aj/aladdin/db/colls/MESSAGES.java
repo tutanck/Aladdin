@@ -35,7 +35,7 @@ public class MESSAGES implements Coll {
                                     .put(__.jo().put(senderIDKey, aID).put(toIDKey, bID))
                                     .put(__.jo().put(toIDKey, aID).put(senderIDKey, bID))
                     )
-                    , __.jo().put("sort", __.jo().put(dateKey, -1))
+                    , __.jo().put("sort", __.jo().put(dateKey, 1))
                     , __.jo(), ack
             );
         } catch (Regina.NullRequiredParameterException | JSONException e) {
@@ -44,18 +44,18 @@ public class MESSAGES implements Coll {
     }
 
 
-    public static void sendMessage(String senderID,String toID, String text, _Ack ack) {
+    public static void sendMessage(String senderID, String toID, String text, _Ack ack) {
         try {
-            IO.r.insert(coll
+            IO.socket.emit("sendMessage"
                     , __.jo()
-                            .put(senderIDKey, senderID).put(toIDKey, toID)
-                            .put(messageKey, text).put(dateKey, new Date())//// TODO: 29/09/2017  date
-                    , __.jo(), __.jo(), ack);
-        } catch (JSONException | Regina.NullRequiredParameterException e) {
+                            .put(senderIDKey, senderID)
+                            .put(toIDKey, toID)
+                            .put(messageKey, text)
+                    , null, ack);
+        } catch (JSONException e) {
             __.fatal(e);
         }
     }
-
 
 
     public static void computeUserContacts(String userID, _Ack ack) {
