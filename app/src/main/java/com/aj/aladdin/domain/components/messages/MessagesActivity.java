@@ -55,7 +55,7 @@ public class MessagesActivity extends AppCompatActivity {
 
         mRecyclerView = (RecyclerView) findViewById(R.id.reyclerview_message_list);
         linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setStackFromEnd(true); //scroll to the bottom
+        linearLayoutManager.setStackFromEnd(true);
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
         mAdapter = new MessageRecyclerAdapter(this, messageList);
